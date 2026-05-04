@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Leibniz 6C - Stundenplan</title>
+  <style>
+    :root {
+      --bg:#f7f6f2;--surface:#ffffff;--surface2:#f1f0ec;--border:#dddbd4;
+      --text:#26231c;--muted:#706e68;--primary:#01696f;--primary-bg:#e6f2f1;
+      --warn:#964219;--warn-bg:#fdf0e8;--ok:#437a22;--ok-bg:#edf5e5;
+      --free:#c0392b;--free-bg:#fdecea;
+      --radius:12px;--font:'Segoe UI',system-ui,sans-serif;
+    }
+    [data-theme="dark"] {
+      --bg:#141312;--surface:#1c1b19;--surface2:#232220;--border:#383633;
+      --text:#d4d2cc;--muted:#9a9891;--primary:#4f9ea8;--primary-bg:#1a3133;
+      --warn:#c47340;--warn-bg:#2a1e12;--ok:#6daa45;--ok-bg:#162310;
+      --free:#e05c4b;--free-bg:#2a1210;
+    }
+    * { box-sizing:border-box; margin:0; padding:0 }
+    body { font-family:var(--font); background:var(--bg); color:var(--text); min-height:100vh }
+    header { background:var(--surface); border-bottom:1px solid var(--border); padding:1rem 1.5rem; display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap }
+    .brand { display:flex; align-items:center; gap:.75rem }
+    .logo { width:38px; height:38px; border-radius:10px; background:var(--primary); display:grid; place-items:center; color:#fff; font-size:1.2rem }
+    .brand-text h1 { font-size:1.1rem; font-weight:700 }
+    .brand-text p { font-size:.8rem; color:var(--muted) }
+    .topbar-right { display:flex; gap:.5rem; align-items:center }
+    .badge { padding:.3rem .65rem; border-radius:999px; font-size:.75rem; font-weight:700; background:var(--primary-bg); color:var(--primary) }
+    .badge.red { background:var(--free-bg); color:var(--free) }
+    .badge.green { background:var(--ok-bg); color:var(--ok) }
+    button { font-family:inherit; cursor:pointer; border:1px solid var(--border); background:var(--surface); color:var(--text); padding:.5rem .9rem; border-radius:8px; font-size:.85rem }
+    button:hover { background:var(--surface2) }
+    .main { max-width:900px; margin:0 auto; padding:1.5rem }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; margin-bottom:1.25rem }
+    .card-header { padding:1rem 1.25rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center }
+    .card-header h2 { font-size:1rem; font-weight:700 }
+    .meta { font-size:.8rem; color:var(--muted) }
+    #countdown { font-weight:700; color:var(--primary) }
+    table { width:100%; border-collapse:collapse; font-size:.9rem }
+    th { background:var(--surface2); padding:.75rem 1rem; text-align:left; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); font-weight:600 }
+    td { padding:.8rem 1rem; border-bottom:1px solid var(--border); vertical-align:middle }
+    tr:last-child td { border-bottom:none }
+    tr.changed td { background:var(--warn-bg) }
+    tr.free td { background:var(--free-bg) }
+    tr.normal td { background:inherit }
+    .pill { display:inline-block; padding:.25rem .55rem; border-radius:999px; font-size:.72rem; font-weight:700; white-space:nowrap }
+    .pill.frei { background:var(--free-bg); color:var(--free) }
+    .pill.vtg { background:var(--warn-bg); color:var(--warn) }
+    .pill.ok { background:var(--ok-bg); color:var(--ok) }
+    .hour-num { font-weight:700; font-size:1rem; color:var(--primary) }
+    .teacher-strike { text-decoration:line-through; color:var(--muted); font-size:.82rem }
+    .summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.25rem }
+    .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.25rem }
+    .stat-card .num { font-size:2rem; font-weight:800; color:var(--primary) }
+    .stat-card .lbl { font-size:.8rem; color:var(--muted) }
+    .empty { padding:2rem; text-align:center; color:var(--muted) }
+    .alert { padding:.85rem 1.25rem; border-radius:var(--radius); font-size:.88rem; margin-bottom:1rem; border:1px solid var(--border) }
+    .alert.info { background:var(--primary-bg); color:var(--primary); border-color:var(--primary) }
+    .alert.warn { background:var(--warn-bg); color:var(--warn); border-color:var(--warn) }
+    .last-check { font-size:.78rem; color:var(--muted) }
+    .day-tabs { display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem }
+    .day-tab { padding:.45rem .85rem; border-radius:8px; cursor:pointer; font-size:.85rem; border:1px solid var(--border); background:var(--surface2) }
+    .day-tab.active { background:var(--primary); color:#fff; border-color:var(--primary) }
+    @media(max-width:600px){ .summary-grid{grid-template-columns:1fr 1fr} }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">📅</div>
+    <div class="brand-text">
+      <h1>Leibniz 6C Stundenplan</h1>
+      <p>Live-Vertretungsplan · Klasse 6C</p>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="badge" id="statusBadge">Lädt...</span>
+    <span class="last-check" id="lastCheck"></span>
+    <button onclick="refreshData()">↻ Aktualisieren</button>
+    <button onclick="toggleTheme()">◐</button>
+  </div>
+</header>
+
+<div class="main">
+  <div id="alertBox"></div>
+
+  <div class="day-tabs" id="dayTabs"></div>
+
+  <div class="summary-grid">
+    <div class="stat-card">
+      <div class="num" id="statTotal">—</div>
+      <div class="lbl">Stunden heute</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="statFrei" style="color:var(--free)">—</div>
+      <div class="lbl">Ausfälle</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="statVtg" style="color:var(--warn)">—</div>
+      <div class="lbl">Vertretungen</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2 id="planTitle">Tagesplan</h2>
+      <span class="meta">Nächste Prüfung: <span id="countdown">05:00</span></span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Std.</th>
+          <th>Fach</th>
+          <th>Lehrkraft</th>
+          <th>Raum</th>
+          <th>Status</th>
+          <th>Hinweis</th>
+        </tr>
+      </thead>
+      <tbody id="planBody">
+        <tr><td colspan="6" class="empty">Daten werden geladen…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const DAYS = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag'];
+const DATA_URL = 'data/today_6c.json';
+let currentDay = new Date().getDay();
+if (currentDay === 0 || currentDay === 6) currentDay = 1;
+let countdown = 300;
+let allData = null;
+
+// Fach-Abkürzungen
+const FACH = { D:'Deutsch', M:'Mathe', E:'Englisch', BI:'Bio', PH:'Physik', CH:'Chemie', GE:'Geschichte', EK:'Erdkunde', KU:'Kunst', MU:'Musik', SP:'Sport', IF:'Informatik', RE:'Religion', L:'Latein', F:'Französisch', SW:'Sozialwissenschaften', DAZ:'DaZ' };
+
+function fachName(k) { return FACH[k] || k || '—' }
+
+async function refreshData() {
+  try {
+    const r = await fetch(DATA_URL + '?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    allData = await r.json();
+    renderPlan(allData);
+    setStatus('green', 'Aktuell');
+    document.getElementById('lastCheck').textContent = 'Zuletzt: ' + new Date().toLocaleTimeString('de-DE');
+    countdown = 300;
+  } catch(e) {
+    setStatus('red', 'Fehler');
+    document.getElementById('alertBox').innerHTML = '<div class="alert warn">⚠ Daten konnten nicht geladen werden: ' + e.message + '</div>';
+  }
+}
+
+function renderPlan(data) {
+  const subs = data.plan || [];
+  const date = data.date || '';
+  document.getElementById('planTitle').textContent = 'Tagesplan ' + (date ? new Date(date+'T12:00:00').toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'}) : '');
+
+  // Stats
+  const frei = subs.filter(s => s.status === 'frei');
+  const vtg  = subs.filter(s => s.status === 'vertretung');
+  document.getElementById('statTotal').textContent = subs.length;
+  document.getElementById('statFrei').textContent  = frei.length;
+  document.getElementById('statVtg').textContent   = vtg.length;
+
+  const tbody = document.getElementById('planBody');
+  if (!subs.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">Keine Vertretungen für 6C heute ✓</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = subs.sort((a,b) => parseInt(a.stunde) - parseInt(b.stunde)).map(s => {
+    const isFrei = s.status === 'frei';
+    const isVtg  = s.vertreter && s.vertreter !== '---';
+    const rowClass = isFrei ? 'free' : isVtg ? 'changed' : 'normal';
+    const pill = isFrei
+      ? '<span class="pill frei">Entfall</span>'
+      : isVtg
+        ? '<span class="pill vtg">Vertretung</span>'
+        : '<span class="pill ok">Info</span>';
+    const lehrer = s.lehrer && s.lehrer !== '---'
+      ? '<span class="teacher-strike">' + s.lehrer + '</span>' + (isVtg ? ' → ' + s.vertreter : '')
+      : s.vertreter && s.vertreter !== '---' ? s.vertreter : '—';
+    const raum = (!s.raum || s.raum === '---') ? '—' : s.raum;
+    const fach = fachName(s.fach && s.fach !== '---' ? s.fach : '');
+    return '<tr class="' + rowClass + '">'
+      + '<td><span class="hour-num">' + s.stunde + '</span></td>'
+      + '<td>' + fach + '</td>'
+      + '<td>' + lehrer + '</td>'
+      + '<td>' + raum + '</td>'
+      + '<td>' + pill + '</td>'
+      + '<td style="font-size:.82rem;color:var(--muted)">' + (s.hinweis && s.hinweis !== '---' ? s.hinweis : '') + '</td>'
+      + '</tr>';
+  }).join('');
+
+  if (frei.length > 0) {
+    document.getElementById('alertBox').innerHTML = '<div class="alert warn">⚠ ' + frei.length + ' Stunde(n) fallen heute aus!</div>';
+  } else {
+    document.getElementById('alertBox').innerHTML = '';
+  }
+}
+
+function setStatus(color, text) {
+  const b = document.getElementById('statusBadge');
+  b.textContent = text;
+  b.className = 'badge ' + color;
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+// Countdown + Auto-Refresh
+setInterval(() => {
+  countdown--;
+  if (countdown <= 0) { refreshData(); countdown = 300; }
+  const m = String(Math.floor(countdown/60)).padStart(2,'0');
+  const s = String(countdown%60).padStart(2,'0');
+  document.getElementById('countdown').textContent = m + ':' + s;
+}, 1000);
+
+const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+document.documentElement.setAttribute('data-theme', savedTheme);
+
+// Start
+refreshData();
+</script>
+</body>
+</html>

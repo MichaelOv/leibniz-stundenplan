@@ -1,0 +1,20 @@
+{
+  "D":    "Deutsch",
+  "E":    "Englisch",
+  "M":    "Mathe",
+  "KU":   "Kunst",
+  "MU":   "Musik",
+  "SP":   "Sport",
+  "SPSW": "Sport Schwimmen",
+  "SPSM": "Sport",
+  "GE":   "Geschichte",
+  "BI":   "Biologie",
+  "IF":   "Informatik",
+  "RE":   "Religion",
+  ".IR":  "Islamische Rel.",
+  "GEO":  "Geographie",
+  "PH":   "Physik",
+  "CH":   "Chemie",
+  "SW":   "Sozialwissenschaften",
+  "EK":   "Erdkunde"
+}

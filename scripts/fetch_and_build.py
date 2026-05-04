@@ -1,77 +1,146 @@
-
-import hashlib, json, os, sys, re
+#!/usr/bin/env python3
+import json, os, sys, re
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 import requests
-from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
-# Load env variables
 load_dotenv()
 USERNAME = os.getenv("ISERV_USER")
 PASSWORD = os.getenv("ISERV_PASS")
-
-ISERV_URL = "https://gym-leibniz-ge.de/iserv/plan/show/raw/Vertretung%20Sch%C3%BCler/{date}-S.pdf"
-UNTIS_URL = "https://leibniz-gymnasium.net/files/stpl/Kla1A_06c.htm"
+BASE_URL  = "https://gym-leibniz-ge.de"
+ISERV_URL = BASE_URL + "/iserv/plan/show/raw/Vertretung%20Sch%C3%BCler/{date}-S.pdf"
 TARGET_CLASS = "06c"
 
-def fetch_with_login(url):
+KNOWN_TEACHERS = re.compile(r'^[A-ZÄÖÜ]{2,6}$')
+KNOWN_ROOMS    = re.compile(r'^[A-Z0-9][A-Z0-9\.\-]{1,7}$', re.IGNORECASE)
+
+def class_matches(s, my_class):
+    s = s.lower().strip()
+    mc = my_class.lower().strip()
+    if s == mc: return True
+    jg  = re.search(r'(\d+)', mc)
+    bst = re.search(r'([a-z]+)$', mc)
+    if jg and bst:
+        vjg   = re.search(r'(\d+)', s)
+        vrest = re.sub(r'\d+', '', s)
+        if vjg and vjg.group(1) == jg.group(1) and bst.group(1) in vrest:
+            return True
+    return False
+
+def is_next_class(s):
+    # Erkennt naechste Klassen-Zeile wie "06c", "07ab", "EF", "iföA"
+    return bool(re.match(r'^(0?\d[a-z]{1,5}|[A-Z]{2,3}|if[oö][A-Z])$', s.strip()))
+
+def get_authenticated_session():
     session = requests.Session()
-    if USERNAME and PASSWORD:
-        session.post("https://gym-leibniz-ge.de/iserv/login", data={"user": USERNAME, "password": PASSWORD})
+    session.headers.update({"User-Agent": "Mozilla/5.0"})
+    r1 = session.get(BASE_URL + "/iserv/login", timeout=30, allow_redirects=True)
+    session.post(r1.url, data={"_username": USERNAME, "_password": PASSWORD,
+                                "_remember_me": "on"}, allow_redirects=True, timeout=30)
+    return session
+
+def fetch_pdf(session, url):
     r = session.get(url, timeout=30)
     r.raise_for_status()
+    if b"%PDF" not in r.content[:10]:
+        print("KEIN PDF")
+        return None
+    print("PDF geladen: " + str(len(r.content)) + " bytes")
     return r.content
 
+def parse_entry(lines, start):
+    """Liest einen Vertretungseintrag ab Position start.
+    Format: klasse, stunde, lehrer, [vertreter [raum]], [fach], [text...]
+    Stoppt wenn naechste Klasse erkannt oder max 6 Felder gelesen."""
+    klasse  = lines[start]
+    stunde  = lines[start+1] if start+1 < len(lines) else ""
+    lehrer  = lines[start+2] if start+2 < len(lines) else ""
 
-def parse_pdf_for_class(pdf_bytes, target_class):
+    # Felder nach Lehrer dynamisch einlesen bis naechste Klasse
+    rest = []
+    j = start + 3
+    while j < len(lines) and len(rest) < 6:
+        val = lines[j].strip()
+        if val == "---":
+            rest.append("")
+            j += 1
+            continue
+        if is_next_class(val) and len(rest) >= 1:
+            break
+        rest.append(val)
+        j += 1
+
+    # rest[0] = vertreter oder "vertreter raum" zusammen
+    # rest[1] = raum oder fach
+    # rest[2] = fach oder text
+    # rest[3+] = text
+    vertreter = ""
+    raum      = ""
+    fach      = ""
+    text      = ""
+
+    if len(rest) >= 1:
+        v = rest[0]
+        if " " in v:
+            parts = v.split(None, 1)
+            vertreter = parts[0]
+            raum      = parts[1]
+        else:
+            vertreter = v
+
+    if len(rest) >= 2 and not raum:
+        raum = rest[1]
+    elif len(rest) >= 2 and raum:
+        fach = rest[1]
+
+    if len(rest) >= 3:
+        text = " ".join(rest[2:])
+
+    if lehrer == "---": lehrer = ""
+    if vertreter == "---": vertreter = ""
+    if raum == "---": raum = ""
+    if fach == "---": fach = ""
+
+    return {
+        "klasse": klasse, "stunde": stunde,
+        "lehrer": lehrer, "vertreter": vertreter,
+        "raum": raum, "fach": fach, "text": text
+    }, j
+
+def parse_class_data(pdf_bytes, target_class):
     import fitz
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    all_data = []
-
+    data = []
     for page in doc:
-        # Extract text blocks
-        blocks = page.get_text("blocks")
-        blocks.sort(key=lambda b: b[1]) # Sort by y0
-
-        for b in blocks:
-            text = b[4].strip()
-            # Split into lines
-            lines = text.split('\n')
-            for line in lines:
-                # Find lines that contain our target class
-                if target_class in line:
-                    parts = line.split()
-                    # Basic robust mapping
-                    row = {
-                        "klasse": parts[0],
-                        "stunde": parts[1] if len(parts) > 1 else "",
-                        "lehrer": parts[2] if len(parts) > 2 else "",
-                        "vertreter": parts[3] if len(parts) > 3 else "",
-                        "raum": parts[4] if len(parts) > 4 else "",
-                        "fach": parts[5] if len(parts) > 5 else "",
-                        "text": " ".join(parts[6:]) if len(parts) > 6 else ""
-                    }
-                    all_data.append(row)
-    return all_data
-
+        for block in page.get_text("blocks"):
+            lines = [l.strip() for l in block[4].split("\n") if l.strip()]
+            i = 0
+            while i < len(lines):
+                if class_matches(lines[i], target_class):
+                    entry, next_i = parse_entry(lines, i)
+                    print("TREFFER: " + str(entry))
+                    data.append(entry)
+                    i = next_i
+                else:
+                    i += 1
+    doc.close()
+    print("Gesamt: " + str(len(data)) + " Eintraege")
+    return data
 
 if __name__ == "__main__":
-    target_date = sys.argv[1] if len(sys.argv) > 1 else datetime.utcnow().strftime("%Y-%m-%d")
-    pdf_url = ISERV_URL.format(date=target_date)
-
+    target_date = sys.argv[1] if len(sys.argv) > 1 else datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    url = ISERV_URL.format(date=target_date)
     try:
-        pdf_bytes = fetch_with_linker = fetch_with_login(pdf_url)
-        class_data = parse_pdf_for_class(pdf_bytes, TARGET_CLASS)
-
-        output = {
-            "date": target_date,
-            "class": TARGET_CLASS,
-            "substitutions": class_data
-        }
-
+        session = get_authenticated_session()
+        pdf_bytes = fetch_pdf(session, url)
+        if not pdf_bytes: sys.exit(1)
+        class_data = parse_class_data(pdf_bytes, TARGET_CLASS)
+        output = {"date": target_date, "class": TARGET_CLASS, "substitutions": class_data}
         data_path = Path(__file__).resolve().parents[1] / "data" / "latest_6c.json"
-        data_path.write_text(json.dumps(output, indent=2))
-        print(f"Successfully processed {TARGET_CLASS}")
+        data_path.parent.mkdir(exist_ok=True)
+        with open(data_path, "w", encoding="utf-8") as f:
+            json.dump(output, f, indent=2, ensure_ascii=False)
+        print("Fertig!")
     except Exception as e:
-        print(f"Error: {e}")
+        import traceback; traceback.print_exc()
