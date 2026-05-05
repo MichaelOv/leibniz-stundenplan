@@ -20,8 +20,8 @@
       "lehrer": "EBR",
       "raum": "603",
       "status": "vertretung",
-      "vertreter": "MOR",
-      "hinweis": ""
+      "vertreter": "KLE",
+      "hinweis": "Mitbeaufsichtigung"
     },
     {
       "stunde": 3,
@@ -65,5 +65,5 @@
     }
   ],
   "vtg_count": 3,
-  "generated_at": "2026-05-04T22:05:02.887047+00:00"
+  "generated_at": "2026-05-05T06:55:03.249906+00:00"
 }

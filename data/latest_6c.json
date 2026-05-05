@@ -1,33 +1,42 @@
 {
-  "date": "2026-05-05",
+  "date": "2026-05-06",
   "class": "06c",
   "substitutions": [
     {
-      "klasse": "06ac",
-      "stunde": "2",
-      "lehrer": "EBR",
-      "vertreter": "MOR",
-      "raum": "603",
+      "klasse": "06acd",
+      "stunde": "7 - 8 ROM",
+      "lehrer": "",
+      "vertreter": "",
+      "raum": "",
       "fach": "",
-      "text": ""
+      "text": "NK entfällt!"
+    },
+    {
+      "klasse": "06c",
+      "stunde": "1 - 2 MAT",
+      "lehrer": "",
+      "vertreter": "",
+      "raum": "",
+      "fach": "",
+      "text": "frei"
+    },
+    {
+      "klasse": "06c",
+      "stunde": "3",
+      "lehrer": "GRU",
+      "vertreter": "",
+      "raum": "",
+      "fach": "",
+      "text": " frei; verlegt auf Mi. 6.5. 5. Std."
     },
     {
       "klasse": "06c",
       "stunde": "5",
       "lehrer": "MAT",
-      "vertreter": "",
-      "raum": "",
-      "fach": "",
-      "text": " frei"
-    },
-    {
-      "klasse": "06c",
-      "stunde": "6",
-      "lehrer": "MAT",
-      "vertreter": "",
-      "raum": "",
-      "fach": "",
-      "text": " frei"
+      "vertreter": "GRU",
+      "raum": "603",
+      "fach": "D",
+      "text": "statt Mi. 6.5. 3. Std."
     }
   ]
 }
