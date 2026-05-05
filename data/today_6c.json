@@ -62,8 +62,28 @@
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
+    },
+    {
+      "stunde": 7,
+      "fach": "NK-IF",
+      "fach_kurz": "NK-IF",
+      "lehrer": "ROM",
+      "raum": "—",
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "NK entfällt!"
+    },
+    {
+      "stunde": 8,
+      "fach": "NK-IF",
+      "fach_kurz": "NK-IF",
+      "lehrer": "ROM",
+      "raum": "—",
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "NK entfällt!"
     }
   ],
-  "vtg_count": 4,
-  "generated_at": "2026-05-05T09:15:02.948092+00:00"
+  "vtg_count": 6,
+  "generated_at": "2026-05-05T10:50:03.081477+00:00"
 }

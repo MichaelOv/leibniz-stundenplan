@@ -85,9 +85,10 @@ if __name__ == "__main__":
         ok = send_ntfy(
             title="Aenderung Klasse 6c - " + target,
             msg="\n".join(msg_zeilen),
-            priority=4
+            priority=3
         )
-        print("Benachrichtigung gesendet!")
+        if ok:
+            print("Benachrichtigung gesendet!")
     else:
         print("Keine Änderungen – keine Benachrichtigung.")
     print("=== Fertig ===")
