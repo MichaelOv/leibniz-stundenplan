@@ -1,37 +1,37 @@
 {
-  "date": "2026-05-05",
-  "day": "Dienstag",
+  "date": "2026-05-06",
+  "day": "Mittwoch",
   "class": "06c",
   "plan": [
     {
-      "stunde": 2,
-      "fach": "Islamische Rel.",
-      "fach_kurz": "IR",
-      "lehrer": "AVS",
-      "raum": "610",
-      "status": "normal",
+      "stunde": 1,
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
+      "raum": "603",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     },
     {
       "stunde": 2,
-      "fach": "Religion",
-      "fach_kurz": "RE",
-      "lehrer": "EBR",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
       "raum": "603",
-      "status": "vertretung",
-      "vertreter": "KLE",
-      "hinweis": "Mitbeaufsichtigung"
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "frei"
     },
     {
       "stunde": 3,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
       "raum": "603",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei; verlegt auf Mi. 6.5. 5. Std."
     },
     {
       "stunde": 4,
@@ -45,25 +45,25 @@
     },
     {
       "stunde": 5,
-      "fach": "Mathe",
-      "fach_kurz": "M",
+      "fach": "Sport",
+      "fach_kurz": "SP",
       "lehrer": "MAT",
       "raum": "603",
-      "status": "frei",
-      "vertreter": "",
-      "hinweis": "frei"
+      "status": "vertretung",
+      "vertreter": "GRU",
+      "hinweis": "D statt Mi. 6.5. 3. Std."
     },
     {
       "stunde": 6,
-      "fach": "Sport Schwimmen",
-      "fach_kurz": "SPSW",
-      "lehrer": "MAT",
-      "raum": "SW1",
-      "status": "frei",
+      "fach": "Musik",
+      "fach_kurz": "MU",
+      "lehrer": "GER",
+      "raum": "A1.03Mu",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei"
+      "hinweis": ""
     }
   ],
-  "vtg_count": 3,
-  "generated_at": "2026-05-05T06:55:03.249906+00:00"
+  "vtg_count": 4,
+  "generated_at": "2026-05-05T09:15:02.948092+00:00"
 }

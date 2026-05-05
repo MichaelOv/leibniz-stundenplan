@@ -56,17 +56,31 @@ def merge(target_date=None):
 
     sub_by_lehrer = {}
     sub_by_hour   = {}
+
+    def parse_stunden(raw):
+        """'7 - 8 ROM' → ([7,8], 'ROM'), '3' → ([3], ''), '1 - 2 MAT' → ([1,2], 'MAT')"""
+        parts = str(raw).replace("-", " ").split()
+        stunden, lehrer_raw = [], ""
+        for p in parts:
+            if p.isdigit():
+                stunden.append(int(p))
+            else:
+                lehrer_raw = p
+        return stunden, lehrer_raw
+
     for s in subs:
-        h    = clean(s.get("stunde",""))
-        lhr  = clean(s.get("lehrer",""))
+        raw_h = clean(s.get("stunde",""))
+        stunden_list, lhr_aus_stunde = parse_stunden(raw_h)
+        lhr  = clean(s.get("lehrer","")) or lhr_aus_stunde
         vtg  = clean(s.get("vertreter",""))
         raum = clean(s.get("raum",""))
         fach = clean(s.get("fach",""))
         text = clean(s.get("text",""))
         entry = {"lehrer": lhr, "vertreter": vtg, "raum": raum, "fach": fach, "text": text}
-        if h and lhr:
-            sub_by_lehrer[(h, lhr)] = entry
-        if h:
+        for stunde_nr in stunden_list:
+            h = str(stunde_nr)
+            if lhr:
+                sub_by_lehrer[(h, lhr)] = entry
             sub_by_hour[h] = entry
 
     plan = []
@@ -113,32 +127,45 @@ def merge(target_date=None):
 
     # Nicht gematchte Vertretungen (z.B. Gruppen wie 06ac)
     for s in subs:
-        h    = clean(s.get("stunde",""))
-        lhr  = clean(s.get("lehrer",""))
+        raw_h = clean(s.get("stunde",""))
+        stunden_list_u, lhr_aus_stunde_u = parse_stunden(raw_h)
+        lhr  = clean(s.get("lehrer","")) or lhr_aus_stunde_u
         vtg  = clean(s.get("vertreter",""))
         raum = clean(s.get("raum",""))
         fach = clean(s.get("fach",""))
         text = clean(s.get("text",""))
-        key  = (h, lhr)
-        if key not in matched_sub_keys and ("HOUR", h) not in matched_sub_keys and h:
-            if not fach:
-                untis_lektionen = untis.get(h, {}).get(day_name, [])
-                match = next((l for l in untis_lektionen if l["lehrer"] == lhr), None)
-                if match:
-                    fach = match["fach"].lstrip(".")
-            if not fach:
-                fach = LEHRER_FACH.get(lhr, "")
-
-            fname = fach_name(fach, FACH) if fach else "Gruppe"
-            status = "frei" if ("frei" in text.lower() or vtg.lower() in ("frei","entfall")) else ("vertretung" if vtg else "info")
-            extra = {
-                "stunde": int(h), "fach": fname, "fach_kurz": fach,
-                "lehrer": lhr, "raum": raum if raum else "\u2014",
-                "status": status,
-                "vertreter": "" if vtg.lower() in ("frei","entfall") else vtg,
-                "hinweis": text or ("Entfall" if status == "frei" else "")
-            }
-            plan.append(extra)
+        for stunde_nr_u in stunden_list_u:
+            h = str(stunde_nr_u)
+            key  = (h, lhr)
+            if key not in matched_sub_keys and ("HOUR", h) not in matched_sub_keys and h:
+                if not fach:
+                    untis_lektionen = untis.get(h, {}).get(day_name, [])
+                    match = next((l for l in untis_lektionen if l["lehrer"] == lhr), None)
+                    if match:
+                        fach = match["fach"].lstrip(".")
+                if not fach:
+                    for neighbor in stunden_list_u:
+                        nb_lektionen = untis.get(str(neighbor), {}).get(day_name, [])
+                        nb_match = next((l for l in nb_lektionen if l["lehrer"] == lhr), None)
+                        if nb_match:
+                            fach = nb_match["fach"].lstrip(".")
+                            if not raum: raum = nb_match.get("raum","")
+                            break
+                if not fach:
+                    fach = LEHRER_FACH.get(lhr, "")
+                # NK-Stunden ohne Vertretung nicht als Extra anzeigen
+                if fach.upper().startswith("NK") and not vtg:
+                    continue
+                fname = fach_name(fach, FACH) if fach else "Gruppe"
+                status = "frei" if ("frei" in text.lower() or vtg.lower() in ("frei","entfall")) else ("vertretung" if vtg else "info")
+                extra = {
+                    "stunde": stunde_nr_u, "fach": fname, "fach_kurz": fach,
+                    "lehrer": lhr, "raum": raum if raum else "\u2014",
+                    "status": status,
+                    "vertreter": "" if vtg.lower() in ("frei","entfall") else vtg,
+                    "hinweis": text or ("Entfall" if status == "frei" else "")
+                }
+                plan.append(extra)
 
     plan.sort(key=lambda x: x["stunde"])
     output = {

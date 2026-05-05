@@ -35,6 +35,20 @@
     ]
   },
   "2": {
+    "Montag": [
+      {
+        "fach": "KU",
+        "lehrer": "NYE",
+        "raum": "A2.03Ku"
+      }
+    ],
+    "Mittwoch": [
+      {
+        "fach": "M",
+        "lehrer": "MAT",
+        "raum": "603"
+      }
+    ],
     "Dienstag": [
       {
         "fach": ".IR",
@@ -100,6 +114,27 @@
     ]
   },
   "4": {
+    "Mittwoch": [
+      {
+        "fach": "D",
+        "lehrer": "GRU",
+        "raum": "603"
+      }
+    ],
+    "Donnerstag": [
+      {
+        "fach": "M",
+        "lehrer": "MAT",
+        "raum": "603"
+      }
+    ],
+    "Freitag": [
+      {
+        "fach": "E",
+        "lehrer": "MOR",
+        "raum": "603"
+      }
+    ],
     "Montag": [
       {
         "fach": "GE",
@@ -153,6 +188,13 @@
     ]
   },
   "6": {
+    "Freitag": [
+      {
+        "fach": "SP",
+        "lehrer": "MAT",
+        "raum": "SH3"
+      }
+    ],
     "Montag": [
       {
         "fach": "BI",
@@ -191,6 +233,14 @@
       }
     ]
   },
-  "8": {},
+  "8": {
+    "Mittwoch": [
+      {
+        "fach": ".NK-IF",
+        "lehrer": "ROM",
+        "raum": "PH204"
+      }
+    ]
+  },
   "9": {}
 }

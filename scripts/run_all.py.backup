@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+import json, sys, hashlib, subprocess
+from pathlib import Path
+from datetime import datetime, timezone, timedelta
+
+BASE = Path(__file__).resolve().parent.parent
+DATA = BASE / "data"
+PYTHON = BASE / "venv/bin/python"
+
+DAYS_DE = {0:"Montag",1:"Dienstag",2:"Mittwoch",3:"Donnerstag",4:"Freitag"}
+
+def get_target_date():
+    now = datetime.now(timezone.utc) + timedelta(hours=2)
+    if now.weekday() > 4:
+        candidate = now.date()
+    else:
+        candidate = now.date()
+    while candidate.weekday() > 4:
+        candidate += timedelta(days=1)
+    return candidate.isoformat()
+
+def send_ntfy(title, msg, priority=4):
+    import requests
+    try:
+        r = requests.post("https://ntfy.sh/6c-vertretung", 
+                         json={"title": title, "message": msg, "priority": priority})
+        return r.status_code == 200
+    except:
+        return False
+
+def run(script, *args):
+    result = subprocess.run([PYTHON, str(BASE / "scripts" / script)] + list(args),
+                           capture_output=True, text=True)
+    print(result.stdout.strip())
+    if result.stderr.strip():
+        print("STDERR:", result.stderr.strip())
+    return result
+
+if __name__ == "__main__":
+    target = sys.argv[1] if len(sys.argv) > 1 else get_target_date()
+    print("Zieldatum: " + target)
+    
+    print("=== Schritt 1: Vertretungsplan laden ===")
+    result1 = run("fetch_and_build.py", target)
+    
+    print("=== Schritt 2: Untis-Stundenplan laden ===")
+    
+    print("=== Schritt 3: Tagesplan zusammenfuehren ===")
+    result3 = run("build_today.py", target)
+    
+    # Änderungen aus stdout parsen
+    zeilen_output = result3.stdout.strip().splitlines()
+    aenderungen = [z for z in zeilen_output if z.startswith("  Std ")]
+    
+    if aenderungen and result3.returncode == 0:
+        # Datum + Änderungen als Hash
+        hash_key = target + "|" + "\n".join(sorted(aenderungen))
+        hash_md5 = hashlib.md5(hash_key.encode()).hexdigest()
+    hash_key = target + "\n" + "\n".join(sorted(aenderungen))
+    hash_md5 = hashlib.md5(hash_key.encode()).hexdigest()
+
+        
+        last_hash_file = DATA / "last_ntfy_hash.txt"
+        if last_hash_file.exists():
+            last_hash = last_hash_file.read_text().strip()
+            if hash_md5 == last_hash:
+    hash_key = target + "\n" + "\n".join(sorted(aenderungen))
+    hash_md5 = hashlib.md5(hash_key.encode()).hexdigest()
+
+                print("Gleiche Änderungen wie gestern – keine Benachrichtigung.")
+            else:
+                msg_zeilen = []
+                for a in aenderungen:
+                    a = a.strip()
+                    if "FREI" in a:
+                        msg_zeilen.append("❌ " + a)
+                    elif "VERTRETUNG" in a:
+                        msg_zeilen.append("🔄 " + a)
+                    else:
+                        msg_zeilen.append("📋 " + a)
+        
+                ok = send_ntfy(
+                    title="Änderung Klasse 6c - " + target,
+                    msg="\n".join(msg_zeilen),
+                    priority=4
+                )
+                if ok:
+                    last_hash_file.write_text(hash_md5)
+    hash_key = target + "\n" + "\n".join(sorted(aenderungen))
+    hash_md5 = hashlib.md5(hash_key.encode()).hexdigest()
+
+                    print("Benachrichtigung gesendet!")
+                else:
+                    print("Fehler beim Senden!")
+        else:
+            # Erster Lauf oder Hash gelöscht → senden
+            msg_zeilen = []
+            for a in aenderungen:
+                a = a.strip()
+                if "FREI" in a:
+                    msg_zeilen.append("❌ " + a)
+                elif "VERTRETUNG" in a:
+                    msg_zeilen.append("🔄 " + a)
+                else:
+                    msg_zeilen.append("📋 " + a)
+    
+            ok = send_ntfy(
+                title="Änderung Klasse 6c - " + target,
+                msg="\n".join(msg_zeilen),
+                priority=4
+            )
+            if ok:
+                last_hash_file.write_text(hash_md5)
+    hash_key = target + "\n" + "\n".join(sorted(aenderungen))
+    hash_md5 = hashlib.md5(hash_key.encode()).hexdigest()
+
+                print("Benachrichtigung gesendet!")
+            else:
+                print("Fehler beim Senden!")
+    else:
+        print("Keine Änderungen – keine Benachrichtigung.")
+    print("=== Fertig ===")

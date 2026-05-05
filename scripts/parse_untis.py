@@ -55,7 +55,8 @@ def parse_untis():
         free_days = [d for d in all_days if not day_skip_next[d]]
 
         # Sub-Tabellen den freien Tagen zuweisen (1:1, inkl. leerer)
-        timetable[stunde] = {}
+        if stunde not in timetable:
+            timetable[stunde] = {}
         for i, day in enumerate(free_days):
             if i >= len(slot_tables):
                 break
@@ -79,14 +80,28 @@ def parse_untis():
                 break
 
         if stunden_row:
-            block_idx = 0
+            cur_col = 0
+            first = True
             for cell in stunden_row.find_all(["td","th"]):
                 cs = int(cell.get("colspan", 1))
                 rs = int(cell.get("rowspan", 1))
+                if first:
+                    first = False
+                    cur_col += cs
+                    continue
                 if cs == 12:
-                    if rs >= 4 and block_idx < len(free_days):
-                        day_skip_next[free_days[block_idx]] = True
-                    block_idx += 1
+                    for dcol, day in day_start_cols.items():
+                        if dcol <= cur_col < dcol + 13:
+                            if rs >= 4:
+                                day_skip_next[day] = True
+                                if day in timetable[stunde]:
+                                    next_stunde = stunde + 1
+                                    if next_stunde not in timetable:
+                                        timetable[next_stunde] = {}
+                                    timetable[next_stunde][day] = timetable[stunde][day]
+                                    print("Std " + str(next_stunde) + " " + day + " (Doppelstunde): " + str(timetable[stunde][day]))
+                            break
+                cur_col += cs
 
     return timetable
 
