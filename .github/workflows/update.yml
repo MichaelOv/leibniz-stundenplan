@@ -1,10 +1,8 @@
 name: Update timetable
-
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 4 * * 1-5'
   workflow_dispatch:
-
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -13,10 +11,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install requests beautifulsoup4 pymupdf
-      - run: python scripts/fetch_and_build.py
-      - run: |
-          cp vertretungsplan-dashboard.html index.html
+      - run: pip install -r requirements.txt
+      - run: python scripts/run_all.py
+        env:
+          ISERV_USER: ${{ secrets.ISERV_USER }}
+          ISERV_PASS: ${{ secrets.ISERV_PASS }}
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'Automated timetable refresh'
