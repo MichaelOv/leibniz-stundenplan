@@ -153,11 +153,12 @@ def merge(target_date=None):
                             break
                 if not fach:
                     fach = LEHRER_FACH.get(lhr, "")
-                # NK-Stunden ohne Vertretung nicht als Extra anzeigen
-                if fach.upper().startswith("NK") and not vtg:
+                # NK-Stunden ohne Vertretung nur anzeigen wenn explizit im Vertretungsplan
+                # (text enthält z.B. "entfällt")
+                if fach.upper().startswith("NK") and not vtg and "entfall" not in text.lower() and "entfällt" not in text.lower():
                     continue
                 fname = fach_name(fach, FACH) if fach else "Gruppe"
-                status = "frei" if ("frei" in text.lower() or vtg.lower() in ("frei","entfall")) else ("vertretung" if vtg else "info")
+                status = "frei" if ("frei" in text.lower() or "entfall" in text.lower() or "entfällt" in text.lower() or vtg.lower() in ("frei","entfall")) else ("vertretung" if vtg else "info")
                 extra = {
                     "stunde": stunde_nr_u, "fach": fname, "fach_kurz": fach,
                     "lehrer": lhr, "raum": raum if raum else "\u2014",
