@@ -4,22 +4,28 @@ import subprocess
 import sys
 import requests
 from pathlib import Path
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, date, timezone, timedelta
 from notify import send_ntfy
 
 BASE = Path(__file__).resolve().parent
 PYTHON = sys.executable
 DATA = BASE.parent / "data"
 
-def get_target_date():
+def get_today():
     now = datetime.now(timezone.utc) + timedelta(hours=2)
     if now.hour >= 9:
-        candidate = now + timedelta(days=1)
+        candidate = now.date() + timedelta(days=1)
     else:
-        candidate = now
+        candidate = now.date()
     while candidate.weekday() > 4:
         candidate += timedelta(days=1)
-    return candidate.strftime("%Y-%m-%d")
+    return candidate.isoformat()
+
+def get_tomorrow(today_str):
+    d = date.fromisoformat(today_str) + timedelta(days=1)
+    while d.weekday() > 4:
+        d += timedelta(days=1)
+    return d.isoformat()
 
 def run(script, *args):
     cmd = [PYTHON, str(BASE / script)] + list(args)
@@ -27,8 +33,8 @@ def run(script, *args):
     print(result.stdout.strip())
     if result.returncode != 0:
         print("FEHLER in " + script + ": " + result.stderr.strip())
-        return False
-    return True
+        return None
+    return result
 
 def untis_html_changed():
     try:
@@ -45,50 +51,84 @@ def untis_html_changed():
         return True
     except Exception as e:
         print("Warnung: Untis-Check fehlgeschlagen: " + str(e))
-        return True  # Im Zweifel neu laden
+        return True
 
-if __name__ == "__main__":
-    target = sys.argv[1] if len(sys.argv) > 1 else get_target_date()
-    print("Zieldatum: " + target)
+def vtg_has_entries(json_file):
+    import json
+    path = DATA / json_file
+    if not path.exists():
+        return False
+    try:
+        data = json.load(open(path))
+        return len(data.get("substitutions", [])) > 0
+    except:
+        return False
 
-    print("=== Schritt 1: Vertretungsplan laden ===")
-    run("fetch_and_build.py", target)
-
-    print("=== Schritt 2: Untis-Stundenplan laden ===")
-    if untis_html_changed():
-        run("parse_untis.py")
-    else:
-        print("Untis-HTML unveraendert, ueberspringe Parse.")
-
-    print("=== Schritt 3: Tagesplan zusammenfuehren ===")
+def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=True):
+    print(f"=== {label}: Tagesplan zusammenfuehren ===")
     result = subprocess.run(
-        [PYTHON, str(BASE / "build_today.py"), target],
+        [PYTHON, str(BASE / "build_today.py"), target, out_file, vtg_file],
         capture_output=True, text=True
     )
     print(result.stdout.strip())
-    
-    # Änderungen aus stdout parsen
+
     zeilen_output = result.stdout.strip().splitlines()
-    aenderungen = [z for z in zeilen_output if z.startswith("  Std ")]
-    
+    aenderungen = [z for z in zeilen_output if z.startswith("  Std ") and any(x in z for x in ["FREI", "VERTRETUNG", "INFO"])]
+
     if aenderungen and result.returncode == 0:
         msg_zeilen = []
         for a in aenderungen:
             a = a.strip()
             if "FREI" in a:
-                msg_zeilen.append("\u274c " + a)
+                msg_zeilen.append("❌ " + a)
             elif "VERTRETUNG" in a:
-                msg_zeilen.append("\U0001f504 " + a)
+                msg_zeilen.append("🔄 " + a)
             else:
-                msg_zeilen.append("\U0001f4da " + a)
-    
-        ok = send_ntfy(
-            title="Aenderung Klasse 6c - " + target,
-            msg="\n".join(msg_zeilen),
-            priority=3
-        )
-        if ok:
-            print("Benachrichtigung gesendet!")
+                msg_zeilen.append("📋 " + a)
+
+        if notify:
+            suffix = "tomorrow" if label == "Morgen" else "today"
+            ok = send_ntfy(
+                title="Änderung 6c " + label + " - " + target,
+                msg="\n".join(msg_zeilen),
+                priority=4,
+                hash_suffix=suffix
+            )
+            if ok:
+                print("Benachrichtigung gesendet!")
+        else:
+            print("Benachrichtigung übersprungen (Zeitfenster).")
     else:
         print("Keine Änderungen – keine Benachrichtigung.")
+
+if __name__ == "__main__":
+    # Manuelles Datum möglich: python run_all.py 2026-05-07
+    manual = sys.argv[1] if len(sys.argv) > 1 else None
+    today = manual or get_today()
+    tomorrow = get_tomorrow(today)
+
+    print("=== Schritt 1: Vertretungsplan heute laden (" + today + ") ===")
+    run("fetch_and_build.py", today, "latest_6c.json")
+
+    print("=== Schritt 2: Vertretungsplan morgen laden (" + tomorrow + ") ===")
+    run("fetch_and_build.py", tomorrow, "latest_6c_tomorrow.json")
+
+    print("=== Schritt 3: Untis-Stundenplan laden ===")
+    if untis_html_changed():
+        run("parse_untis.py")
+    else:
+        print("Untis-HTML unveraendert, ueberspringe Parse.")
+
+    now = datetime.now(timezone.utc) + timedelta(hours=2)
+    after_nine = now.hour >= 9
+
+    print("=== Schritt 4: Heute ===")
+    build_and_notify(today, "today_6c.json", "Heute", vtg_file="latest_6c.json", notify=not after_nine)
+
+    print("=== Schritt 5: Morgen ===")
+    if vtg_has_entries("latest_6c_tomorrow.json"):
+        build_and_notify(tomorrow, "tomorrow_6c.json", "Morgen", vtg_file="latest_6c_tomorrow.json", notify=after_nine)
+    else:
+        print("Kein Vertretungsplan für morgen verfügbar – überspringe.")
+
     print("=== Fertig ===")

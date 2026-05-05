@@ -137,7 +137,8 @@ if __name__ == "__main__":
         if not pdf_bytes: sys.exit(1)
         class_data = parse_class_data(pdf_bytes, TARGET_CLASS)
         output = {"date": target_date, "class": TARGET_CLASS, "substitutions": class_data}
-        data_path = Path(__file__).resolve().parents[1] / "data" / "latest_6c.json"
+        out_file = sys.argv[2] if len(sys.argv) > 2 else "latest_6c.json"
+        data_path = Path(__file__).resolve().parents[1] / "data" / out_file
         data_path.parent.mkdir(exist_ok=True)
         with open(data_path, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)

@@ -81,6 +81,10 @@
       </div>
     </div>
     <div class="actions">
+      <div style="display:flex;gap:4px;background:var(--color-surface);border-radius:8px;padding:3px">
+        <button class="btn" id="todayBtn" onclick="switchDay('today')" style="opacity:1">Heute</button>
+        <button class="btn" id="tomorrowBtn" onclick="switchDay('tomorrow')" style="opacity:.5">Morgen</button>
+      </div>
       <button class="btn" id="refreshBtn">&#8635; Aktualisieren</button>
       <button class="btn" data-theme-toggle aria-label="Theme wechseln">&#9680;</button>
     </div>
@@ -145,12 +149,22 @@
     localStorage.setItem('theme', theme);
   });
 
+  let currentDay = 'today';
+
+  window.switchDay = function(day) {
+    currentDay = day;
+    document.getElementById('todayBtn').style.opacity = day === 'today' ? '1' : '.5';
+    document.getElementById('tomorrowBtn').style.opacity = day === 'tomorrow' ? '1' : '.5';
+    load();
+  }
+
   async function load() {
     const errorBox = document.getElementById('errorBox');
     errorBox.style.display = 'none';
     document.getElementById('statusPill').textContent = 'Lade...';
     try {
-      const r = await fetch('data/today_6c.json?t=' + Date.now());
+      const file = currentDay === 'tomorrow' ? 'tomorrow_6c.json' : 'today_6c.json';
+      const r = await fetch('data/' + file + '?t=' + Date.now());
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const d = await r.json();
       render(d);

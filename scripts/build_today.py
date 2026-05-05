@@ -28,12 +28,18 @@ LEHRER_FACH = {
 
 def clean(v):
     return "" if v in ("---", None) else str(v).strip()
+def clean_lehrer(v):
+    s = clean(v)
+    if not s:
+        return ""
+    parts = s.split()
+    return parts[0] if parts else ""
 
 def fach_name(kuerzel: str, fach_map: dict) -> str:
     key = kuerzel.lstrip(".")
     return fach_map.get(key, key)
 
-def merge(target_date=None):
+def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json"):
     FACH = load_fach_map()
 
     if not target_date:
@@ -51,7 +57,7 @@ def merge(target_date=None):
 
     day_name = DAYS_DE[weekday]
     untis = load_json(BASE / "data" / "untis_6c.json")
-    vtg_data = load_json(BASE / "data" / "latest_6c.json")
+    vtg_data = load_json(BASE / "data" / vtg_file)
     subs = vtg_data.get("substitutions", [])
 
     sub_by_lehrer = {}
@@ -71,7 +77,7 @@ def merge(target_date=None):
     for s in subs:
         raw_h = clean(s.get("stunde",""))
         stunden_list, lhr_aus_stunde = parse_stunden(raw_h)
-        lhr  = clean(s.get("lehrer","")) or lhr_aus_stunde
+        lhr  = clean_lehrer(s.get("lehrer","")) or lhr_aus_stunde
         vtg  = clean(s.get("vertreter",""))
         raum = clean(s.get("raum",""))
         fach = clean(s.get("fach",""))
@@ -129,7 +135,7 @@ def merge(target_date=None):
     for s in subs:
         raw_h = clean(s.get("stunde",""))
         stunden_list_u, lhr_aus_stunde_u = parse_stunden(raw_h)
-        lhr  = clean(s.get("lehrer","")) or lhr_aus_stunde_u
+        lhr  = clean_lehrer(s.get("lehrer","")) or lhr_aus_stunde_u
         vtg  = clean(s.get("vertreter",""))
         raum = clean(s.get("raum",""))
         fach = clean(s.get("fach",""))
@@ -175,7 +181,7 @@ def merge(target_date=None):
         "vtg_count": len([p for p in plan if p["status"] in ("frei","vertretung")]),
         "generated_at": datetime.now(timezone.utc).isoformat()
     }
-    out_path = BASE / "data" / "today_6c.json"
+    out_path = BASE / "data" / out_file
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
 
@@ -187,4 +193,6 @@ def merge(target_date=None):
         print("  Std " + str(p["stunde"]) + " " + p["fach"] + " (" + p["lehrer"] + ") " + p["raum"] + mark + vtg_str + hinweis)
 
 if __name__ == "__main__":
-    merge(sys.argv[1] if len(sys.argv) > 1 else None)
+    out = sys.argv[2] if len(sys.argv) > 2 else "today_6c.json"
+    vtg = sys.argv[3] if len(sys.argv) > 3 else "latest_6c.json"
+    merge(sys.argv[1] if len(sys.argv) > 1 else None, out_file=out, vtg_file=vtg)

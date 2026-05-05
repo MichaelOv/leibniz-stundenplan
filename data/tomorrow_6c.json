@@ -1,0 +1,69 @@
+{
+  "date": "2026-05-07",
+  "day": "Donnerstag",
+  "class": "06c",
+  "plan": [
+    {
+      "stunde": 1,
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
+      "raum": "603",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 2,
+      "fach": "Informatik",
+      "fach_kurz": "IF",
+      "lehrer": "WES",
+      "raum": "442If",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 3,
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
+      "raum": "603",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 4,
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
+      "raum": "603",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 5,
+      "fach": "Biologie",
+      "fach_kurz": "BI",
+      "lehrer": "BUT",
+      "raum": "BI004",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 6,
+      "fach": "Geschichte",
+      "fach_kurz": "GE",
+      "lehrer": "BOR",
+      "raum": "603",
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "frei; verlegt auf Mo. 4.5. 5. Std."
+    }
+  ],
+  "vtg_count": 1,
+  "generated_at": "2026-05-05T13:00:05.471049+00:00"
+}
