@@ -4,7 +4,7 @@ from pathlib import Path
 
 NTFY_TOPIC = "leibniz-gym-ge-plan-jeo"
 NTFY_URL = f"https://ntfy.sh/{NTFY_TOPIC}"
-HASH_FILE  = Path(__file__).resolve().parents[1] / "data" / "last_ntfy_hash.txt"
+DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 
 def rfc2047(s: str) -> str:
     b64 = base64.b64encode(s.encode("utf-8")).decode("ascii")
