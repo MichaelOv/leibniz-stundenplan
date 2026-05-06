@@ -82,8 +82,8 @@
     </div>
     <div class="actions">
       <div style="display:flex;gap:4px;background:var(--color-surface);border-radius:8px;padding:3px">
-        <button class="btn" id="todayBtn" onclick="switchDay('today')" style="opacity:1">Heute</button>
-        <button class="btn" id="tomorrowBtn" onclick="switchDay('tomorrow')" style="opacity:.5">Morgen</button>
+        <button class="btn" id="todayBtn" onclick="switchDay('today')" style="opacity:1">Tag</button>
+        <button class="btn" id="tomorrowBtn" onclick="switchDay('tomorrow')" style="opacity:.5">Tag</button>
       </div>
       <button class="btn" id="refreshBtn">&#8635; Aktualisieren</button>
       <button class="btn" data-theme-toggle aria-label="Theme wechseln">&#9680;</button>
@@ -179,6 +179,11 @@
 
   function render(d) {
     document.getElementById('statDay').textContent   = d.day || '\u2014';
+    if (currentDay === 'today') {
+      document.getElementById('todayBtn').textContent = d.day || 'Heute';
+    } else {
+      document.getElementById('tomorrowBtn').textContent = d.day || 'Morgen';
+    }
     document.getElementById('statDate').textContent  = formatDate(d.date);
     document.getElementById('statCount').textContent = d.plan ? d.plan.length : 0;
     document.getElementById('statVtg').textContent   = d.vtg_count || 0;
