@@ -133,5 +133,9 @@ if __name__ == "__main__":
         build_and_notify(tomorrow, "tomorrow_6c.json", "Morgen", vtg_file="latest_6c_tomorrow.json", notify=after_nine)
     else:
         print("Kein Vertretungsplan für morgen verfügbar – überspringe.")
+        tomorrow_file = DATA / "tomorrow_6c.json"
+        if tomorrow_file.exists():
+            tomorrow_file.unlink()
+            print("Veraltete tomorrow_6c.json gelöscht.")
 
     print("=== Fertig ===")
