@@ -217,8 +217,9 @@
       const fachCell = p.status === 'frei'
         ? '<span class="fach-strike">' + esc(p.fach) + '</span>'
         : esc(p.fach);
+      const zeit = ZEITEN[p.stunde] ? '<div style="font-size:.75em;opacity:.6">' + ZEITEN[p.stunde] + '</div>' : '';
       return '<tr class="row-' + p.status + '">'
-        + '<td><strong>' + p.stunde + '</strong></td>'
+        + '<td><strong>' + p.stunde + '</strong>' + zeit + '</td>'
         + '<td>' + fachCell + '</td>'
         + '<td>' + esc(p.lehrer) + vtgLine + '</td>'
         + '<td>' + esc(p.raum) + '</td>'
@@ -232,6 +233,18 @@
     return new Date(iso + 'T00:00:00').toLocaleDateString('de-DE',
       {weekday:'long', day:'numeric', month:'long', year:'numeric'});
   }
+
+  const ZEITEN = {
+    1: '8:20 – 9:05',
+    2: '9:10 – 9:55',
+    3: '10:15 – 11:00',
+    4: '11:05 – 11:50',
+    5: '12:05 – 12:50',
+    6: '12:55 – 13:40',
+    7: '13:50 – 14:35',
+    8: '14:40 – 15:25',
+    9: '15:25 – 16:10'
+  };
 
   function esc(s) {
     if (!s) return '\u2014';
