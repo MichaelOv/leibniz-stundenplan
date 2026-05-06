@@ -249,7 +249,6 @@
     if (!s) return '\u2014';
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
-  });
 
   load();
   setInterval(load, 5 * 60 * 1000);
