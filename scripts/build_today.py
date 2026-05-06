@@ -185,7 +185,8 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
 
-    print("Tag: " + day_name + " | " + str(len(plan)) + " Stunden | " + str(output["vtg_count"]) + " Aenderungen")
+    unique_stunden = len(set(p["stunde"] for p in plan))
+    print("Tag: " + day_name + " | " + str(unique_stunden) + " Stunden | " + str(output["vtg_count"]) + " Aenderungen")
     for p in plan:
         mark    = " [" + p["status"].upper() + "]" if p["status"] != "normal" else ""
         vtg_str = " -> " + p["vertreter"] if p["vertreter"] else ""
