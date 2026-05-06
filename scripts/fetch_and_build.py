@@ -108,6 +108,18 @@ def parse_entry(lines, start):
         "raum": raum, "fach": fach, "text": text
     }, j
 
+def pdf_contains_date(pdf_bytes, target_date):
+    import fitz
+    from datetime import date
+    d = date.fromisoformat(target_date)
+    # Plandatum steht im Format "7.5. / Donnerstag" im PDF
+    pattern = f"{d.day}.{d.month}."
+    days_de = {0:"Montag",1:"Dienstag",2:"Mittwoch",3:"Donnerstag",4:"Freitag"}
+    day_name = days_de[d.weekday()]
+    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+    text = "".join(page.get_text() for page in doc)
+    return (pattern in text and day_name in text)
+
 def parse_class_data(pdf_bytes, target_class):
     import fitz
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
@@ -135,6 +147,9 @@ if __name__ == "__main__":
         session = get_authenticated_session()
         pdf_bytes = fetch_pdf(session, url)
         if not pdf_bytes: sys.exit(1)
+        if not pdf_contains_date(pdf_bytes, target_date):
+            print("PDF enthält nicht das Zieldatum – kein Plan verfügbar.")
+            sys.exit(1)
         class_data = parse_class_data(pdf_bytes, TARGET_CLASS)
         output = {"date": target_date, "class": TARGET_CLASS, "substitutions": class_data}
         out_file = sys.argv[2] if len(sys.argv) > 2 else "latest_6c.json"
