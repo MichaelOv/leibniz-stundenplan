@@ -108,10 +108,10 @@ if __name__ == "__main__":
     tomorrow = get_tomorrow(today)
 
     print("=== Schritt 1: Vertretungsplan heute laden (" + today + ") ===")
-    run("fetch_and_build.py", today, "latest_6c.json")
+    ok1 = run("fetch_and_build.py", today, "latest_6c.json")
 
     print("=== Schritt 2: Vertretungsplan morgen laden (" + tomorrow + ") ===")
-    run("fetch_and_build.py", tomorrow, "latest_6c_tomorrow.json")
+    ok2 = run("fetch_and_build.py", tomorrow, "latest_6c_tomorrow.json")
 
     print("=== Schritt 3: Untis-Stundenplan laden ===")
     if untis_html_changed():
@@ -123,10 +123,13 @@ if __name__ == "__main__":
     after_nine = now.hour >= 9
 
     print("=== Schritt 4: Heute ===")
-    build_and_notify(today, "today_6c.json", "Heute", vtg_file="latest_6c.json", notify=not after_nine)
+    if ok1:
+        build_and_notify(today, "today_6c.json", "Heute", vtg_file="latest_6c.json", notify=not after_nine)
+    else:
+        print("PDF-Fehler – überspringe Heute.")
 
     print("=== Schritt 5: Morgen ===")
-    if vtg_has_entries("latest_6c_tomorrow.json"):
+    if ok2 and vtg_has_entries("latest_6c_tomorrow.json"):
         build_and_notify(tomorrow, "tomorrow_6c.json", "Morgen", vtg_file="latest_6c_tomorrow.json", notify=after_nine)
     else:
         print("Kein Vertretungsplan für morgen verfügbar – überspringe.")
