@@ -250,6 +250,19 @@
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
+  // Beide Tagnamen vorab laden
+  (async () => {
+    try {
+      const rt = await fetch('data/today_6c.json?t=' + Date.now());
+      const dt = await rt.json();
+      document.getElementById('todayBtn').textContent = dt.day || 'Tag 1';
+    } catch(e) {}
+    try {
+      const rm = await fetch('data/tomorrow_6c.json?t=' + Date.now());
+      const dm = await rm.json();
+      document.getElementById('tomorrowBtn').textContent = dm.day || 'Tag 2';
+    } catch(e) {}
+  })();
   load();
   setInterval(load, 5 * 60 * 1000);
 })();
