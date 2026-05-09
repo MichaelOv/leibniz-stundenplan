@@ -21,10 +21,11 @@ def load_fach_map():
     # Fallback falls Datei fehlt
     return {}
 
-LEHRER_FACH = {
-    "EBR": "RE",
-    "AVS": "IR",
-}
+def load_lehrer_fach():
+    path = BASE / "data" / "lehrer_fach.json"
+    if path.exists():
+        return load_json(path)
+    return {}
 
 def clean(v):
     return "" if v in ("---", None) else str(v).strip()
@@ -41,6 +42,7 @@ def fach_name(kuerzel: str, fach_map: dict) -> str:
 
 def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json"):
     FACH = load_fach_map()
+    LEHRER_FACH = load_lehrer_fach()
 
     if not target_date:
         now = datetime.now(timezone.utc)
@@ -56,7 +58,11 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
         return
 
     day_name = DAYS_DE[weekday]
-    untis = load_json(BASE / "data" / "untis_6c.json")
+    untis_path = BASE / "data" / "untis_6c.json"
+    if not untis_path.exists():
+        print("WARNUNG: untis_6c.json fehlt – bitte parse_untis.py ausführen.")
+        return
+    untis = load_json(untis_path)
     vtg_data = load_json(BASE / "data" / vtg_file)
     subs = vtg_data.get("substitutions", [])
 

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-import requests, base64, hashlib, json
+import os, requests, base64, hashlib, json
 from pathlib import Path
+from dotenv import load_dotenv
 
-NTFY_TOPIC = "leibniz-gym-ge-plan-jeo"
+load_dotenv()
+NTFY_TOPIC = os.getenv("NTFY_TOPIC", "leibniz-gym-ge-plan-jeo")
 NTFY_URL = f"https://ntfy.sh/{NTFY_TOPIC}"
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 

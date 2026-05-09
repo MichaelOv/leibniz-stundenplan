@@ -1,136 +1,199 @@
 # Leibniz Stundenplan
 
-Automatisches System zur Zusammenführung von Untis-Stundenplan und Vertretungsplan für Klasse 6c des Leibniz-Gymnasiums. Bei Änderungen wird eine Push-Benachrichtigung via ntfy.sh gesendet.
+Automatisches System, das täglich den Vertretungsplan des Leibniz-Gymnasiums Gelsenkirchen mit dem regulären Untis-Stundenplan zusammenführt — speziell für Klasse 6c. Das Ergebnis ist ein fertiger Tagesplan als JSON-Datei, der im Web-Dashboard angezeigt wird. Bei Änderungen (Ausfall, Vertretung, Raumwechsel) wird automatisch eine Push-Benachrichtigung aufs Handy geschickt.
 
-## Features
+## Wie es funktioniert
 
-- Lädt den Vertretungsplan täglich als PDF und extrahiert relevante Einträge für Klasse 6c
-- Parst den Untis-HTML-Stundenplan (inkl. Doppelstunden via rowspan)
-- Führt beide Quellen zusammen und erkennt Vertretungen, Ausfälle und Raumänderungen
-- Sendet Push-Benachrichtigungen via [ntfy.sh](https://ntfy.sh) — nur bei echten Änderungen
-- Stellt den Tagesplan als JSON bereit, abrufbar über ein Web-Dashboard
-- Unterstützt Heute/Morgen-Ansicht im Dashboard
+Das System hat zwei Datenquellen:
 
-## Projektstruktur
+1. **Untis-Stundenplan** (`parse_untis.py`): Der reguläre Wochenplan der Klasse wird von einer öffentlich zugänglichen HTML-Seite der Schule geladen. Er enthält für jeden Wochentag und jede Stunde Fach, Lehrkraft und Raum. Dieser Plan ändert sich selten — er wird nur neu geladen, wenn sich die Seite geändert hat.
+
+2. **Vertretungsplan** (`fetch_and_build.py`): Die Schule stellt täglich ein PDF über iServ bereit, das alle Vertretungen, Ausfälle und Raumänderungen für den jeweiligen Tag enthält. Der Zugriff auf dieses PDF erfordert einen gültigen iServ-Login (Schüler- oder Elternzugang).
+
+`build_today.py` gleicht dann beide Quellen ab: Für jede Stunde aus dem Untis-Plan wird geprüft, ob es im Vertretungsplan einen passenden Eintrag gibt. Wenn ja, wird der Status auf `vertretung`, `frei` oder `info` gesetzt. Das Ergebnis landet in `data/today_6c.json` und `data/tomorrow_6c.json`.
+
+`run_all.py` orchestriert alle Schritte und schickt am Ende — falls es Änderungen gibt — eine Push-Benachrichtigung via [ntfy.sh](https://ntfy.sh).
 
 ```
-leibniz-stundenplan/
-├── scripts/
-│   ├── run_all.py              # Hauptscript: führt alle Schritte aus
-│   ├── fetch_and_build.py      # Schritt 1: Vertretungsplan (PDF) laden & parsen
-│   ├── parse_untis.py          # Schritt 2: Untis-HTML parsen → untis_6c.json
-│   ├── build_today.py          # Schritt 3: Tagesplan zusammenführen
-│   ├── notify.py               # ntfy.sh Push-Benachrichtigung
-│   ├── check_login.py          # Hilfscript: Login prüfen
-│   ├── debug_pdf.py            # Debug: PDF-Inhalt ausgeben
-│   ├── debug_untis.py          # Debug: Untis-HTML analysieren
-│   └── debug_untis2.py         # Debug: Untis rowspan/colspan analysieren
-├── data/
-│   ├── fach_mapping.json           # Fachkürzel → Anzeigename (editierbar)
-│   ├── untis_6c.json               # Geparster Wochenstundenplan
-│   ├── latest_6c.json              # Vertretungsplan heute
-│   ├── latest_6c_tomorrow.json     # Vertretungsplan morgen
-│   ├── today_6c.json               # Fertiger Tagesplan heute (Output)
-│   ├── tomorrow_6c.json            # Fertiger Tagesplan morgen (Output)
-│   ├── untis_last_modified.txt     # Cache: letzter Untis-Abruf
-│   ├── last_ntfy_hash_today.txt    # Cache: verhindert doppelte Benachrichtigungen
-│   └── last_ntfy_hash_tomorrow.txt # Cache: verhindert doppelte Benachrichtigungen
-├── index.html          # Web-Dashboard (Heute/Morgen-Ansicht)
-├── server.py           # Einfacher HTTP-Server für Dashboard
-├── setup_alpine.sh     # Einrichtungsscript für Alpine Linux
-└── requirements.txt
+iServ PDF (Vertretungsplan)  →  fetch_and_build.py  →  latest_6c.json
+Untis HTML (Wochenplan)      →  parse_untis.py      →  untis_6c.json
+                                           ↓
+                               build_today.py        →  today_6c.json / tomorrow_6c.json
+                                           ↓
+                                 notify.py           →  ntfy.sh Push-Benachrichtigung
 ```
+
+## Voraussetzungen
+
+- **Python 3.10+**
+- **iServ-Zugangsdaten** des Leibniz-Gymnasiums (Schüler- oder Elternzugang) — wird benötigt, um das Vertretungsplan-PDF herunterzuladen
+- **ntfy-App** auf dem Handy ([Android](https://play.google.com/store/apps/details?id=io.heckel.ntfy) / [iOS](https://apps.apple.com/app/ntfy/id1625396347)), um Push-Benachrichtigungen zu empfangen
 
 ## Installation
 
+### 1. Python-Umgebung einrichten
+
 ```bash
+cd leibniz-stundenplan
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Credentials in `.env` hinterlegen:
+Die virtuelle Umgebung (`venv/`) isoliert die Abhängigkeiten vom System-Python. Nach einmaliger Installation muss sie bei jedem neuen Terminal-Start mit `source venv/bin/activate` aktiviert werden — oder man verwendet immer den direkten Pfad `venv/bin/python`.
+
+### 2. Zugangsdaten hinterlegen
+
+Eine Datei `.env` im Projektordner anlegen:
 
 ```
-ISERV_USER=benutzername
-ISERV_PASS=passwort
+ISERV_USER=vorname.nachname
+ISERV_PASS=dein-passwort
+NTFY_TOPIC=leibniz-stundenplan-6c   # frei wählen, muss einmalig sein
 ```
 
-## Verwendung
+- `ISERV_USER` und `ISERV_PASS` sind die Login-Daten für [gym-leibniz-ge.de/iserv](https://gym-leibniz-ge.de/iserv). Das System meldet sich damit an, lädt das PDF herunter und meldet sich wieder ab — die Daten verlassen den eigenen Server nicht.
+- `NTFY_TOPIC` ist ein frei wählbarer Name für den Benachrichtigungskanal (wie ein Gruppenname). Jeder, der dieses Topic in der ntfy-App abonniert, bekommt die Benachrichtigungen. Einen bereits genutzten Namen eines anderen zu erraten ist unwahrscheinlich, aber sicherheitshalber etwas Einzigartiges wählen (z.B. `leibniz-6c-abc123`). Der Wert ist optional — ohne Angabe wird `leibniz-gym-ge-plan-jeo` verwendet.
+
+### 3. ntfy-App einrichten
+
+1. App installieren und öffnen
+2. Neues Abonnement hinzufügen: den gewählten `NTFY_TOPIC`-Namen eingeben, Server bleibt `ntfy.sh`
+3. Fertig — Benachrichtigungen kommen nun automatisch an
+
+### 4. Ersten Lauf testen
 
 ```bash
-# Manuell ausführen
-python scripts/run_all.py
-
-# Bestimmtes Datum
-python scripts/run_all.py 2026-05-06
-
-# Dashboard starten
-python server.py
+venv/bin/python scripts/run_all.py
 ```
 
-## Cron-Job (täglich 06:00 Uhr)
+Erwartete Ausgabe:
+
+```
+=== Schritt 1: Vertretungsplan heute laden (2026-05-06) ===
+PDF geladen: 84321 bytes
+TREFFER: {'klasse': '06c', 'stunde': '3', ...}
+Gesamt: 2 Eintraege
+
+=== Schritt 2: Vertretungsplan morgen laden (2026-05-07) ===
+...
+
+=== Schritt 3: Untis-Stundenplan laden ===
+Tage: ['Montag', 'Dienstag', ...]
+Std 1 Montag: [{'fach': 'D', 'lehrer': 'MUS', 'raum': '210'}]
+...
+
+=== Schritt 4: Heute ===
+Tag: Mittwoch | 6 Stunden | 1 Aenderungen
+  Std 3 Deutsch (MUS) 210 [FREI] | Entfall
+
+=== Fertig ===
+```
+
+Falls etwas schiefgeht:
+
+```bash
+# Login prüfen
+venv/bin/python scripts/check_login.py
+
+# PDF-Inhalt ansehen (was das System aus dem PDF liest)
+venv/bin/python scripts/debug_pdf.py
+
+# Untis-HTML analysieren
+venv/bin/python scripts/debug_untis.py
+```
+
+## Dashboard starten
+
+```bash
+venv/bin/python server.py
+```
+
+Danach im Browser öffnen: [http://localhost:8080](http://localhost:8080)
+
+Das Dashboard zeigt die Heute/Morgen-Ansicht des Tagesplans. Es liest die JSON-Dateien aus `data/` und aktualisiert sich automatisch alle 5 Minuten. Der "Stand"-Zeitstempel in der Übersicht zeigt, wann die Daten zuletzt generiert wurden.
+
+Über den Refresh-Button im Dashboard kann `run_all.py` auch manuell ausgelöst werden (dauert ca. 30–60 Sekunden).
+
+## Automatisierung
+
+### Cron-Job (Linux/macOS, täglich 06:00 Uhr)
 
 ```bash
 crontab -e
-# Eintrag:
-0 6 * * 1-5 cd /root/leibniz-stundenplan && venv/bin/python scripts/run_all.py
 ```
+
+Folgenden Eintrag hinzufügen (Pfad anpassen):
+
+```
+0 6 * * 1-5 cd /pfad/zu/leibniz-stundenplan && venv/bin/python scripts/run_all.py >> /tmp/stundenplan.log 2>&1
+```
+
+Der Job läuft nur montags bis freitags (`1-5`). Die Ausgabe wird in `/tmp/stundenplan.log` gespeichert und kann dort zur Fehlersuche eingesehen werden.
+
+### GitHub Actions (alternativ, ohne eigenen Server)
+
+Die Datei `.github/workflows/update.yml` enthält einen Workflow, der täglich um 04:00 UTC (= 06:00 MESZ) ausgeführt wird. Er führt `run_all.py` aus und committet die aktualisierten JSON-Dateien zurück ins Repository — so können die Daten auch ohne laufenden Server über GitHub Pages bereitgestellt werden.
+
+Dazu müssen im GitHub-Repository unter *Settings → Secrets and variables → Actions* zwei Secrets angelegt werden:
+- `ISERV_USER`
+- `ISERV_PASS`
 
 ## Benachrichtigungslogik
 
-- **Vor 09:00 Uhr:** Benachrichtigung für heute
-- **Ab 09:00 Uhr:** Benachrichtigung für morgen
-- Doppelte Benachrichtigungen werden per Hash-Vergleich unterdrückt
+Das System unterscheidet, ob es eher morgens oder tagsüber läuft:
+
+- **Vor 09:00 Uhr:** Benachrichtigung bezieht sich auf **heute** — sinnvoll für den morgendlichen Cron-Job, damit man noch vor der Schule weiß, ob etwas ausfällt.
+- **Ab 09:00 Uhr:** Benachrichtigung bezieht sich auf **morgen** — der heutige Tag läuft bereits, Änderungen für morgen sind relevanter.
+
+Damit keine doppelten Benachrichtigungen verschickt werden (z.B. wenn der Cron mehrfach läuft), wird ein MD5-Hash des Benachrichtigungsinhalts in `data/last_ntfy_hash_today.txt` bzw. `data/last_ntfy_hash_tomorrow.txt` gespeichert. Nur wenn sich der Inhalt gegenüber der letzten Benachrichtigung geändert hat, wird eine neue verschickt.
 
 ## Konfiguration
 
-### Fach-Mapping anpassen
+### Fächernamen anpassen (`data/fach_mapping.json`)
 
-`data/fach_mapping.json` enthält die Übersetzung von Untis-Kürzeln zu Anzeigenamen:
+Untis verwendet interne Kürzel (z.B. `SPSW`), die im Dashboard nicht selbsterklärend sind. Diese Datei übersetzt sie in lesbare Namen:
 
 ```json
 {
   "D":    "Deutsch",
+  "M":    "Mathe",
   "SPSW": "Sport Schwimmen"
 }
 ```
 
-### ntfy.sh Topic ändern
+Einträge können jederzeit ergänzt oder geändert werden — ohne Code-Änderung.
 
-In `scripts/notify.py`:
+### Lehrer-Fach-Zuordnung (`data/lehrer_fach.json`)
 
-```python
-NTFY_TOPIC = "dein-eigenes-topic"
+Manche Vertretungsplan-Einträge enthalten nur das Lehrerkürzel, aber kein Fach. Diese Datei ordnet bekannte Lehrerkürzel einem Fachkürzel zu, damit das Fach trotzdem angezeigt werden kann:
+
+```json
+{
+  "EBR": "RE",
+  "AVS": "IR"
+}
 ```
 
-Topic in der [ntfy App](https://ntfy.sh) abonnieren — fertig.
+Wenn ein Lehrer in einem Eintrag vorkommt, dessen Fach nicht aus dem Untis-Plan herleitbar ist, wird hier nachgeschlagen.
 
-## Datenfluss
+### Klasse oder Schule wechseln
 
-```
-PDF (Vertretungsplan heute)   →  fetch_and_build.py  →  latest_6c.json
-PDF (Vertretungsplan morgen)  →  fetch_and_build.py  →  latest_6c_tomorrow.json
-Untis HTML                    →  parse_untis.py      →  untis_6c.json
-                                          ↓
-                                  build_today.py     →  today_6c.json / tomorrow_6c.json
-                                          ↓
-                                    notify.py        →  ntfy.sh Push
-```
+Das System ist auf Klasse 6c des Leibniz-Gymnasiums Gelsenkirchen ausgerichtet. Für eine andere Klasse oder Schule müssen folgende Stellen angepasst werden:
+
+| Was | Datei | Variable/Wert |
+|---|---|---|
+| Zielklasse (Vertretungsplan) | `scripts/fetch_and_build.py` | `TARGET_CLASS = "06c"` |
+| Untis-URL | `scripts/parse_untis.py` | `UNTIS_URL` |
+| iServ-Basis-URL | `scripts/fetch_and_build.py` | `BASE_URL` |
+| ntfy-Topic | `.env` | `NTFY_TOPIC` |
 
 ## Abhängigkeiten
 
-- `requests` — HTTP-Anfragen
-- `beautifulsoup4` — HTML-Parsing (Untis)
-- `pymupdf` — PDF-Parsing (Vertretungsplan)
-- `python-dotenv` — Laden der `.env`-Datei
-README
-```
-
-Dann committen:
-
-```bash
-git add README.md
-git commit -m "Update README"
-git push
-```
+| Paket | Zweck |
+|---|---|
+| `requests` | HTTP-Anfragen (iServ-Login, Untis, ntfy) |
+| `beautifulsoup4` | HTML-Parsing des Untis-Stundenplans |
+| `pymupdf` | Text-Extraktion aus dem Vertretungsplan-PDF |
+| `python-dotenv` | Laden der Zugangsdaten aus der `.env`-Datei |
+| `flask` | HTTP-Server für das Web-Dashboard |
