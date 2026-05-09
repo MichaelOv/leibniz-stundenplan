@@ -4,7 +4,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
-NTFY_TOPIC = os.getenv("NTFY_TOPIC", "leibniz-gym-ge-plan-jeo")
+NTFY_TOPIC = os.getenv("NTFY_TOPIC")
+if not NTFY_TOPIC:
+    raise ValueError("NTFY_TOPIC ist nicht gesetzt. Bitte in .env oder als Umgebungsvariable definieren.")
 NTFY_URL = f"https://ntfy.sh/{NTFY_TOPIC}"
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 
