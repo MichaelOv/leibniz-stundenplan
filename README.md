@@ -117,19 +117,26 @@ Das Dashboard zeigt die Heute/Morgen-Ansicht des Tagesplans. Es liest die JSON-D
 
 ## Automatisierung
 
-### Cron-Job (Linux/macOS, täglich 06:00 Uhr)
+### Cron-Job (Linux/macOS)
 
 ```bash
 crontab -e
 ```
 
-Folgenden Eintrag hinzufügen (Pfad anpassen):
+Folgende Einträge hinzufügen (Pfad anpassen):
 
 ```
-0 6 * * 1-5 cd /pfad/zu/leibniz-stundenplan && venv/bin/python scripts/run_all.py >> /tmp/stundenplan.log 2>&1
+# Morgens alle 5 Minuten (6:30 bis 8:55), da sich der Plan häufig kurzfristig ändert
+30,35,40,45,50,55 6 * * 1-5 cd /pfad/zu/leibniz-stundenplan && venv/bin/python scripts/run_all.py >> /tmp/stundenplan.log 2>&1
+*/5 7-8 * * 1-5 cd /pfad/zu/leibniz-stundenplan && venv/bin/python scripts/run_all.py >> /tmp/stundenplan.log 2>&1
+
+# Tagsüber stündlich (9:00 bis 22:00)
+0 9-22 * * 1-5 cd /pfad/zu/leibniz-stundenplan && venv/bin/python scripts/run_all.py >> /tmp/stundenplan.log 2>&1
 ```
 
-Der Job läuft nur montags bis freitags (`1-5`). Die Ausgabe wird in `/tmp/stundenplan.log` gespeichert und kann dort zur Fehlersuche eingesehen werden.
+Die Jobs laufen nur montags bis freitags (`1-5`). Ab 9 Uhr schaltet `run_all.py` automatisch auf den Plan für morgen um. Die Ausgabe wird in `/tmp/stundenplan.log` gespeichert und kann dort zur Fehlersuche eingesehen werden.
+
+Hinweis für Alpine Linux: Die `30,35,...,55 6`-Zeile ist absichtlich ausgeschrieben, da busybox crond mit der Schreibweise `30-59/5` manchmal Probleme hat.
 
 ### GitHub Actions (alternativ, ohne eigenen Server)
 
