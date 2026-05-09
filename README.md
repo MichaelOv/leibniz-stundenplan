@@ -54,7 +54,9 @@ Unter *Settings -> Secrets and variables -> Actions* drei Secrets anlegen:
 
 Unter *Settings -> Pages -> Source: "Deploy from a branch" -> Branch: `main`, Folder: `/ (root)` -> Save*
 
-Das Dashboard ist danach erreichbar unter `https://michaelov.github.io/leibniz-stundenplan/`
+Das Dashboard ist danach erreichbar unter `https://<github-username>.github.io/leibniz-stundenplan/`
+
+Das Dashboard zeigt in der Topbar einen "ntfy abonnieren"-Button, der direkt zum konfigurierten Kanal verlinkt. Er erscheint automatisch, sobald `run_all.py` einmal gelaufen ist und `data/config.json` erstellt hat.
 
 #### 3. ntfy-App einrichten
 
