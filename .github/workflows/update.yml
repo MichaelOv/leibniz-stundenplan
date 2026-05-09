@@ -1,7 +1,11 @@
 name: Update timetable
 on:
   schedule:
-    - cron: '0 4 * * 1-5'
+    # Morgens alle 5 Minuten (4:30-6:55 UTC = 6:30-8:55 MESZ)
+    - cron: '30,35,40,45,50,55 4 * * 1-5'
+    - cron: '*/5 5-6 * * 1-5'
+    # Stündlich (7:00-20:00 UTC = 9:00-22:00 MESZ)
+    - cron: '0 7-20 * * 1-5'
   workflow_dispatch:
 jobs:
   refresh:
@@ -16,6 +20,7 @@ jobs:
         env:
           ISERV_USER: ${{ secrets.ISERV_USER }}
           ISERV_PASS: ${{ secrets.ISERV_PASS }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'Automated timetable refresh'
