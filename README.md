@@ -2,6 +2,8 @@
 
 Automatisches System, das täglich den Vertretungsplan des Leibniz-Gymnasiums Gelsenkirchen mit dem regulären Untis-Stundenplan zusammenführt, speziell für Klasse 6c. Das Ergebnis ist ein fertiger Tagesplan als JSON-Datei, der im Web-Dashboard angezeigt wird. Bei Änderungen (Ausfall, Vertretung, Raumwechsel) wird automatisch eine Push-Benachrichtigung aufs Handy geschickt.
 
+Der Workflow läuft vollständig über GitHub Actions und benötigt keinen eigenen Server. Das Dashboard wird über GitHub Pages bereitgestellt.
+
 ## Wie es funktioniert
 
 Das System hat zwei Datenquellen:
@@ -25,35 +27,28 @@ Untis HTML (Wochenplan)      ->  parse_untis.py      ->  untis_6c.json
 
 ## Voraussetzungen
 
-- **Python 3.10+**
 - **iServ-Schüleraccount** des Leibniz-Gymnasiums. Die Vertretungspläne sind nicht öffentlich zugänglich und der Elternaccount hat keinen Zugriff darauf.
 - **ntfy-App** auf dem Handy ([Android](https://play.google.com/store/apps/details?id=io.heckel.ntfy) / [iOS](https://apps.apple.com/app/ntfy/id1625396347)), um Push-Benachrichtigungen zu empfangen
 
-## Installation
+## Einrichtung
 
-### 1. Python-Umgebung einrichten
+### 1. GitHub Secrets anlegen
 
-```bash
-cd leibniz-stundenplan
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
+Im GitHub-Repository unter *Settings -> Secrets and variables -> Actions* drei Secrets anlegen:
 
-Die virtuelle Umgebung (`venv/`) isoliert die Abhängigkeiten vom System-Python. Nach einmaliger Installation muss sie bei jedem neuen Terminal-Start mit `source venv/bin/activate` aktiviert werden, oder man verwendet immer den direkten Pfad `venv/bin/python`.
+| Secret | Inhalt |
+|---|---|
+| `ISERV_USER` | iServ-Benutzername (Schüleraccount) |
+| `ISERV_PASS` | iServ-Passwort |
+| `NTFY_TOPIC` | Frei gewählter Name für den Benachrichtigungskanal, z.B. `leibniz-6c-abc123` |
 
-### 2. Zugangsdaten hinterlegen
+`NTFY_TOPIC` ist der Name des Kanals, den du in der ntfy-App abonnierst. Wähle etwas Einzigartiges, damit keine fremden Personen zufällig dieselben Benachrichtigungen erhalten.
 
-Eine Datei `.env` im Projektordner anlegen:
+### 2. GitHub Pages aktivieren
 
-```
-ISERV_USER=vorname.nachname
-ISERV_PASS=dein-passwort
-NTFY_TOPIC=leibniz-stundenplan-6c   # frei wählen, muss einmalig sein
-```
+Unter *Settings -> Pages -> Source: "Deploy from a branch" -> Branch: `main`, Folder: `/ (root)` -> Save*
 
-- `ISERV_USER` und `ISERV_PASS` sind die Login-Daten eines Schüleraccounts für [gym-leibniz-ge.de/iserv](https://gym-leibniz-ge.de/iserv). Das System meldet sich an, lädt das PDF herunter und meldet sich wieder ab.
-- `NTFY_TOPIC` ist ein frei wählbarer Name für den Benachrichtigungskanal (wie ein Gruppenname). Jeder, der dieses Topic in der ntfy-App abonniert, bekommt die Benachrichtigungen. Sicherheitshalber etwas Einzigartiges wählen, z.B. `leibniz-6c-abc123`. Der Wert ist optional, ohne Angabe wird `leibniz-gym-ge-plan-jeo` verwendet.
+Das Dashboard ist danach erreichbar unter `https://michaelov.github.io/leibniz-stundenplan/`
 
 ### 3. ntfy-App einrichten
 
@@ -61,88 +56,18 @@ NTFY_TOPIC=leibniz-stundenplan-6c   # frei wählen, muss einmalig sein
 2. Neues Abonnement hinzufügen: den gewählten `NTFY_TOPIC`-Namen eingeben, Server bleibt `ntfy.sh`
 3. Fertig, Benachrichtigungen kommen nun automatisch an
 
-### 4. Ersten Lauf testen
+### 4. Workflow testen
 
-```bash
-venv/bin/python scripts/run_all.py
-```
-
-Erwartete Ausgabe:
-
-```
-=== Schritt 1: Vertretungsplan heute laden (2026-05-06) ===
-PDF geladen: 84321 bytes
-TREFFER: {'klasse': '06c', 'stunde': '3', ...}
-Gesamt: 2 Eintraege
-
-=== Schritt 2: Vertretungsplan morgen laden (2026-05-07) ===
-...
-
-=== Schritt 3: Untis-Stundenplan laden ===
-Tage: ['Montag', 'Dienstag', ...]
-Std 1 Montag: [{'fach': 'D', 'lehrer': 'MUS', 'raum': '210'}]
-...
-
-=== Schritt 4: Heute ===
-Tag: Mittwoch | 6 Stunden | 1 Aenderungen
-  Std 3 Deutsch (MUS) 210 [FREI] | Entfall
-
-=== Fertig ===
-```
-
-Falls etwas schiefgeht:
-
-```bash
-# Login prüfen
-venv/bin/python scripts/check_login.py
-
-# PDF-Inhalt ansehen (was das System aus dem PDF liest)
-venv/bin/python scripts/debug_pdf.py
-
-# Untis-HTML analysieren
-venv/bin/python scripts/debug_untis.py
-```
-
-## Dashboard starten
-
-```bash
-venv/bin/python server.py
-```
-
-Danach im Browser öffnen: [http://localhost:8080](http://localhost:8080)
-
-Das Dashboard zeigt die Heute/Morgen-Ansicht des Tagesplans. Es liest die JSON-Dateien aus `data/` und aktualisiert sich automatisch alle 5 Minuten. Der "Stand"-Zeitstempel in der Übersicht zeigt, wann die Daten zuletzt generiert wurden.
+Unter *Actions -> Update timetable -> Run workflow* kann der Workflow manuell gestartet werden, um die Einrichtung zu prüfen. Bei Erfolg werden die JSON-Dateien in `data/` aktualisiert und committed.
 
 ## Automatisierung
 
-### Cron-Job (Linux/macOS)
+Der Workflow in `.github/workflows/update.yml` läuft automatisch montags bis freitags nach folgendem Schema (alle Zeiten MESZ):
 
-```bash
-crontab -e
-```
+- **6:30 bis 9:00 Uhr:** alle 5 Minuten, da sich der Plan morgens häufig kurzfristig ändert
+- **9:00 bis 22:00 Uhr:** stündlich
 
-Folgende Einträge hinzufügen (Pfad anpassen):
-
-```
-# Morgens alle 5 Minuten (6:30 bis 8:55), da sich der Plan häufig kurzfristig ändert
-30,35,40,45,50,55 6 * * 1-5 cd /pfad/zu/leibniz-stundenplan && venv/bin/python scripts/run_all.py >> /tmp/stundenplan.log 2>&1
-*/5 7-8 * * 1-5 cd /pfad/zu/leibniz-stundenplan && venv/bin/python scripts/run_all.py >> /tmp/stundenplan.log 2>&1
-
-# Tagsüber stündlich (9:00 bis 22:00)
-0 9-22 * * 1-5 cd /pfad/zu/leibniz-stundenplan && venv/bin/python scripts/run_all.py >> /tmp/stundenplan.log 2>&1
-```
-
-Die Jobs laufen nur montags bis freitags (`1-5`). Ab 9 Uhr schaltet `run_all.py` automatisch auf den Plan für morgen um. Die Ausgabe wird in `/tmp/stundenplan.log` gespeichert und kann dort zur Fehlersuche eingesehen werden.
-
-Hinweis für Alpine Linux: Die `30,35,...,55 6`-Zeile ist absichtlich ausgeschrieben, da busybox crond mit der Schreibweise `30-59/5` manchmal Probleme hat.
-
-### GitHub Actions (alternativ, ohne eigenen Server)
-
-Die Datei `.github/workflows/update.yml` enthält einen Workflow, der täglich um 04:00 UTC (06:00 MESZ) ausgeführt wird. Er führt `run_all.py` aus und committet die aktualisierten JSON-Dateien zurück ins Repository, so dass die Daten auch ohne laufenden Server über GitHub Pages bereitgestellt werden können.
-
-Dazu müssen im GitHub-Repository unter *Settings -> Secrets and variables -> Actions* zwei Secrets angelegt werden:
-- `ISERV_USER`
-- `ISERV_PASS`
+Ab 9 Uhr schaltet `run_all.py` automatisch auf den Plan für morgen um. Hinweis: GitHub Actions garantiert keine sekundengenauem Ausführung, Verzögerungen von einigen Minuten sind möglich.
 
 ## Benachrichtigungslogik
 
@@ -151,7 +76,7 @@ Das System unterscheidet, ob es eher morgens oder tagsüber läuft:
 - **Vor 09:00 Uhr:** Benachrichtigung bezieht sich auf **heute**, damit man noch vor der Schule weiß, ob etwas ausfällt.
 - **Ab 09:00 Uhr:** Benachrichtigung bezieht sich auf **morgen**, da der heutige Tag bereits läuft.
 
-Damit keine doppelten Benachrichtigungen verschickt werden, wird ein MD5-Hash des Benachrichtigungsinhalts in `data/last_ntfy_hash_today.txt` bzw. `data/last_ntfy_hash_tomorrow.txt` gespeichert. Nur wenn sich der Inhalt gegenüber der letzten Benachrichtigung geändert hat, wird eine neue verschickt.
+Damit keine doppelten Benachrichtigungen verschickt werden, wird ein MD5-Hash des Benachrichtigungsinhalts gespeichert. Nur wenn sich der Inhalt gegenüber der letzten Benachrichtigung geändert hat, wird eine neue verschickt.
 
 ## Konfiguration
 
@@ -180,8 +105,6 @@ Manche Vertretungsplan-Einträge enthalten nur das Lehrerkürzel, aber kein Fach
 }
 ```
 
-Wenn ein Lehrer in einem Eintrag vorkommt, dessen Fach nicht aus dem Untis-Plan herleitbar ist, wird hier nachgeschlagen.
-
 ### Klasse oder Schule wechseln
 
 Das System ist auf Klasse 6c des Leibniz-Gymnasiums Gelsenkirchen ausgerichtet. Für eine andere Klasse oder Schule müssen folgende Stellen angepasst werden:
@@ -191,7 +114,41 @@ Das System ist auf Klasse 6c des Leibniz-Gymnasiums Gelsenkirchen ausgerichtet. 
 | Zielklasse (Vertretungsplan) | `scripts/fetch_and_build.py` | `TARGET_CLASS = "06c"` |
 | Untis-URL | `scripts/parse_untis.py` | `UNTIS_URL` |
 | iServ-Basis-URL | `scripts/fetch_and_build.py` | `BASE_URL` |
-| ntfy-Topic | `.env` | `NTFY_TOPIC` |
+| ntfy-Topic | GitHub Secret | `NTFY_TOPIC` |
+
+## Lokale Entwicklung
+
+Für lokale Tests ohne GitHub Actions:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+`.env` anlegen:
+
+```
+ISERV_USER=vorname.nachname
+ISERV_PASS=dein-passwort
+NTFY_TOPIC=dein-topic
+```
+
+```bash
+# Pipeline manuell ausführen
+venv/bin/python scripts/run_all.py
+
+# Für ein bestimmtes Datum
+venv/bin/python scripts/run_all.py 2026-05-06
+
+# Dashboard lokal starten (http://localhost:8080)
+venv/bin/python server.py
+
+# Fehlersuche
+venv/bin/python scripts/check_login.py
+venv/bin/python scripts/debug_pdf.py
+venv/bin/python scripts/debug_untis.py
+```
 
 ## Abhängigkeiten
 
@@ -201,4 +158,4 @@ Das System ist auf Klasse 6c des Leibniz-Gymnasiums Gelsenkirchen ausgerichtet. 
 | `beautifulsoup4` | HTML-Parsing des Untis-Stundenplans |
 | `pymupdf` | Text-Extraktion aus dem Vertretungsplan-PDF |
 | `python-dotenv` | Laden der Zugangsdaten aus der `.env`-Datei |
-| `flask` | HTTP-Server für das Web-Dashboard |
+| `flask` | HTTP-Server für das lokale Dashboard |
