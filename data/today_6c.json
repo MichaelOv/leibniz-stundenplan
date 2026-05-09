@@ -1,27 +1,27 @@
 {
-  "date": "2026-05-06",
-  "day": "Mittwoch",
+  "date": "2026-05-11",
+  "day": "Montag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
-      "raum": "603",
-      "status": "frei",
+      "fach": "Kunst",
+      "fach_kurz": "KU",
+      "lehrer": "NYE",
+      "raum": "A2.03Ku",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei"
+      "hinweis": ""
     },
     {
       "stunde": 2,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
-      "raum": "603",
-      "status": "frei",
+      "fach": "Kunst",
+      "fach_kurz": "KU",
+      "lehrer": "NYE",
+      "raum": "A2.03Ku",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei"
+      "hinweis": ""
     },
     {
       "stunde": 3,
@@ -29,15 +29,15 @@
       "fach_kurz": "D",
       "lehrer": "GRU",
       "raum": "603",
-      "status": "frei",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei; verlegt auf Mi. 6.5. 5. Std."
+      "hinweis": ""
     },
     {
       "stunde": 4,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
+      "fach": "Geschichte",
+      "fach_kurz": "GE",
+      "lehrer": "BOR",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -45,45 +45,25 @@
     },
     {
       "stunde": 5,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "603",
-      "status": "vertretung",
-      "vertreter": "GRU",
-      "hinweis": "D statt Mi. 6.5. 3. Std."
-    },
-    {
-      "stunde": 6,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Informatik",
+      "fach_kurz": "IF",
+      "lehrer": "WES",
+      "raum": "442If",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
-      "stunde": 7,
-      "fach": "NK-IF",
-      "fach_kurz": "NK-IF",
-      "lehrer": "ROM",
-      "raum": "—",
-      "status": "frei",
+      "stunde": 6,
+      "fach": "Biologie",
+      "fach_kurz": "BI",
+      "lehrer": "BUT",
+      "raum": "BI006",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "NK entfällt!"
-    },
-    {
-      "stunde": 8,
-      "fach": "NK-IF",
-      "fach_kurz": "NK-IF",
-      "lehrer": "ROM",
-      "raum": "—",
-      "status": "frei",
-      "vertreter": "",
-      "hinweis": "NK entfällt!"
+      "hinweis": ""
     }
   ],
-  "vtg_count": 6,
-  "generated_at": "2026-05-05T15:15:01.626713+00:00"
+  "vtg_count": 0,
+  "generated_at": "2026-05-09T18:54:33.139532+00:00"
 }
