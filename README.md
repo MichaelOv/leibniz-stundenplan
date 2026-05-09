@@ -8,7 +8,7 @@ Das System hat zwei Datenquellen:
 
 1. **Untis-Stundenplan** (`parse_untis.py`): Der reguläre Wochenplan der Klasse wird von einer öffentlich zugänglichen HTML-Seite der Schule geladen. Er enthält für jeden Wochentag und jede Stunde Fach, Lehrkraft und Raum. Dieser Plan ändert sich selten und wird nur neu geladen, wenn sich die Seite geändert hat.
 
-2. **Vertretungsplan** (`fetch_and_build.py`): Die Schule stellt täglich ein PDF über iServ bereit, das alle Vertretungen, Ausfälle und Raumänderungen für den jeweiligen Tag enthält. Der Zugriff erfordert einen Schülerzugang.
+2. **Vertretungsplan** (`fetch_and_build.py`): Die Schule stellt täglich ein PDF über iServ bereit, das alle Vertretungen, Ausfälle und Raumänderungen für den jeweiligen Tag enthält. Die Vertretungspläne sind nicht öffentlich zugänglich und der Elternaccount hat keinen Zugriff darauf, daher wird ein Schüleraccount verwendet.
 
 `build_today.py` gleicht dann beide Quellen ab: Für jede Stunde aus dem Untis-Plan wird geprüft, ob es im Vertretungsplan einen passenden Eintrag gibt. Wenn ja, wird der Status auf `vertretung`, `frei` oder `info` gesetzt. Das Ergebnis landet in `data/today_6c.json` und `data/tomorrow_6c.json`.
 
@@ -26,7 +26,7 @@ Untis HTML (Wochenplan)      ->  parse_untis.py      ->  untis_6c.json
 ## Voraussetzungen
 
 - **Python 3.10+**
-- **iServ-Schülerzugang** des Leibniz-Gymnasiums. Es muss ein Schülerzugang sein, da nur damit der Zugriff auf die Vertretungsplan-PDFs funktioniert.
+- **iServ-Schüleraccount** des Leibniz-Gymnasiums. Die Vertretungspläne sind nicht öffentlich zugänglich und der Elternaccount hat keinen Zugriff darauf.
 - **ntfy-App** auf dem Handy ([Android](https://play.google.com/store/apps/details?id=io.heckel.ntfy) / [iOS](https://apps.apple.com/app/ntfy/id1625396347)), um Push-Benachrichtigungen zu empfangen
 
 ## Installation
@@ -112,8 +112,6 @@ venv/bin/python server.py
 Danach im Browser öffnen: [http://localhost:8080](http://localhost:8080)
 
 Das Dashboard zeigt die Heute/Morgen-Ansicht des Tagesplans. Es liest die JSON-Dateien aus `data/` und aktualisiert sich automatisch alle 5 Minuten. Der "Stand"-Zeitstempel in der Übersicht zeigt, wann die Daten zuletzt generiert wurden.
-
-Über den Refresh-Button im Dashboard kann `run_all.py` auch manuell ausgelöst werden (dauert ca. 30-60 Sekunden).
 
 ## Automatisierung
 
