@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #!/usr/bin/env python3
+import os
 import subprocess
 import sys
 import requests
@@ -137,5 +138,9 @@ if __name__ == "__main__":
         empty = {"date": tomorrow, "class": "06c", "substitutions": []}
         (DATA / "latest_6c_tomorrow.json").write_text(json.dumps(empty))
         run("build_today.py", tomorrow, "tomorrow_6c.json", "latest_6c_tomorrow.json")
+
+    import json
+    config = {"ntfy_topic": os.getenv("NTFY_TOPIC", "")}
+    (DATA / "config.json").write_text(json.dumps(config))
 
     print("=== Fertig ===")

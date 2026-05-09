@@ -85,6 +85,7 @@
         <button class="btn" id="todayBtn" onclick="switchDay('today')" style="opacity:1">Tag</button>
         <button class="btn" id="tomorrowBtn" onclick="switchDay('tomorrow')" style="opacity:.5">Tag</button>
       </div>
+      <a id="ntfyBtn" href="#" target="_blank" rel="noopener" class="btn" style="display:none">ntfy abonnieren</a>
       <button class="btn" data-theme-toggle aria-label="Theme wechseln">&#9680;</button>
     </div>
   </header>
@@ -249,6 +250,19 @@
     if (!s) return '\u2014';
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
+
+  // ntfy Subscribe-Button laden
+  (async () => {
+    try {
+      const r = await fetch('data/config.json?t=' + Date.now());
+      const c = await r.json();
+      if (c.ntfy_topic) {
+        const btn = document.getElementById('ntfyBtn');
+        btn.href = 'https://ntfy.sh/' + c.ntfy_topic;
+        btn.style.display = '';
+      }
+    } catch(e) {}
+  })();
 
   // Beide Tagnamen vorab laden
   (async () => {
