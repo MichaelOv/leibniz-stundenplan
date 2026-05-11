@@ -188,10 +188,11 @@
     document.getElementById('statCount').textContent = d.plan ? new Set(d.plan.map(p => p.stunde)).size : 0;
     document.getElementById('statVtg').textContent   = d.vtg_count || 0;
 
-    const gen = d.generated_at ? new Date(d.generated_at) : null;
+    const standSrc = d.pdf_stand || d.generated_at;
+    const gen = standSrc ? new Date(standSrc) : null;
     const genStr = gen ? gen.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) : '\u2014';
     document.getElementById('statGenerated').textContent   = 'Stand ' + genStr + ' Uhr';
-    document.getElementById('footerGenerated').textContent = 'Zuletzt generiert: ' + genStr + ' Uhr';
+    document.getElementById('footerGenerated').textContent = 'Zuletzt gepr\u00fcft: \u2014';
 
     const pill = document.getElementById('statusPill');
     if (!d.vtg_count || d.vtg_count === 0) {

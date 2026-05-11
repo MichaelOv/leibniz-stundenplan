@@ -45,9 +45,18 @@ def fetch_pdf(session, url):
     r.raise_for_status()
     if b"%PDF" not in r.content[:10]:
         print("KEIN PDF")
-        return None
+        return None, None
+    last_mod = r.headers.get("Last-Modified", "")
+    if last_mod:
+        from email.utils import parsedate_to_datetime
+        try:
+            pdf_stand = parsedate_to_datetime(last_mod).isoformat()
+        except Exception:
+            pdf_stand = datetime.now(timezone.utc).isoformat()
+    else:
+        pdf_stand = datetime.now(timezone.utc).isoformat()
     print("PDF geladen: " + str(len(r.content)) + " bytes")
-    return r.content
+    return r.content, pdf_stand
 
 def parse_entry(lines, start):
     """Liest einen Vertretungseintrag ab Position start.
@@ -145,13 +154,13 @@ if __name__ == "__main__":
     url = ISERV_URL.format(date=target_date)
     try:
         session = get_authenticated_session()
-        pdf_bytes = fetch_pdf(session, url)
+        pdf_bytes, pdf_stand = fetch_pdf(session, url)
         if not pdf_bytes: sys.exit(1)
         if not pdf_contains_date(pdf_bytes, target_date):
             print("PDF enthält nicht das Zieldatum – kein Plan verfügbar.")
             sys.exit(1)
         class_data = parse_class_data(pdf_bytes, TARGET_CLASS)
-        output = {"date": target_date, "class": TARGET_CLASS, "substitutions": class_data}
+        output = {"date": target_date, "class": TARGET_CLASS, "substitutions": class_data, "pdf_stand": pdf_stand}
         out_file = sys.argv[2] if len(sys.argv) > 2 else "latest_6c.json"
         data_path = Path(__file__).resolve().parents[1] / "data" / out_file
         data_path.parent.mkdir(exist_ok=True)

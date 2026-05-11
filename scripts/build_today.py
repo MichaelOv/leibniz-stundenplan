@@ -65,6 +65,7 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
     untis = load_json(untis_path)
     vtg_data = load_json(BASE / "data" / vtg_file)
     subs = vtg_data.get("substitutions", [])
+    pdf_stand = vtg_data.get("pdf_stand", "")
 
     sub_by_lehrer = {}
     sub_by_hour   = {}
@@ -185,7 +186,8 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
         "date": target_date, "day": day_name, "class": "06c",
         "plan": plan,
         "vtg_count": len([p for p in plan if p["status"] in ("frei","vertretung")]),
-        "generated_at": datetime.now(timezone.utc).isoformat()
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "pdf_stand": pdf_stand
     }
     out_path = BASE / "data" / out_file
     with open(out_path, "w", encoding="utf-8") as f:
