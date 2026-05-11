@@ -6,6 +6,9 @@ import sys
 import requests
 from pathlib import Path
 from datetime import datetime, date, timezone, timedelta
+from zoneinfo import ZoneInfo
+
+_TZ_BERLIN = ZoneInfo("Europe/Berlin")
 from notify import send_ntfy
 from constants import DAYS_DE, NOTIFY_HOUR_CUTOFF
 
@@ -14,7 +17,7 @@ PYTHON = sys.executable
 DATA = BASE.parent / "data"
 
 def get_today():
-    now = datetime.now(timezone.utc) + timedelta(hours=2)
+    now = datetime.now(_TZ_BERLIN)
     if now.hour >= NOTIFY_HOUR_CUTOFF:
         candidate = now.date() + timedelta(days=1)
     else:
@@ -72,6 +75,8 @@ def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=
         capture_output=True, text=True
     )
     print(result.stdout.strip())
+    if result.returncode != 0:
+        return
 
     zeilen_output = result.stdout.strip().splitlines()
     alle_stunden = [z for z in zeilen_output if z.startswith("  Std ")]

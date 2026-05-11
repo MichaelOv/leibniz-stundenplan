@@ -32,6 +32,17 @@ def fach_name(kuerzel: str, fach_map: dict) -> str:
     key = kuerzel.lstrip(".")
     return fach_map.get(key, key)
 
+def parse_stunden(raw):
+    """'7 - 8 ROM' → ([7,8], 'ROM'), '3' → ([3], ''), '1 - 2 MAT' → ([1,2], 'MAT')"""
+    parts = str(raw).replace("-", " ").split()
+    stunden, lehrer_raw = [], ""
+    for p in parts:
+        if p.isdigit():
+            stunden.append(int(p))
+        else:
+            lehrer_raw = p
+    return stunden, lehrer_raw
+
 def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json"):
     FACH = load_fach_map()
     LEHRER_FACH = load_lehrer_fach()
@@ -60,17 +71,6 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
 
     sub_by_lehrer = {}
     sub_by_hour   = {}
-
-    def parse_stunden(raw):
-        """'7 - 8 ROM' → ([7,8], 'ROM'), '3' → ([3], ''), '1 - 2 MAT' → ([1,2], 'MAT')"""
-        parts = str(raw).replace("-", " ").split()
-        stunden, lehrer_raw = [], ""
-        for p in parts:
-            if p.isdigit():
-                stunden.append(int(p))
-            else:
-                lehrer_raw = p
-        return stunden, lehrer_raw
 
     parsed_subs = []
     for s in subs:

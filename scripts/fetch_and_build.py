@@ -180,3 +180,4 @@ if __name__ == "__main__":
         print("Fertig!")
     except Exception:
         traceback.print_exc()
+        sys.exit(1)

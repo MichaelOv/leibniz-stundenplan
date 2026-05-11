@@ -1,13 +1,15 @@
-import os, requests, base64, hashlib, json
+import os, requests, base64, hashlib
 from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
-NTFY_TOPIC = os.getenv("NTFY_TOPIC")
-if not NTFY_TOPIC:
-    raise ValueError("NTFY_TOPIC ist nicht gesetzt. Bitte in .env oder als Umgebungsvariable definieren.")
-NTFY_URL = f"https://ntfy.sh/{NTFY_TOPIC}"
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
+
+def _ntfy_url() -> str:
+    topic = os.getenv("NTFY_TOPIC")
+    if not topic:
+        raise ValueError("NTFY_TOPIC ist nicht gesetzt. Bitte in .env oder als Umgebungsvariable definieren.")
+    return f"https://ntfy.sh/{topic}"
 
 def rfc2047(s: str) -> str:
     b64 = base64.b64encode(s.encode("utf-8")).decode("ascii")
@@ -26,8 +28,9 @@ def send_ntfy(title: str, msg: str, priority: int = 3, hash_suffix: str = "today
         print("ntfy: Gleiche Benachrichtigung bereits gesendet, ueberspringe.")
         return False
 
+    ntfy_url = _ntfy_url()
     try:
-        r = requests.post(NTFY_URL,
+        r = requests.post(ntfy_url,
             data=msg.encode("utf-8"),
             headers={
                 "Title":    rfc2047(title),
@@ -40,7 +43,7 @@ def send_ntfy(title: str, msg: str, priority: int = 3, hash_suffix: str = "today
         hash_file.write_text(_hash(key))
         return True
     except requests.exceptions.ConnectionError:
-        print("ntfy FEHLER: Keine Verbindung zu " + NTFY_URL)
+        print("ntfy FEHLER: Keine Verbindung zu " + ntfy_url)
     except requests.exceptions.Timeout:
         print("ntfy FEHLER: Timeout nach 5s")
     except requests.exceptions.HTTPError as e:
