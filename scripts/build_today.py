@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 import json, sys
 from pathlib import Path
-from datetime import datetime, timezone
-
-DAYS_DE = {0:"Montag",1:"Dienstag",2:"Mittwoch",3:"Donnerstag",4:"Freitag"}
+from datetime import datetime, date, timezone
+from constants import DAYS_DE
 
 BASE = Path(__file__).resolve().parents[1]
 
@@ -49,19 +47,18 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
         target_date = now.strftime("%Y-%m-%d")
         weekday = now.weekday()
     else:
-        from datetime import date
         d = date.fromisoformat(target_date)
         weekday = d.weekday()
 
     if weekday > 4:
-        print("Wochenende")
-        return
+        print("FEHLER: Zieldatum ist ein Wochenende.")
+        sys.exit(1)
 
     day_name = DAYS_DE[weekday]
     untis_path = BASE / "data" / "untis_6c.json"
     if not untis_path.exists():
-        print("WARNUNG: untis_6c.json fehlt – bitte parse_untis.py ausführen.")
-        return
+        print("FEHLER: untis_6c.json fehlt – bitte parse_untis.py ausführen.")
+        sys.exit(1)
     untis = load_json(untis_path)
     vtg_data = load_json(BASE / "data" / vtg_file)
     subs = vtg_data.get("substitutions", [])

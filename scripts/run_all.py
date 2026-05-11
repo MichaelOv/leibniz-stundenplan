@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 #!/usr/bin/env python3
+import json
 import os
 import subprocess
 import sys
@@ -7,6 +7,7 @@ import requests
 from pathlib import Path
 from datetime import datetime, date, timezone, timedelta
 from notify import send_ntfy
+from constants import DAYS_DE, NOTIFY_HOUR_CUTOFF
 
 BASE = Path(__file__).resolve().parent
 PYTHON = sys.executable
@@ -14,7 +15,7 @@ DATA = BASE.parent / "data"
 
 def get_today():
     now = datetime.now(timezone.utc) + timedelta(hours=2)
-    if now.hour >= 9:
+    if now.hour >= NOTIFY_HOUR_CUTOFF:
         candidate = now.date() + timedelta(days=1)
     else:
         candidate = now.date()
@@ -28,14 +29,14 @@ def get_tomorrow(today_str):
         d += timedelta(days=1)
     return d.isoformat()
 
-def run(script, *args):
+def run(script, *args) -> bool:
     cmd = [PYTHON, str(BASE / script)] + list(args)
     result = subprocess.run(cmd, capture_output=True, text=True)
     print(result.stdout.strip())
     if result.returncode != 0:
         print("FEHLER in " + script + ": " + result.stderr.strip())
-        return None
-    return result
+        return False
+    return True
 
 def untis_html_changed():
     try:
@@ -54,8 +55,7 @@ def untis_html_changed():
         print("Warnung: Untis-Check fehlgeschlagen: " + str(e))
         return True
 
-def vtg_has_entries(json_file):
-    import json
+def vtg_has_entries(json_file) -> bool:
     path = DATA / json_file
     if not path.exists():
         return False
@@ -63,7 +63,8 @@ def vtg_has_entries(json_file):
         with open(path) as f:
             data = json.load(f)
         return len(data.get("substitutions", [])) > 0
-    except:
+    except (json.JSONDecodeError, OSError) as e:
+        print(f"Warnung: {json_file} konnte nicht gelesen werden: {e}")
         return False
 
 def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=True):
@@ -92,7 +93,6 @@ def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=
                 msg_zeilen.append("   " + a)
 
         if notify:
-            DAYS_DE = {0:"Montag",1:"Dienstag",2:"Mittwoch",3:"Donnerstag",4:"Freitag"}
             d = date.fromisoformat(target)
             day_label = DAYS_DE[d.weekday()] + " " + str(d.day) + "." + str(d.month) + "."
             suffix = "tomorrow" if label == "Morgen" else "today"
@@ -137,12 +137,10 @@ if __name__ == "__main__":
     else:
         print("Kein Vertretungsplan für morgen – zeige regulären Plan.")
         if not ok2:
-            import json
             empty = {"date": tomorrow, "class": "06c", "substitutions": []}
             (DATA / "latest_6c_tomorrow.json").write_text(json.dumps(empty))
         run("build_today.py", tomorrow, "tomorrow_6c.json", "latest_6c_tomorrow.json")
 
-    import json
     config = {
         "ntfy_topic": os.getenv("NTFY_TOPIC", ""),
         "last_run_at": datetime.now(timezone.utc).isoformat()

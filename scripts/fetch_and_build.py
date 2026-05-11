@@ -5,10 +5,15 @@ from datetime import datetime, date, timezone, timedelta
 import fitz
 import requests
 from dotenv import load_dotenv
+from constants import DAYS_DE
 
 load_dotenv()
-USERNAME = os.getenv("ISERV_USER")
-PASSWORD = os.getenv("ISERV_PASS")
+try:
+    USERNAME = os.environ["ISERV_USER"]
+    PASSWORD = os.environ["ISERV_PASS"]
+except KeyError as e:
+    print(f"FEHLER: Umgebungsvariable {e} fehlt – bitte .env prüfen.")
+    sys.exit(1)
 BASE_URL  = "https://gym-leibniz-ge.de"
 ISERV_URL = BASE_URL + "/iserv/plan/show/raw/Vertretung%20Sch%C3%BCler/{date}-S.pdf"
 TARGET_CLASS = "06c"
@@ -113,8 +118,7 @@ def check_pdf_header(pdf_bytes, target_date):
     """Öffnet das PDF einmal und gibt (datum_stimmt, pdf_stand_iso) zurück."""
     d = date.fromisoformat(target_date)
     pattern = f"{d.day}.{d.month}."
-    days_de = {0:"Montag",1:"Dienstag",2:"Mittwoch",3:"Donnerstag",4:"Freitag"}
-    day_name = days_de[d.weekday()]
+    day_name = DAYS_DE[d.weekday()]
     with fitz.open(stream=pdf_bytes, filetype="pdf") as doc:
         text = "".join(page.get_text() for page in doc)
     date_ok = (pattern in text and day_name in text)
@@ -124,8 +128,8 @@ def check_pdf_header(pdf_bytes, target_date):
         try:
             dt = datetime.strptime(m.group(1) + " " + m.group(2), "%d.%m.%Y %H:%M")
             pdf_stand = dt.replace(tzinfo=timezone(timedelta(hours=2))).isoformat()
-        except Exception:
-            pass
+        except ValueError as e:
+            print(f"Warnung: pdf_stand konnte nicht geparst werden: {e}")
     return date_ok, pdf_stand
 
 def parse_class_data(pdf_bytes, target_class):
