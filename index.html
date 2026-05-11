@@ -192,7 +192,7 @@
     const gen = standSrc ? new Date(standSrc) : null;
     const genStr = gen ? gen.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) : '\u2014';
     document.getElementById('statGenerated').textContent   = 'Stand ' + genStr + ' Uhr';
-    document.getElementById('footerGenerated').textContent = 'Zuletzt gepr\u00fcft: \u2014';
+    document.getElementById('footerGenerated').textContent = 'Zuletzt gepr\u00fcft: ' + genStr + ' Uhr';
 
     const pill = document.getElementById('statusPill');
     if (!d.vtg_count || d.vtg_count === 0) {

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import json, os, sys, re
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime, date, timezone, timedelta
+import fitz
 import requests
 from dotenv import load_dotenv
 
@@ -45,18 +46,9 @@ def fetch_pdf(session, url):
     r.raise_for_status()
     if b"%PDF" not in r.content[:10]:
         print("KEIN PDF")
-        return None, None
-    last_mod = r.headers.get("Last-Modified", "")
-    if last_mod:
-        from email.utils import parsedate_to_datetime
-        try:
-            pdf_stand = parsedate_to_datetime(last_mod).isoformat()
-        except Exception:
-            pdf_stand = datetime.now(timezone.utc).isoformat()
-    else:
-        pdf_stand = datetime.now(timezone.utc).isoformat()
+        return None
     print("PDF geladen: " + str(len(r.content)) + " bytes")
-    return r.content, pdf_stand
+    return r.content
 
 def parse_entry(lines, start):
     """Liest einen Vertretungseintrag ab Position start.
@@ -117,35 +109,40 @@ def parse_entry(lines, start):
         "raum": raum, "fach": fach, "text": text
     }, j
 
-def pdf_contains_date(pdf_bytes, target_date):
-    import fitz
-    from datetime import date
+def check_pdf_header(pdf_bytes, target_date):
+    """Öffnet das PDF einmal und gibt (datum_stimmt, pdf_stand_iso) zurück."""
     d = date.fromisoformat(target_date)
-    # Plandatum steht im Format "7.5. / Donnerstag" im PDF
     pattern = f"{d.day}.{d.month}."
     days_de = {0:"Montag",1:"Dienstag",2:"Mittwoch",3:"Donnerstag",4:"Freitag"}
     day_name = days_de[d.weekday()]
-    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    text = "".join(page.get_text() for page in doc)
-    return (pattern in text and day_name in text)
+    with fitz.open(stream=pdf_bytes, filetype="pdf") as doc:
+        text = "".join(page.get_text() for page in doc)
+    date_ok = (pattern in text and day_name in text)
+    m = re.search(r'(\d{1,2}\.\d{1,2}\.\d{4})\s+(\d{1,2}:\d{2})', text)
+    pdf_stand = None
+    if m:
+        try:
+            dt = datetime.strptime(m.group(1) + " " + m.group(2), "%d.%m.%Y %H:%M")
+            pdf_stand = dt.replace(tzinfo=timezone(timedelta(hours=2))).isoformat()
+        except Exception:
+            pass
+    return date_ok, pdf_stand
 
 def parse_class_data(pdf_bytes, target_class):
-    import fitz
-    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
     data = []
-    for page in doc:
-        for block in page.get_text("blocks"):
-            lines = [l.strip() for l in block[4].split("\n") if l.strip()]
-            i = 0
-            while i < len(lines):
-                if class_matches(lines[i], target_class):
-                    entry, next_i = parse_entry(lines, i)
-                    print("TREFFER: " + str(entry))
-                    data.append(entry)
-                    i = next_i
-                else:
-                    i += 1
-    doc.close()
+    with fitz.open(stream=pdf_bytes, filetype="pdf") as doc:
+        for page in doc:
+            for block in page.get_text("blocks"):
+                lines = [l.strip() for l in block[4].split("\n") if l.strip()]
+                i = 0
+                while i < len(lines):
+                    if class_matches(lines[i], target_class):
+                        entry, next_i = parse_entry(lines, i)
+                        print("TREFFER: " + str(entry))
+                        data.append(entry)
+                        i = next_i
+                    else:
+                        i += 1
     print("Gesamt: " + str(len(data)) + " Eintraege")
     return data
 
@@ -154,11 +151,13 @@ if __name__ == "__main__":
     url = ISERV_URL.format(date=target_date)
     try:
         session = get_authenticated_session()
-        pdf_bytes, pdf_stand = fetch_pdf(session, url)
+        pdf_bytes = fetch_pdf(session, url)
         if not pdf_bytes: sys.exit(1)
-        if not pdf_contains_date(pdf_bytes, target_date):
+        date_ok, pdf_stand = check_pdf_header(pdf_bytes, target_date)
+        if not date_ok:
             print("PDF enthält nicht das Zieldatum – kein Plan verfügbar.")
             sys.exit(1)
+        print("PDF-Stand: " + str(pdf_stand))
         class_data = parse_class_data(pdf_bytes, TARGET_CLASS)
         output = {"date": target_date, "class": TARGET_CLASS, "substitutions": class_data, "pdf_stand": pdf_stand}
         out_file = sys.argv[2] if len(sys.argv) > 2 else "latest_6c.json"

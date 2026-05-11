@@ -60,7 +60,8 @@ def vtg_has_entries(json_file):
     if not path.exists():
         return False
     try:
-        data = json.load(open(path))
+        with open(path) as f:
+            data = json.load(f)
         return len(data.get("substitutions", [])) > 0
     except:
         return False
@@ -74,18 +75,21 @@ def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=
     print(result.stdout.strip())
 
     zeilen_output = result.stdout.strip().splitlines()
-    aenderungen = [z for z in zeilen_output if z.startswith("  Std ") and any(x in z for x in ["FREI", "VERTRETUNG", "INFO"])]
+    alle_stunden = [z for z in zeilen_output if z.startswith("  Std ")]
+    aenderungen = [z for z in alle_stunden if any(x in z for x in ["FREI", "VERTRETUNG", "INFO"])]
 
     if aenderungen and result.returncode == 0:
         msg_zeilen = []
-        for a in aenderungen:
+        for a in alle_stunden:
             a = a.strip()
             if "FREI" in a:
                 msg_zeilen.append("❌ " + a)
             elif "VERTRETUNG" in a:
                 msg_zeilen.append("🔄 " + a)
-            else:
+            elif "INFO" in a:
                 msg_zeilen.append("📋 " + a)
+            else:
+                msg_zeilen.append("   " + a)
 
         if notify:
             suffix = "tomorrow" if label == "Morgen" else "today"
@@ -97,8 +101,6 @@ def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=
             )
             if ok:
                 print("Benachrichtigung gesendet!")
-        else:
-            print("Benachrichtigung übersprungen (Zeitfenster).")
     else:
         print("Keine Änderungen – keine Benachrichtigung.")
 
@@ -120,18 +122,15 @@ if __name__ == "__main__":
     else:
         print("Untis-HTML unveraendert, ueberspringe Parse.")
 
-    now = datetime.now(timezone.utc) + timedelta(hours=2)
-    after_nine = now.hour >= 9
-
     print("=== Schritt 4: Heute ===")
     if ok1:
-        build_and_notify(today, "today_6c.json", "Heute", vtg_file="latest_6c.json", notify=not after_nine)
+        build_and_notify(today, "today_6c.json", "Heute", vtg_file="latest_6c.json", notify=True)
     else:
         print("PDF-Fehler – überspringe Heute.")
 
     print("=== Schritt 5: Morgen ===")
     if ok2 and vtg_has_entries("latest_6c_tomorrow.json"):
-        build_and_notify(tomorrow, "tomorrow_6c.json", "Morgen", vtg_file="latest_6c_tomorrow.json", notify=after_nine)
+        build_and_notify(tomorrow, "tomorrow_6c.json", "Morgen", vtg_file="latest_6c_tomorrow.json", notify=False)
     else:
         print("Kein Vertretungsplan für morgen – zeige regulären Plan.")
         import json
