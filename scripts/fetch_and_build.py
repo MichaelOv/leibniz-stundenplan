@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-import json, os, sys, re
+import json, os, sys, re, traceback, logging
 from pathlib import Path
 from datetime import datetime, date, timezone, timedelta
 import fitz
 import requests
 from dotenv import load_dotenv
 from constants import DAYS_DE
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 load_dotenv()
 try:
@@ -24,7 +26,8 @@ KNOWN_ROOMS    = re.compile(r'^[A-Z0-9][A-Z0-9\.\-]{1,7}$', re.IGNORECASE)
 def class_matches(s, my_class):
     s = s.lower().strip()
     mc = my_class.lower().strip()
-    if s == mc: return True
+    if s == mc:
+        return True
     jg  = re.search(r'(\d+)', mc)
     bst = re.search(r'([a-z]+)$', mc)
     if jg and bst:
@@ -103,10 +106,14 @@ def parse_entry(lines, start):
     if len(rest) >= 3:
         text = " ".join(rest[2:])
 
-    if lehrer == "---": lehrer = ""
-    if vertreter == "---": vertreter = ""
-    if raum == "---": raum = ""
-    if fach == "---": fach = ""
+    if lehrer == "---":
+        lehrer = ""
+    if vertreter == "---":
+        vertreter = ""
+    if raum == "---":
+        raum = ""
+    if fach == "---":
+        fach = ""
 
     return {
         "klasse": klasse, "stunde": stunde,
@@ -137,12 +144,12 @@ def parse_class_data(pdf_bytes, target_class):
     with fitz.open(stream=pdf_bytes, filetype="pdf") as doc:
         for page in doc:
             for block in page.get_text("blocks"):
-                lines = [l.strip() for l in block[4].split("\n") if l.strip()]
+                lines = [ln.strip() for ln in block[4].split("\n") if ln.strip()]
                 i = 0
                 while i < len(lines):
                     if class_matches(lines[i], target_class):
                         entry, next_i = parse_entry(lines, i)
-                        print("TREFFER: " + str(entry))
+                        logging.debug("TREFFER: %s", entry)
                         data.append(entry)
                         i = next_i
                     else:
@@ -156,7 +163,8 @@ if __name__ == "__main__":
     try:
         session = get_authenticated_session()
         pdf_bytes = fetch_pdf(session, url)
-        if not pdf_bytes: sys.exit(1)
+        if not pdf_bytes:
+            sys.exit(1)
         date_ok, pdf_stand = check_pdf_header(pdf_bytes, target_date)
         if not date_ok:
             print("PDF enthält nicht das Zieldatum – kein Plan verfügbar.")
@@ -170,5 +178,5 @@ if __name__ == "__main__":
         with open(data_path, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)
         print("Fertig!")
-    except Exception as e:
-        import traceback; traceback.print_exc()
+    except Exception:
+        traceback.print_exc()

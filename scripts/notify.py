@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os, requests, base64, hashlib, json
 from pathlib import Path
 from dotenv import load_dotenv
@@ -15,7 +14,7 @@ def rfc2047(s: str) -> str:
     return f"=?UTF-8?B?{b64}?="
 
 def already_sent(key: str, hash_file: Path) -> bool:
-    h = hashlib.md5(key.encode()).hexdigest()
+    h = hashlib.sha256(key.encode()).hexdigest()
     if hash_file.exists() and hash_file.read_text().strip() == h:
         return True
     hash_file.write_text(h)

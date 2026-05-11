@@ -46,7 +46,6 @@ def untis_html_changed():
         )
         last_mod = r.headers.get("Last-Modified", "")
         cache = DATA / "untis_last_modified.txt"
-        DATA.mkdir(exist_ok=True)
         if cache.exists() and cache.read_text().strip() == last_mod:
             return False
         cache.write_text(last_mod)
@@ -108,6 +107,7 @@ def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=
         print("Keine Änderungen – keine Benachrichtigung.")
 
 if __name__ == "__main__":
+    DATA.mkdir(exist_ok=True)
     # Manuelles Datum möglich: python run_all.py 2026-05-07
     manual = sys.argv[1] if len(sys.argv) > 1 else None
     today = manual or get_today()

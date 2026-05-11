@@ -78,16 +78,22 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
                 lehrer_raw = p
         return stunden, lehrer_raw
 
+    parsed_subs = []
     for s in subs:
-        raw_h = clean(s.get("stunde",""))
-        stunden_list, lhr_aus_stunde = parse_stunden(raw_h)
-        lhr  = clean_lehrer(s.get("lehrer","")) or lhr_aus_stunde
-        vtg  = clean(s.get("vertreter",""))
-        raum = clean(s.get("raum",""))
-        fach = clean(s.get("fach",""))
-        text = clean(s.get("text",""))
-        entry = {"lehrer": lhr, "vertreter": vtg, "raum": raum, "fach": fach, "text": text}
-        for stunde_nr in stunden_list:
+        stunden_list, lhr_aus_stunde = parse_stunden(clean(s.get("stunde", "")))
+        parsed_subs.append({
+            "stunden_list": stunden_list,
+            "lhr":  clean_lehrer(s.get("lehrer", "")) or lhr_aus_stunde,
+            "vtg":  clean(s.get("vertreter", "")),
+            "raum": clean(s.get("raum", "")),
+            "fach": clean(s.get("fach", "")),
+            "text": clean(s.get("text", "")),
+        })
+
+    for ps in parsed_subs:
+        lhr = ps["lhr"]
+        entry = {"lehrer": lhr, "vertreter": ps["vtg"], "raum": ps["raum"], "fach": ps["fach"], "text": ps["text"]}
+        for stunde_nr in ps["stunden_list"]:
             h = str(stunde_nr)
             if lhr:
                 sub_by_lehrer[(h, lhr)] = entry
@@ -98,11 +104,13 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
 
     for stunde_str, days in untis.items():
         stunde = int(stunde_str)
-        if stunde == 0: continue
+        if stunde == 0:
+            continue
         lessons = days.get(day_name, [])
         for lesson in lessons:
             fach_key = lesson["fach"].lstrip(".")
-            if fach_key.upper().startswith("NK"): continue
+            if fach_key.upper().startswith("NK"):
+                continue
             fname = fach_name(fach_key, FACH)
             lehrer = lesson["lehrer"]
             raum   = lesson["raum"]
@@ -131,35 +139,35 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
                 elif vtg:
                     entry["status"] = "vertretung"
                     entry["vertreter"] = vtg
-                    if raum_neu: entry["raum"] = raum_neu
+                    if raum_neu:
+                        entry["raum"] = raum_neu
                     entry["hinweis"] = sub.get("text","")
             plan.append(entry)
 
     # Nicht gematchte Vertretungen (z.B. Gruppen wie 06ac)
-    for s in subs:
-        raw_h = clean(s.get("stunde",""))
-        stunden_list_u, lhr_aus_stunde_u = parse_stunden(raw_h)
-        lhr  = clean_lehrer(s.get("lehrer","")) or lhr_aus_stunde_u
-        vtg  = clean(s.get("vertreter",""))
-        raum = clean(s.get("raum",""))
-        fach = clean(s.get("fach",""))
-        text = clean(s.get("text",""))
-        for stunde_nr_u in stunden_list_u:
+    for ps in parsed_subs:
+        lhr  = ps["lhr"]
+        vtg  = ps["vtg"]
+        text = ps["text"]
+        for stunde_nr_u in ps["stunden_list"]:
+            fach = ps["fach"]
+            raum = ps["raum"]
             h = str(stunde_nr_u)
-            key  = (h, lhr)
+            key = (h, lhr)
             if key not in matched_sub_keys and ("HOUR", h) not in matched_sub_keys and h:
                 if not fach:
                     untis_lektionen = untis.get(h, {}).get(day_name, [])
-                    match = next((l for l in untis_lektionen if l["lehrer"] == lhr), None)
-                    if match:
-                        fach = match["fach"].lstrip(".")
+                    les = next((les for les in untis_lektionen if les["lehrer"] == lhr), None)
+                    if les:
+                        fach = les["fach"].lstrip(".")
                 if not fach:
-                    for neighbor in stunden_list_u:
+                    for neighbor in ps["stunden_list"]:
                         nb_lektionen = untis.get(str(neighbor), {}).get(day_name, [])
-                        nb_match = next((l for l in nb_lektionen if l["lehrer"] == lhr), None)
-                        if nb_match:
-                            fach = nb_match["fach"].lstrip(".")
-                            if not raum: raum = nb_match.get("raum","")
+                        nb_les = next((les for les in nb_lektionen if les["lehrer"] == lhr), None)
+                        if nb_les:
+                            fach = nb_les["fach"].lstrip(".")
+                            if not raum:
+                                raum = nb_les.get("raum", "")
                             break
                 if not fach:
                     fach = LEHRER_FACH.get(lhr, "")
