@@ -140,7 +140,10 @@ if __name__ == "__main__":
         run("build_today.py", tomorrow, "tomorrow_6c.json", "latest_6c_tomorrow.json")
 
     import json
-    config = {"ntfy_topic": os.getenv("NTFY_TOPIC", "")}
+    config = {
+        "ntfy_topic": os.getenv("NTFY_TOPIC", ""),
+        "last_run_at": datetime.now(timezone.utc).isoformat()
+    }
     (DATA / "config.json").write_text(json.dumps(config))
 
     print("=== Fertig ===")

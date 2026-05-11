@@ -261,6 +261,11 @@
         btn.href = 'https://ntfy.sh/' + c.ntfy_topic;
         btn.style.display = '';
       }
+      if (c.last_run_at) {
+        const run = new Date(c.last_run_at);
+        const runStr = run.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'});
+        document.getElementById('footerGenerated').textContent = 'Zuletzt geprüft: ' + runStr + ' Uhr';
+      }
     } catch(e) {}
   })();
 
