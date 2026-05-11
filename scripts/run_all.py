@@ -136,9 +136,10 @@ if __name__ == "__main__":
         build_and_notify(tomorrow, "tomorrow_6c.json", "Morgen", vtg_file="latest_6c_tomorrow.json", notify=False)
     else:
         print("Kein Vertretungsplan für morgen – zeige regulären Plan.")
-        import json
-        empty = {"date": tomorrow, "class": "06c", "substitutions": []}
-        (DATA / "latest_6c_tomorrow.json").write_text(json.dumps(empty))
+        if not ok2:
+            import json
+            empty = {"date": tomorrow, "class": "06c", "substitutions": []}
+            (DATA / "latest_6c_tomorrow.json").write_text(json.dumps(empty))
         run("build_today.py", tomorrow, "tomorrow_6c.json", "latest_6c_tomorrow.json")
 
     import json
