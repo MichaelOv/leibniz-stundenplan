@@ -17,7 +17,9 @@ def data(filename):
 @app.route('/api/refresh', methods=['POST'])
 def refresh():
     try:
-        subprocess.run(['venv/bin/python', 'scripts/run_all.py'], cwd=str(BASE_DIR), timeout=120)
+        result = subprocess.run(['venv/bin/python', 'scripts/run_all.py'], cwd=str(BASE_DIR), timeout=120)
+        if result.returncode != 0:
+            return jsonify({"ok": False, "error": "run_all.py fehlgeschlagen"}), 500
         return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500

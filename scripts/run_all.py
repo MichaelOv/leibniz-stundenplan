@@ -107,12 +107,11 @@ def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=
         if notify:
             d = date.fromisoformat(target)
             day_label = DAYS_DE[d.weekday()] + " " + str(d.day) + "." + str(d.month) + "."
-            suffix = "tomorrow" if label == "Morgen" else "today"
             ok = send_ntfy(
                 title="Änderung 6c " + day_label,
                 msg="\n".join(msg_zeilen),
                 priority=4,
-                hash_suffix=suffix
+                hash_suffix="today"
             )
             if ok:
                 print("Benachrichtigung gesendet!")

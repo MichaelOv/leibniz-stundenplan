@@ -1,18 +1,20 @@
-# parse_untis.py
-# -*- coding: utf-8 -*-
 #!/usr/bin/env python3
-import requests, json
+import requests, json, sys
 from bs4 import BeautifulSoup
 from pathlib import Path
+from constants import DAYS_DE
 
 UNTIS_URL = "https://leibniz-gymnasium.net/files/stpl/Kla1A_06c.htm"
-DAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
 
 def parse_untis():
     r = requests.get(UNTIS_URL, timeout=30)
+    r.raise_for_status()
     r.encoding = r.apparent_encoding
     soup = BeautifulSoup(r.content, "html.parser")
     tables = soup.find_all("table")
+    if len(tables) < 2:
+        print("FEHLER: Untis-HTML hat unerwartete Struktur (zu wenige Tabellen).")
+        sys.exit(1)
     main_rows = tables[1].find_all("tr")
 
     # Tag-Startspalten aus Header
@@ -21,7 +23,7 @@ def parse_untis():
     for cell in main_rows[0].find_all(["td","th"]):
         cs = int(cell.get("colspan", 1))
         txt = cell.get_text(strip=True)
-        if cs == 12 and txt in DAYS:
+        if cs == 12 and txt in DAYS_DE.values():
             day_start_cols[col] = txt
         col += cs
     all_days = [day_start_cols[c] for c in sorted(day_start_cols.keys())]
