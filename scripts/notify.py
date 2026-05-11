@@ -13,15 +13,13 @@ def rfc2047(s: str) -> str:
     b64 = base64.b64encode(s.encode("utf-8")).decode("ascii")
     return f"=?UTF-8?B?{b64}?="
 
+def _hash(key: str) -> str:
+    return hashlib.sha256(key.encode()).hexdigest()
+
 def already_sent(key: str, hash_file: Path) -> bool:
-    h = hashlib.sha256(key.encode()).hexdigest()
-    if hash_file.exists() and hash_file.read_text().strip() == h:
-        return True
-    hash_file.write_text(h)
-    return False
+    return hash_file.exists() and hash_file.read_text().strip() == _hash(key)
 
 def send_ntfy(title: str, msg: str, priority: int = 3, hash_suffix: str = "today") -> bool:
-    # Datum + Inhalt als eindeutiger Key
     hash_file = DATA_DIR / f"last_ntfy_hash_{hash_suffix}.txt"
     key = title + "|" + msg
     if already_sent(key, hash_file):
@@ -39,6 +37,7 @@ def send_ntfy(title: str, msg: str, priority: int = 3, hash_suffix: str = "today
             timeout=5
         )
         r.raise_for_status()
+        hash_file.write_text(_hash(key))
         return True
     except requests.exceptions.ConnectionError:
         print("ntfy FEHLER: Keine Verbindung zu " + NTFY_URL)

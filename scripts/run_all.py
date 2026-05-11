@@ -55,13 +55,12 @@ def untis_html_changed():
         return True
 
 def vtg_has_entries(json_file) -> bool:
-    path = DATA / json_file
-    if not path.exists():
-        return False
     try:
-        with open(path) as f:
+        with open(DATA / json_file) as f:
             data = json.load(f)
         return len(data.get("substitutions", [])) > 0
+    except FileNotFoundError:
+        return False
     except (json.JSONDecodeError, OSError) as e:
         print(f"Warnung: {json_file} konnte nicht gelesen werden: {e}")
         return False

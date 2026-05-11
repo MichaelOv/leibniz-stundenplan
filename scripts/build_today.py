@@ -7,23 +7,17 @@ from constants import DAYS_DE
 BASE = Path(__file__).resolve().parents[1]
 
 def load_json(path):
-    if path.exists():
+    try:
         with open(path, encoding="utf-8") as f:
             return json.load(f)
-    return {}
+    except FileNotFoundError:
+        return {}
 
 def load_fach_map():
-    path = BASE / "data" / "fach_mapping.json"
-    if path.exists():
-        return load_json(path)
-    # Fallback falls Datei fehlt
-    return {}
+    return load_json(BASE / "data" / "fach_mapping.json")
 
 def load_lehrer_fach():
-    path = BASE / "data" / "lehrer_fach.json"
-    if path.exists():
-        return load_json(path)
-    return {}
+    return load_json(BASE / "data" / "lehrer_fach.json")
 
 def clean(v):
     return "" if v in ("---", None) else str(v).strip()
