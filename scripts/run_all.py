@@ -78,22 +78,31 @@ def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=
     if result.returncode != 0:
         return
 
-    zeilen_output = result.stdout.strip().splitlines()
-    alle_stunden = [z for z in zeilen_output if z.startswith("  Std ")]
-    aenderungen = [z for z in alle_stunden if any(x in z for x in ["FREI", "VERTRETUNG", "INFO"])]
+    try:
+        with open(DATA / out_file) as f:
+            plan_data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Warnung: {out_file} konnte nicht gelesen werden: {e}")
+        return
 
-    if aenderungen and result.returncode == 0:
+    alle_stunden = plan_data.get("plan", [])
+    aenderungen = [p for p in alle_stunden if p["status"] in ("frei", "vertretung", "info")]
+
+    if aenderungen:
         msg_zeilen = []
-        for a in alle_stunden:
-            a = a.strip()
-            if "FREI" in a:
-                msg_zeilen.append("❌ " + a)
-            elif "VERTRETUNG" in a:
-                msg_zeilen.append("🔄 " + a)
-            elif "INFO" in a:
-                msg_zeilen.append("📋 " + a)
+        for p in alle_stunden:
+            mark = f" [{p['status'].upper()}]" if p["status"] != "normal" else ""
+            vtg_str = f" -> {p['vertreter']}" if p["vertreter"] else ""
+            hinweis = f" | {p['hinweis']}" if p["hinweis"] else ""
+            line = f"Std {p['stunde']} {p['fach']} ({p['lehrer']}) {p['raum']}{mark}{vtg_str}{hinweis}"
+            if p["status"] == "frei":
+                msg_zeilen.append("❌ " + line)
+            elif p["status"] == "vertretung":
+                msg_zeilen.append("🔄 " + line)
+            elif p["status"] == "info":
+                msg_zeilen.append("📋 " + line)
             else:
-                msg_zeilen.append("   " + a)
+                msg_zeilen.append("   " + line)
 
         if notify:
             d = date.fromisoformat(target)

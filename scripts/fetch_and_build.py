@@ -45,8 +45,11 @@ def get_authenticated_session():
     session = requests.Session()
     session.headers.update({"User-Agent": "Mozilla/5.0"})
     r1 = session.get(BASE_URL + "/iserv/login", timeout=30, allow_redirects=True)
-    session.post(r1.url, data={"_username": USERNAME, "_password": PASSWORD,
-                                "_remember_me": "on"}, allow_redirects=True, timeout=30)
+    r2 = session.post(r1.url, data={"_username": USERNAME, "_password": PASSWORD,
+                                    "_remember_me": "on"}, allow_redirects=True, timeout=30)
+    r2.raise_for_status()
+    if "/iserv/login" in r2.url:
+        raise ValueError("iServ-Login fehlgeschlagen – Zugangsdaten pruefen.")
     return session
 
 def fetch_pdf(session, url):

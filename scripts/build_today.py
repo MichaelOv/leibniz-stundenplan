@@ -91,7 +91,7 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
             h = str(stunde_nr)
             if lhr:
                 sub_by_lehrer[(h, lhr)] = entry
-            sub_by_hour[h] = entry
+            sub_by_hour.setdefault(h, []).append(entry)
 
     plan = []
     matched_sub_keys = set()
@@ -118,8 +118,9 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
             if sub:
                 matched_sub_keys.add(sub_key)
             else:
-                fallback = sub_by_hour.get(str(stunde))
-                if fallback and fallback.get("lehrer","") == lehrer:
+                fallbacks = sub_by_hour.get(str(stunde), [])
+                fallback = next((f for f in fallbacks if f.get("lehrer", "") == lehrer), None)
+                if fallback:
                     sub = fallback
                     matched_sub_keys.add(("HOUR", str(stunde)))
 
