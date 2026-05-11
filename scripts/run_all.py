@@ -92,9 +92,12 @@ def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=
                 msg_zeilen.append("   " + a)
 
         if notify:
+            DAYS_DE = {0:"Montag",1:"Dienstag",2:"Mittwoch",3:"Donnerstag",4:"Freitag"}
+            d = date.fromisoformat(target)
+            day_label = DAYS_DE[d.weekday()] + " " + str(d.day) + "." + str(d.month) + "."
             suffix = "tomorrow" if label == "Morgen" else "today"
             ok = send_ntfy(
-                title="Änderung 6c " + label + " - " + target,
+                title="Änderung 6c " + day_label,
                 msg="\n".join(msg_zeilen),
                 priority=4,
                 hash_suffix=suffix
