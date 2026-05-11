@@ -9,9 +9,9 @@
       "fach_kurz": "IR",
       "lehrer": "AVS",
       "raum": "610",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     },
     {
       "stunde": 2,
@@ -64,7 +64,7 @@
       "hinweis": ""
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-05-11T07:59:23.820994+00:00",
-  "pdf_stand": "2026-05-11T05:54:42+00:00"
+  "vtg_count": 1,
+  "generated_at": "2026-05-11T08:19:23.630182+00:00",
+  "pdf_stand": "2026-05-11T08:07:23+00:00"
 }
