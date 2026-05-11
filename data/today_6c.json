@@ -1,30 +1,40 @@
 {
-  "date": "2026-05-11",
-  "day": "Montag",
+  "date": "2026-05-12",
+  "day": "Dienstag",
   "class": "06c",
   "plan": [
     {
-      "stunde": 1,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.03Ku",
+      "stunde": 2,
+      "fach": "Islamische Rel.",
+      "fach_kurz": "IR",
+      "lehrer": "AVS",
+      "raum": "610",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 2,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.03Ku",
+      "fach": "Religion",
+      "fach_kurz": "RE",
+      "lehrer": "EBR",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 3,
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
+      "raum": "603",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 4,
       "fach": "Deutsch",
       "fach_kurz": "D",
       "lehrer": "GRU",
@@ -34,36 +44,26 @@
       "hinweis": ""
     },
     {
-      "stunde": 4,
-      "fach": "Geschichte",
-      "fach_kurz": "GE",
-      "lehrer": "BOR",
+      "stunde": 5,
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
-      "stunde": 5,
-      "fach": "Informatik",
-      "fach_kurz": "IF",
-      "lehrer": "WES",
-      "raum": "442If",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
-    },
-    {
       "stunde": 6,
-      "fach": "Biologie",
-      "fach_kurz": "BI",
-      "lehrer": "BUT",
-      "raum": "BI006",
+      "fach": "Sport Schwimmen",
+      "fach_kurz": "SPSW",
+      "lehrer": "MAT",
+      "raum": "SW1",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
   "vtg_count": 0,
-  "generated_at": "2026-05-09T22:12:47.650857+00:00"
+  "generated_at": "2026-05-11T07:12:21.588156+00:00"
 }
