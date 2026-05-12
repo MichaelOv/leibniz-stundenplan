@@ -1,23 +1,23 @@
 {
-  "date": "2026-05-12",
-  "day": "Dienstag",
+  "date": "2026-05-13",
+  "day": "Mittwoch",
   "class": "06c",
   "plan": [
     {
-      "stunde": 2,
-      "fach": "Islamische Rel.",
-      "fach_kurz": "IR",
-      "lehrer": "AVS",
-      "raum": "610",
-      "status": "frei",
+      "stunde": 1,
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
+      "raum": "603",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei"
+      "hinweis": ""
     },
     {
       "stunde": 2,
-      "fach": "Religion",
-      "fach_kurz": "RE",
-      "lehrer": "EBR",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -25,9 +25,9 @@
     },
     {
       "stunde": 3,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -45,26 +45,26 @@
     },
     {
       "stunde": 5,
-      "fach": "Mathe",
-      "fach_kurz": "M",
+      "fach": "Sport",
+      "fach_kurz": "SP",
       "lehrer": "MAT",
-      "raum": "603",
+      "raum": "SH1",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Sport Schwimmen",
-      "fach_kurz": "SPSW",
-      "lehrer": "MAT",
-      "raum": "SW1",
+      "fach": "Musik",
+      "fach_kurz": "MU",
+      "lehrer": "GER",
+      "raum": "A1.03Mu",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
-  "vtg_count": 1,
-  "generated_at": "2026-05-12T06:55:32.330949+00:00",
-  "pdf_stand": "2026-05-12T07:36:00+02:00"
+  "vtg_count": 0,
+  "generated_at": "2026-05-12T07:00:29.498381+00:00",
+  "pdf_stand": "2026-05-12T07:46:00+02:00"
 }
