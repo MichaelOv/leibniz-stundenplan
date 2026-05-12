@@ -12,7 +12,7 @@ Das System hat zwei Datenquellen:
 
 `build_today.py` gleicht dann beide Quellen ab: Für jede Stunde aus dem Untis-Plan wird geprüft, ob es im Vertretungsplan einen passenden Eintrag gibt. Wenn ja, wird der Status auf `vertretung`, `frei` oder `info` gesetzt. Das Ergebnis landet in `data/today_6c.json` und `data/tomorrow_6c.json`.
 
-`run_all.py` orchestriert alle Schritte und schickt am Ende, falls es Änderungen gibt, eine Push-Benachrichtigung via [ntfy.sh](https://ntfy.sh).
+`run_all.py` orchestriert alle Schritte und schickt am Ende eine Push-Benachrichtigung via [ntfy.sh](https://ntfy.sh), sobald Änderungen vorliegen.
 
 ```
 iServ PDF (Vertretungsplan)  ->  fetch_and_build.py  ->  latest_6c.json
@@ -30,15 +30,14 @@ Untis HTML (Wochenplan)      ->  parse_untis.py      ->  untis_6c.json
 
 ## Einrichtung
 
-Es gibt zwei Betriebsmodi: vollständig über GitHub Actions und GitHub Pages (kein eigener Server nötig) oder lokal auf einem eigenen Server.
+Das System besteht aus zwei Teilen: Der **GitHub Actions Workflow** übernimmt die eigentliche Pipeline (PDF laden, parsen, JSON bauen, committen). Ein **lokaler Cron-Job** auf einem eigenen Server triggert diesen Workflow zum richtigen Zeitpunkt.
+
+> **Warum kein reiner GitHub Actions Schedule?**
+> GitHub Actions führt Scheduled Workflows auf kostenlosen Repos häufig mit Verspätungen von 30-60 Minuten aus oder überspringt Ausführungen ganz, wenn die Runner ausgelastet sind. Für einen Schulplan, der morgens zuverlässig um 6:30 Uhr aktuell sein soll, ist das nicht brauchbar. Der lokale Cron-Job triggert den Workflow per `workflow_dispatch`, was sofort und zuverlässig ausgeführt wird.
 
 ---
 
-### Option A: GitHub Actions + GitHub Pages
-
-Der Workflow läuft komplett in der Cloud. GitHub Actions führt die Pipeline aus und committet die aktualisierten JSON-Dateien zurück ins Repository. Das Dashboard wird über GitHub Pages bereitgestellt.
-
-#### 1. GitHub Secrets anlegen
+### Schritt 1: GitHub Secrets anlegen
 
 Unter *Settings -> Secrets and variables -> Actions* drei Secrets anlegen:
 
@@ -50,105 +49,80 @@ Unter *Settings -> Secrets and variables -> Actions* drei Secrets anlegen:
 
 `NTFY_TOPIC` ist der Name des Kanals, den du in der ntfy-App abonnierst. Wähle etwas Einzigartiges, damit keine fremden Personen zufällig dieselben Benachrichtigungen erhalten.
 
-#### 2. GitHub Pages aktivieren
+---
+
+### Schritt 2: GitHub Pages aktivieren
 
 Unter *Settings -> Pages -> Source: "Deploy from a branch" -> Branch: `main`, Folder: `/ (root)` -> Save*
 
 Das Dashboard ist danach erreichbar unter `https://<github-username>.github.io/leibniz-stundenplan/`
 
-Das Dashboard zeigt in der Topbar einen "ntfy abonnieren"-Button, der direkt zum konfigurierten Kanal verlinkt. Er erscheint automatisch, sobald `run_all.py` einmal gelaufen ist und `data/config.json` erstellt hat.
+---
 
-#### 3. ntfy-App einrichten
+### Schritt 3: ntfy-App einrichten
 
 1. App installieren und öffnen
 2. Neues Abonnement hinzufügen: den gewählten `NTFY_TOPIC`-Namen eingeben, Server bleibt `ntfy.sh`
 3. Fertig, Benachrichtigungen kommen nun automatisch an
 
-#### 4. Workflow testen
-
-Unter *Actions -> Update timetable -> Run workflow* kann der Workflow manuell gestartet werden. Bei Erfolg werden die JSON-Dateien in `data/` aktualisiert und committed.
-
-#### Zeitplan
-
-Der Workflow läuft automatisch montags bis freitags (alle Zeiten MESZ):
-
-- **6:30 bis 9:00 Uhr:** alle 5 Minuten, da sich der Plan morgens häufig kurzfristig ändert
-- **9:00 bis 22:00 Uhr:** stündlich
-
-Hinweis: GitHub Actions garantiert keine sekundengenaue Ausführung, Verzögerungen von einigen Minuten sind möglich.
+Das Dashboard zeigt in der Topbar einen "ntfy abonnieren"-Button, der direkt zum konfigurierten Kanal verlinkt. Er erscheint automatisch, sobald `run_all.py` einmal gelaufen ist und `data/config.json` erstellt hat.
 
 ---
 
-### Option B: Lokaler Server
+### Schritt 4: Lokalen Cron-Job einrichten
 
-Das System läuft auf einem eigenen Rechner oder Server. Der Cron-Job übernimmt die Automatisierung, `server.py` stellt das Dashboard bereit.
-
-#### 1. Python-Umgebung einrichten
-
-```bash
-cd leibniz-stundenplan
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-#### 2. Zugangsdaten hinterlegen
-
-Eine Datei `.env` im Projektordner anlegen:
-
-```
-ISERV_USER=vorname.nachname
-ISERV_PASS=dein-passwort
-NTFY_TOPIC=leibniz-6c-abc123
-```
-
-#### 3. ntfy-App einrichten
-
-1. App installieren und öffnen
-2. Neues Abonnement hinzufügen: den gewählten `NTFY_TOPIC`-Namen eingeben, Server bleibt `ntfy.sh`
-3. Fertig, Benachrichtigungen kommen nun automatisch an
-
-#### 4. Cron-Job einrichten
+Auf dem Server muss die [GitHub CLI](https://cli.github.com/) installiert und einmalig mit `gh auth login` authentifiziert sein.
 
 ```bash
 crontab -e
 ```
 
-Folgende Einträge hinzufügen (Pfad anpassen):
+Folgende Einträge hinzufügen:
 
 ```
-# Morgens alle 5 Minuten (6:30 bis 8:55)
-30,35,40,45,50,55 6 * * 1-5 cd /pfad/zu/leibniz-stundenplan && venv/bin/python scripts/run_all.py >> /tmp/stundenplan.log 2>&1
-*/5 7-8 * * 1-5 cd /pfad/zu/leibniz-stundenplan && venv/bin/python scripts/run_all.py >> /tmp/stundenplan.log 2>&1
-
-# Tagsüber stündlich (9:00 bis 22:00)
-0 9-22 * * 1-5 cd /pfad/zu/leibniz-stundenplan && venv/bin/python scripts/run_all.py >> /tmp/stundenplan.log 2>&1
+# Leibniz Stundenplan - GitHub Workflow triggern (CEST)
+# Morgens alle 5 Minuten 6:30-8:55
+30,35,40,45,50,55 6 * * 1-5 HOME=/root /usr/bin/gh workflow run update.yml --repo <github-username>/leibniz-stundenplan
+*/5 7-8 * * 1-5 HOME=/root /usr/bin/gh workflow run update.yml --repo <github-username>/leibniz-stundenplan
+# Stündlich 9:00-22:00
+0 9-22 * * 1-5 HOME=/root /usr/bin/gh workflow run update.yml --repo <github-username>/leibniz-stundenplan
 ```
 
-Die Jobs laufen nur montags bis freitags (`1-5`). Ab 9 Uhr schaltet `run_all.py` automatisch auf den Plan für morgen um. Die Ausgabe wird in `/tmp/stundenplan.log` gespeichert.
+`<github-username>` durch den tatsächlichen GitHub-Benutzernamen ersetzen. Die Zeiten sind in lokaler Serverzeit (CEST/MEZ). `HOME=/root` stellt sicher, dass `gh` die gespeicherten Anmeldedaten findet.
 
-Hinweis für Alpine Linux: Die `30,35,...,55 6`-Zeile ist absichtlich ausgeschrieben, da busybox crond mit der Schreibweise `30-59/5` manchmal Probleme hat.
+---
 
-#### 5. Dashboard starten
+### Workflow manuell starten
+
+Unter *Actions -> Update timetable -> Run workflow* oder per CLI:
 
 ```bash
-venv/bin/python server.py
+gh workflow run update.yml --repo <github-username>/leibniz-stundenplan
 ```
-
-Danach im Browser öffnen: [http://localhost:8080](http://localhost:8080)
-
-Das Dashboard liest die JSON-Dateien aus `data/` und aktualisiert sich automatisch alle 5 Minuten.
 
 ---
 
 ## Benachrichtigungslogik
 
-Das System unterscheidet, ob es eher morgens oder tagsüber läuft:
+Die Benachrichtigung enthält immer den **kompletten Tagesplan** der Klasse, nicht nur die geänderten Stunden. Ausgefallene Stunden werden mit ❌, Vertretungen mit 🔄 und Info-Einträge mit 📋 markiert.
+
+`run_all.py` bestimmt automatisch, für welchen Tag benachrichtigt wird:
 
 - **Vor 09:00 Uhr:** Benachrichtigung bezieht sich auf **heute**, damit man noch vor der Schule weiß, ob etwas ausfällt.
 - **Ab 09:00 Uhr:** Benachrichtigung bezieht sich auf **morgen**, da der heutige Tag bereits läuft.
 
 Damit keine doppelten Benachrichtigungen verschickt werden, wird ein MD5-Hash des Benachrichtigungsinhalts gespeichert. Nur wenn sich der Inhalt gegenüber der letzten Benachrichtigung geändert hat, wird eine neue verschickt.
+
+---
+
+## Dashboard-Zeitstempel
+
+Das Dashboard zeigt zwei Zeitstempel:
+
+- **Stand X Uhr** (oben): Zeitpunkt, zu dem die Schule den Vertretungsplan veröffentlicht hat. Wird direkt aus dem PDF-Text ausgelesen, nicht aus dem HTTP-Header.
+- **Zuletzt geprüft: X Uhr** (unten): Zeitpunkt, zu dem `run_all.py` zuletzt gelaufen ist.
+
+---
 
 ## Konfiguration
 
@@ -188,6 +162,8 @@ Das System ist auf Klasse 6c des Leibniz-Gymnasiums Gelsenkirchen ausgerichtet. 
 | iServ-Basis-URL | `scripts/fetch_and_build.py` | `BASE_URL` |
 | ntfy-Topic | `.env` oder GitHub Secret | `NTFY_TOPIC` |
 
+---
+
 ## Abhängigkeiten
 
 | Paket | Zweck |
@@ -196,4 +172,4 @@ Das System ist auf Klasse 6c des Leibniz-Gymnasiums Gelsenkirchen ausgerichtet. 
 | `beautifulsoup4` | HTML-Parsing des Untis-Stundenplans |
 | `pymupdf` | Text-Extraktion aus dem Vertretungsplan-PDF |
 | `python-dotenv` | Laden der Zugangsdaten aus der `.env`-Datei |
-| `flask` | HTTP-Server für das lokale Dashboard (Option B) |
+| `flask` | HTTP-Server für das lokale Dashboard |
