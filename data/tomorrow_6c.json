@@ -1,43 +1,33 @@
 {
-  "date": "2026-05-15",
-  "day": "Freitag",
+  "date": "2026-05-18",
+  "day": "Montag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Islamische Rel.",
-      "fach_kurz": "IR",
-      "lehrer": "AVS",
-      "raum": "610",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
-    },
-    {
-      "stunde": 1,
-      "fach": "Religion",
-      "fach_kurz": "RE",
-      "lehrer": "EBR",
-      "raum": "603",
+      "fach": "Kunst",
+      "fach_kurz": "KU",
+      "lehrer": "NYE",
+      "raum": "A2.03Ku",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 2,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Kunst",
+      "fach_kurz": "KU",
+      "lehrer": "NYE",
+      "raum": "A2.03Ku",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 3,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -45,9 +35,9 @@
     },
     {
       "stunde": 4,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
+      "fach": "Geschichte",
+      "fach_kurz": "GE",
+      "lehrer": "BOR",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -55,26 +45,26 @@
     },
     {
       "stunde": 5,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "SH3",
+      "fach": "Informatik",
+      "fach_kurz": "IF",
+      "lehrer": "WES",
+      "raum": "442If",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "SH3",
+      "fach": "Biologie",
+      "fach_kurz": "BI",
+      "lehrer": "BUT",
+      "raum": "BI006",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
   "vtg_count": 0,
-  "generated_at": "2026-05-14T06:55:27.468576+00:00",
-  "pdf_stand": ""
+  "generated_at": "2026-05-14T07:00:24.970688+00:00",
+  "pdf_stand": "2026-05-11T18:05:00+02:00"
 }
