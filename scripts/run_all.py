@@ -111,7 +111,7 @@ def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=
                 title="Änderung 6c " + day_label,
                 msg="\n".join(msg_zeilen),
                 priority=4,
-                hash_suffix="today"
+                hash_suffix=target
             )
             if ok:
                 print("Benachrichtigung gesendet!")

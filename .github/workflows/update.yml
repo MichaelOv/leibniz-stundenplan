@@ -1,6 +1,9 @@
 name: Update timetable
 on:
   workflow_dispatch:
+concurrency:
+  group: timetable-update
+  cancel-in-progress: false
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -18,6 +21,6 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'Automated timetable refresh'
-          file_pattern: 'data/*.json data/last_ntfy_hash*.txt'
+          file_pattern: 'data/*.json data/last_ntfy_hash_*.txt'
           commit_user_name: 'github-actions[bot]'
           commit_user_email: 'github-actions[bot]@users.noreply.github.com'
