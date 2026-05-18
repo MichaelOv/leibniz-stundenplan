@@ -9,8 +9,8 @@
       "fach_kurz": "KU",
       "lehrer": "NYE",
       "raum": "A2.03Ku",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "MON",
       "hinweis": ""
     },
     {
@@ -19,8 +19,8 @@
       "fach_kurz": "KU",
       "lehrer": "NYE",
       "raum": "A2.03Ku",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "SMI",
       "hinweis": ""
     },
     {
@@ -59,12 +59,12 @@
       "fach_kurz": "BI",
       "lehrer": "BUT",
       "raum": "BI006",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-05-18T05:40:19.718142+00:00",
-  "pdf_stand": "2026-05-11T18:05:00+02:00"
+  "vtg_count": 3,
+  "generated_at": "2026-05-18T05:45:20.584830+00:00",
+  "pdf_stand": "2026-05-18T07:37:00+02:00"
 }
