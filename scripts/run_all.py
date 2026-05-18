@@ -110,7 +110,7 @@ def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=
             ok = send_ntfy(
                 title="Änderung 6c " + day_label,
                 msg="\n".join(msg_zeilen),
-                priority=4,
+                priority=3,
                 hash_suffix=target
             )
             if ok:
