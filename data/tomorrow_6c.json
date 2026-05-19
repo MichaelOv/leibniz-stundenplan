@@ -1,13 +1,13 @@
 {
-  "date": "2026-05-20",
-  "day": "Mittwoch",
+  "date": "2026-05-21",
+  "day": "Donnerstag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -15,6 +15,16 @@
     },
     {
       "stunde": 2,
+      "fach": "Informatik",
+      "fach_kurz": "IF",
+      "lehrer": "WES",
+      "raum": "442If",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 3,
       "fach": "Mathe",
       "fach_kurz": "M",
       "lehrer": "MAT",
@@ -24,20 +34,10 @@
       "hinweis": ""
     },
     {
-      "stunde": 3,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "603",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
-    },
-    {
       "stunde": 4,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -45,26 +45,26 @@
     },
     {
       "stunde": 5,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "SH1",
+      "fach": "Biologie",
+      "fach_kurz": "BI",
+      "lehrer": "BUT",
+      "raum": "BI004",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Geschichte",
+      "fach_kurz": "GE",
+      "lehrer": "BOR",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
   "vtg_count": 0,
-  "generated_at": "2026-05-19T06:55:22.597530+00:00",
-  "pdf_stand": "2026-05-18T18:57:00+02:00"
+  "generated_at": "2026-05-19T07:00:23.653227+00:00",
+  "pdf_stand": "2026-05-18T18:58:00+02:00"
 }
