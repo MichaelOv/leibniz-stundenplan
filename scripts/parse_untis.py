@@ -1,15 +1,27 @@
 #!/usr/bin/env python3
-import requests, json, sys
+import re, requests, json, sys, shutil
 from bs4 import BeautifulSoup
 from pathlib import Path
 from constants import DAYS_DE
 
 UNTIS_URL = "https://leibniz-gymnasium.net/files/stpl/Kla1A_06c.htm"
 
+def extract_valid_from(html_text: str) -> str | None:
+    m = re.search(r'\(ab (\d{1,2}\.\d{1,2}\.\d{2,4})\)', html_text)
+    if not m:
+        return None
+    day, month, year = m.group(1).split(".")
+    if len(year) == 2:
+        year = "20" + year
+    return f"{year}-{int(month):02d}-{int(day):02d}"
+
 def parse_untis():
     r = requests.get(UNTIS_URL, timeout=30)
     r.raise_for_status()
     r.encoding = r.apparent_encoding
+    valid_from = extract_valid_from(r.text)
+    if valid_from:
+        print("Gültig ab: " + valid_from)
     soup = BeautifulSoup(r.content, "html.parser")
     tables = soup.find_all("table")
     if len(tables) < 2:
@@ -105,12 +117,21 @@ def parse_untis():
                             break
                 cur_col += cs
 
-    return timetable
+    return timetable, valid_from
 
 if __name__ == "__main__":
-    tt = parse_untis()
+    tt, valid_from = parse_untis()
     out = Path(__file__).resolve().parents[1] / "data" / "untis_6c.json"
     out.parent.mkdir(exist_ok=True)
+    # Backup: wenn valid_from sich geändert hat, alten Plan sichern
+    if out.exists() and valid_from:
+        old = json.loads(out.read_text(encoding="utf-8"))
+        if old.get("valid_from") != valid_from:
+            prev = out.parent / "untis_6c_prev.json"
+            shutil.copy2(out, prev)
+            print("Backup gespeichert: " + str(prev))
+    output = {"valid_from": valid_from} if valid_from else {}
+    output.update(tt)
     with open(out, "w", encoding="utf-8") as f:
-        json.dump(tt, f, indent=2, ensure_ascii=False)
+        json.dump(output, f, indent=2, ensure_ascii=False)
     print("Gespeichert: " + str(out))

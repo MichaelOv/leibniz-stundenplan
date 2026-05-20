@@ -1,18 +1,10 @@
 {
-  "valid_from": "2026-05-25",
   "1": {
     "Montag": [
       {
-        "fach": "D",
-        "lehrer": "GRU",
-        "raum": "603"
-      }
-    ],
-    "Dienstag": [
-      {
-        "fach": "E",
-        "lehrer": "MOR",
-        "raum": "603"
+        "fach": "KU",
+        "lehrer": "NYE",
+        "raum": "A2.03Ku"
       }
     ],
     "Mittwoch": [
@@ -24,9 +16,9 @@
     ],
     "Donnerstag": [
       {
-        "fach": "IF",
-        "lehrer": "WES",
-        "raum": "442If"
+        "fach": "E",
+        "lehrer": "MOR",
+        "raum": "603"
       }
     ],
     "Freitag": [
@@ -43,17 +35,17 @@
     ]
   },
   "2": {
+    "Montag": [
+      {
+        "fach": "KU",
+        "lehrer": "NYE",
+        "raum": "A2.03Ku"
+      }
+    ],
     "Mittwoch": [
       {
         "fach": "M",
         "lehrer": "MAT",
-        "raum": "603"
-      }
-    ],
-    "Montag": [
-      {
-        "fach": "E",
-        "lehrer": "MOR",
         "raum": "603"
       }
     ],
@@ -71,32 +63,32 @@
     ],
     "Donnerstag": [
       {
-        "fach": "M",
-        "lehrer": "MAT",
-        "raum": "603"
+        "fach": "IF",
+        "lehrer": "WES",
+        "raum": "442If"
       }
     ],
     "Freitag": [
       {
-        "fach": "M",
-        "lehrer": "MAT",
-        "raum": "603"
+        "fach": "MU",
+        "lehrer": "GER",
+        "raum": "A1.03Mu"
       }
     ]
   },
   "3": {
     "Montag": [
       {
-        "fach": "GE",
-        "lehrer": "BOR",
+        "fach": "D",
+        "lehrer": "GRU",
         "raum": "603"
       }
     ],
     "Dienstag": [
       {
-        "fach": "KU",
-        "lehrer": "NYE",
-        "raum": "A2.02Ku"
+        "fach": "E",
+        "lehrer": "MOR",
+        "raum": "603"
       }
     ],
     "Mittwoch": [
@@ -108,8 +100,8 @@
     ],
     "Donnerstag": [
       {
-        "fach": "E",
-        "lehrer": "MOR",
+        "fach": "M",
+        "lehrer": "MAT",
         "raum": "603"
       }
     ],
@@ -122,13 +114,6 @@
     ]
   },
   "4": {
-    "Dienstag": [
-      {
-        "fach": "KU",
-        "lehrer": "NYE",
-        "raum": "A2.02Ku"
-      }
-    ],
     "Mittwoch": [
       {
         "fach": "D",
@@ -136,21 +121,28 @@
         "raum": "603"
       }
     ],
-    "Montag": [
-      {
-        "fach": "BI",
-        "lehrer": "BUT",
-        "raum": "BI001"
-      }
-    ],
     "Donnerstag": [
       {
-        "fach": "MU",
-        "lehrer": "GER",
-        "raum": "A1.03Mu"
+        "fach": "M",
+        "lehrer": "MAT",
+        "raum": "603"
       }
     ],
     "Freitag": [
+      {
+        "fach": "E",
+        "lehrer": "MOR",
+        "raum": "603"
+      }
+    ],
+    "Montag": [
+      {
+        "fach": "GE",
+        "lehrer": "BOR",
+        "raum": "603"
+      }
+    ],
+    "Dienstag": [
       {
         "fach": "D",
         "lehrer": "GRU",
@@ -161,37 +153,37 @@
   "5": {
     "Montag": [
       {
+        "fach": "IF",
+        "lehrer": "WES",
+        "raum": "442If"
+      }
+    ],
+    "Dienstag": [
+      {
         "fach": "M",
         "lehrer": "MAT",
         "raum": "603"
       }
     ],
-    "Dienstag": [
-      {
-        "fach": "MU",
-        "lehrer": "GER",
-        "raum": "A1.03Mu"
-      }
-    ],
     "Mittwoch": [
       {
-        "fach": "GE",
-        "lehrer": "BOR",
-        "raum": "603"
+        "fach": "SP",
+        "lehrer": "MAT",
+        "raum": "SH1"
       }
     ],
     "Donnerstag": [
       {
         "fach": "BI",
         "lehrer": "BUT",
-        "raum": "BI006"
+        "raum": "BI004"
       }
     ],
     "Freitag": [
       {
         "fach": "SP",
         "lehrer": "MAT",
-        "raum": "SH1"
+        "raum": "SH3"
       }
     ]
   },
@@ -200,14 +192,14 @@
       {
         "fach": "SP",
         "lehrer": "MAT",
-        "raum": "SH1"
+        "raum": "SH3"
       }
     ],
     "Montag": [
       {
-        "fach": "IF",
-        "lehrer": "WES",
-        "raum": "442If"
+        "fach": "BI",
+        "lehrer": "BUT",
+        "raum": "BI006"
       }
     ],
     "Dienstag": [
@@ -219,9 +211,16 @@
     ],
     "Mittwoch": [
       {
-        "fach": "SP",
-        "lehrer": "MAT",
-        "raum": "SH2"
+        "fach": "MU",
+        "lehrer": "GER",
+        "raum": "A1.03Mu"
+      }
+    ],
+    "Donnerstag": [
+      {
+        "fach": "GE",
+        "lehrer": "BOR",
+        "raum": "603"
       }
     ]
   },

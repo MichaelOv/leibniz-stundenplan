@@ -16,6 +16,18 @@ def load_json(path):
 def load_fach_map():
     return load_json(BASE / "data" / "fach_mapping.json")
 
+def load_untis(target_date: str) -> dict:
+    main = load_json(BASE / "data" / "untis_6c.json")
+    valid_from = main.pop("valid_from", None)
+    if valid_from and target_date < valid_from:
+        prev_path = BASE / "data" / "untis_6c_prev.json"
+        if prev_path.exists():
+            prev = load_json(prev_path)
+            prev.pop("valid_from", None)
+            print("Stundenplan: nutze Vorversion (gültig ab " + valid_from + ")")
+            return prev
+    return main
+
 def load_lehrer_fach():
     return load_json(BASE / "data" / "lehrer_fach.json")
 
@@ -60,11 +72,10 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
         sys.exit(1)
 
     day_name = DAYS_DE[weekday]
-    untis_path = BASE / "data" / "untis_6c.json"
-    if not untis_path.exists():
+    if not (BASE / "data" / "untis_6c.json").exists():
         print("FEHLER: untis_6c.json fehlt – bitte parse_untis.py ausführen.")
         sys.exit(1)
-    untis = load_json(untis_path)
+    untis = load_untis(target_date)
     vtg_data = load_json(BASE / "data" / vtg_file)
     subs = vtg_data.get("substitutions", [])
     pdf_stand = vtg_data.get("pdf_stand", "")
