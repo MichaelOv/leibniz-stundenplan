@@ -5,6 +5,16 @@
   "plan": [
     {
       "stunde": 1,
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
+      "raum": "603",
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "frei"
+    },
+    {
+      "stunde": 2,
       "fach": "Informatik",
       "fach_kurz": "IF",
       "lehrer": "WES",
@@ -14,17 +24,7 @@
       "hinweis": ""
     },
     {
-      "stunde": 1,
-      "fach": "Gruppe",
-      "fach_kurz": "",
-      "lehrer": "MOR",
-      "raum": "—",
-      "status": "frei",
-      "vertreter": "",
-      "hinweis": "frei"
-    },
-    {
-      "stunde": 2,
+      "stunde": 3,
       "fach": "Mathe",
       "fach_kurz": "M",
       "lehrer": "MAT",
@@ -34,21 +34,11 @@
       "hinweis": ""
     },
     {
-      "stunde": 3,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
-      "raum": "603",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
-    },
-    {
       "stunde": 4,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
@@ -58,13 +48,23 @@
       "fach": "Biologie",
       "fach_kurz": "BI",
       "lehrer": "BUT",
-      "raum": "BI006",
+      "raum": "BI004",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 6,
+      "fach": "Geschichte",
+      "fach_kurz": "GE",
+      "lehrer": "BOR",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
   "vtg_count": 1,
-  "generated_at": "2026-05-20T20:00:24.388461+00:00",
+  "generated_at": "2026-05-20T21:15:20.881103+00:00",
   "pdf_stand": "2026-05-20T13:44:00+02:00"
 }
