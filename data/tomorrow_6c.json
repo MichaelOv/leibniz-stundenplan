@@ -39,8 +39,8 @@
       "fach_kurz": "E",
       "lehrer": "MOR",
       "raum": "603",
-      "status": "vertretung",
-      "vertreter": "WAR",
+      "status": "normal",
+      "vertreter": "",
       "hinweis": ""
     },
     {
@@ -49,8 +49,8 @@
       "fach_kurz": "E",
       "lehrer": "MOR",
       "raum": "603",
-      "status": "vertretung",
-      "vertreter": "GRU",
+      "status": "normal",
+      "vertreter": "",
       "hinweis": ""
     },
     {
@@ -74,7 +74,7 @@
       "hinweis": ""
     }
   ],
-  "vtg_count": 2,
-  "generated_at": "2026-05-20T11:00:30.262293+00:00",
-  "pdf_stand": "2026-05-19T20:21:00+02:00"
+  "vtg_count": 0,
+  "generated_at": "2026-05-20T12:00:27.432152+00:00",
+  "pdf_stand": ""
 }
