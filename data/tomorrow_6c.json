@@ -9,9 +9,9 @@
       "fach_kurz": "E",
       "lehrer": "MOR",
       "raum": "603",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     },
     {
       "stunde": 2,
@@ -64,7 +64,7 @@
       "hinweis": ""
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-05-20T05:45:19.118804+00:00",
-  "pdf_stand": "2026-05-18T18:58:00+02:00"
+  "vtg_count": 1,
+  "generated_at": "2026-05-20T05:50:19.286116+00:00",
+  "pdf_stand": "2026-05-20T07:45:00+02:00"
 }
