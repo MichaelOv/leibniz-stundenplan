@@ -1,70 +1,80 @@
 {
-  "date": "2026-05-21",
-  "day": "Donnerstag",
+  "date": "2026-05-22",
+  "day": "Freitag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
-      "raum": "603",
-      "status": "frei",
+      "fach": "Islamische Rel.",
+      "fach_kurz": "IR",
+      "lehrer": "AVS",
+      "raum": "610",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei"
+      "hinweis": ""
+    },
+    {
+      "stunde": 1,
+      "fach": "Religion",
+      "fach_kurz": "RE",
+      "lehrer": "EBR",
+      "raum": "603",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
     },
     {
       "stunde": 2,
-      "fach": "Informatik",
-      "fach_kurz": "IF",
-      "lehrer": "WES",
-      "raum": "442If",
+      "fach": "Musik",
+      "fach_kurz": "MU",
+      "lehrer": "GER",
+      "raum": "A1.03Mu",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 3,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
       "raum": "603",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "WAR",
       "hinweis": ""
     },
     {
       "stunde": 4,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
       "raum": "603",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "GRU",
       "hinweis": ""
     },
     {
       "stunde": 5,
-      "fach": "Biologie",
-      "fach_kurz": "BI",
-      "lehrer": "BUT",
-      "raum": "BI004",
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH3",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Geschichte",
-      "fach_kurz": "GE",
-      "lehrer": "BOR",
-      "raum": "603",
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH3",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
-  "vtg_count": 1,
-  "generated_at": "2026-05-21T05:10:22.212547+00:00",
-  "pdf_stand": "2026-05-20T13:44:00+02:00"
+  "vtg_count": 2,
+  "generated_at": "2026-05-21T08:00:24.609987+00:00",
+  "pdf_stand": "2026-05-21T07:39:00+02:00"
 }
