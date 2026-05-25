@@ -138,10 +138,14 @@ if __name__ == "__main__":
         print("Untis-HTML unveraendert, ueberspringe Parse.")
 
     print("=== Schritt 4: Heute ===")
-    if ok1:
+    if ok1 and vtg_has_entries("latest_6c.json"):
         build_and_notify(today, "today_6c.json", "Heute", vtg_file="latest_6c.json", notify=True)
     else:
-        print("PDF-Fehler – überspringe Heute.")
+        print("Kein Vertretungsplan für heute – zeige regulären Plan.")
+        if not ok1:
+            empty = {"date": today, "class": "06c", "substitutions": []}
+            (DATA / "latest_6c.json").write_text(json.dumps(empty))
+        run("build_today.py", today, "today_6c.json", "latest_6c.json")
 
     print("=== Schritt 5: Morgen ===")
     if ok2 and vtg_has_entries("latest_6c_tomorrow.json"):

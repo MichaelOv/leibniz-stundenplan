@@ -1,13 +1,13 @@
 {
-  "date": "2026-05-27",
-  "day": "Mittwoch",
+  "date": "2026-05-26",
+  "day": "Dienstag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -15,9 +15,19 @@
     },
     {
       "stunde": 2,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
+      "fach": "Islamische Rel.",
+      "fach_kurz": "IR",
+      "lehrer": "AVS",
+      "raum": "610",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 2,
+      "fach": "Religion",
+      "fach_kurz": "RE",
+      "lehrer": "EBR",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -25,46 +35,46 @@
     },
     {
       "stunde": 3,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "603",
+      "fach": "Kunst",
+      "fach_kurz": "KU",
+      "lehrer": "NYE",
+      "raum": "A2.02Ku",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 4,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "603",
+      "fach": "Kunst",
+      "fach_kurz": "KU",
+      "lehrer": "NYE",
+      "raum": "A2.02Ku",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 5,
-      "fach": "Geschichte",
-      "fach_kurz": "GE",
-      "lehrer": "BOR",
-      "raum": "603",
+      "fach": "Musik",
+      "fach_kurz": "MU",
+      "lehrer": "GER",
+      "raum": "A1.03Mu",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Sport",
-      "fach_kurz": "SP",
+      "fach": "Sport Schwimmen",
+      "fach_kurz": "SPSW",
       "lehrer": "MAT",
-      "raum": "SH2",
+      "raum": "SW1",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
   "vtg_count": 0,
-  "generated_at": "2026-05-25T07:00:24.232239+00:00",
-  "pdf_stand": "2026-05-21T14:10:00+02:00"
+  "generated_at": "2026-05-25T07:09:46.504970+00:00",
+  "pdf_stand": ""
 }
