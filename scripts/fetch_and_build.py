@@ -48,7 +48,13 @@ def get_authenticated_session():
     r2 = session.post(r1.url, data={"_username": USERNAME, "_password": PASSWORD,
                                     "_remember_me": "on"}, allow_redirects=True, timeout=30)
     r2.raise_for_status()
-    if "/iserv/login" in r2.url:
+    # iServ nutzt einen HTML meta-refresh fuer den OIDC-Abschluss – manuell folgen
+    meta = re.search(r'<meta[^>]+http-equiv=["\']refresh["\'][^>]+content=["\']0;url=([^"\']+)["\']', r2.text, re.I)
+    if meta:
+        redirect_url = meta.group(1).replace("&amp;", "&")
+        r2 = session.get(redirect_url, timeout=30, allow_redirects=True)
+        r2.raise_for_status()
+    if "/iserv/auth/login" in r2.url:
         raise ValueError("iServ-Login fehlgeschlagen – Zugangsdaten pruefen.")
     return session
 
