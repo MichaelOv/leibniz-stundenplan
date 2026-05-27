@@ -16,12 +16,23 @@ Das System hat zwei Datenquellen:
 
 ```
 iServ PDF (Vertretungsplan)  ->  fetch_and_build.py  ->  latest_6c.json
-Untis HTML (Wochenplan)      ->  parse_untis.py      ->  untis_6c.json
+Untis HTML (Wochenplan)      ->  parse_untis.py      ->  untis_6c.json / untis_6c_prev.json
                                            |
                                build_today.py        ->  today_6c.json / tomorrow_6c.json
                                            |
                                  notify.py           ->  ntfy.sh Push-Benachrichtigung
 ```
+
+### Besondere Fälle
+
+**Neuer Untis-Plan vor Gültigkeitsdatum**  
+Schulen veröffentlichen den Stundenplan für die nächste Woche manchmal schon mittwochs oder donnerstags. Die HTML-Seite enthält ein `(ab DD.MM.YY)`-Datum. `parse_untis.py` liest dieses aus und speichert es als `valid_from` in `untis_6c.json`. Der alte Plan wird automatisch als `untis_6c_prev.json` gesichert. `build_today.py` verwendet automatisch die Vorversion, solange das Zieldatum vor `valid_from` liegt – Vertretungen werden so immer dem richtigen Stundenplan zugeordnet.
+
+**Verschobene Stunden**  
+Wenn der Vertretungsplan eine Stunde als "frei; verlegt auf X. Std." markiert, wird die Zielstunde automatisch mit Fach und Lehrkraft der verschobenen Stunde aktualisiert – statt das ursprüngliche Fach der Zielstunde anzuzeigen.
+
+**Kein Vertretungsplan verfügbar**  
+Ist für einen Tag noch kein PDF abrufbar (z.B. weil die Schule es noch nicht hochgeladen hat), wird statt veralteter Daten der reguläre Untis-Stundenplan für den korrekten Tag angezeigt.
 
 ## Voraussetzungen
 
