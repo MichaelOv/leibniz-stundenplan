@@ -113,6 +113,21 @@ gh workflow run update.yml --repo <github-username>/leibniz-stundenplan
 
 ---
 
+## Fehlerüberwachung
+
+Das System unterscheidet zwischen erwarteten und echten Fehlern:
+
+| Situation | Verhalten |
+|---|---|
+| Kein PDF für den Tag (noch nicht veröffentlicht) | Regulärer Untis-Plan wird angezeigt, kein Alarm |
+| Login fehlgeschlagen | Workflow schlägt fehl → GitHub sendet Failure-E-Mail |
+| Netzwerkfehler | Workflow schlägt fehl → GitHub sendet Failure-E-Mail |
+| Unerwartete Exception | Workflow schlägt fehl → GitHub sendet Failure-E-Mail |
+
+Die Failure-E-Mails gehen automatisch an die E-Mail-Adresse des GitHub-Accounts. Empfänger und Benachrichtigungstypen lassen sich unter *Settings → Notifications → Actions* anpassen.
+
+---
+
 ## Benachrichtigungslogik
 
 Die Benachrichtigung enthält immer den **kompletten Tagesplan** der Klasse, nicht nur die geänderten Stunden. Ausgefallene Stunden werden mit ❌, Vertretungen mit 🔄 und Info-Einträge mit 📋 markiert.
