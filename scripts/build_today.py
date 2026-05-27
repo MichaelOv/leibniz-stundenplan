@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, sys
+import json, re, sys
 from pathlib import Path
 from datetime import datetime, date, timezone
 from constants import DAYS_DE
@@ -193,6 +193,23 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
                 plan.append(extra)
 
     plan.sort(key=lambda x: x["stunde"])
+
+    # "verlegt auf X. Std." – Zielstunde mit korrektem Fach/Lehrer aktualisieren
+    plan_by_stunde = {e["stunde"]: e for e in plan}
+    for entry in plan:
+        if entry["status"] != "frei":
+            continue
+        m = re.search(r'verlegt\s+auf\s+.*?(\d+)\.\s*std', entry["hinweis"], re.I)
+        if not m:
+            continue
+        ziel = int(m.group(1))
+        target = plan_by_stunde.get(ziel)
+        if target and target["status"] == "vertretung" and target["vertreter"] == entry["lehrer"]:
+            target["fach"]      = entry["fach"]
+            target["fach_kurz"] = entry["fach_kurz"]
+            target["lehrer"]    = entry["lehrer"]
+            target["vertreter"] = ""
+            target["hinweis"]   = f"verlegt von {entry['stunde']}. Std."
     output = {
         "date": target_date, "day": day_name, "class": "06c",
         "plan": plan,
