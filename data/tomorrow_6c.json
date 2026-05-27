@@ -1,27 +1,37 @@
 {
-  "date": "2026-05-28",
-  "day": "Donnerstag",
+  "date": "2026-05-29",
+  "day": "Freitag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Informatik",
-      "fach_kurz": "IF",
-      "lehrer": "WES",
-      "raum": "442If",
-      "status": "frei",
+      "fach": "Islamische Rel.",
+      "fach_kurz": "IR",
+      "lehrer": "AVS",
+      "raum": "610",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei; verlegt auf Do. 28.5. 2. Std."
+      "hinweis": ""
+    },
+    {
+      "stunde": 1,
+      "fach": "Religion",
+      "fach_kurz": "RE",
+      "lehrer": "EBR",
+      "raum": "603",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
     },
     {
       "stunde": 2,
-      "fach": "Informatik",
-      "fach_kurz": "IF",
-      "lehrer": "WES",
-      "raum": "442If",
-      "status": "vertretung",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
+      "raum": "603",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "verlegt von 1. Std."
+      "hinweis": ""
     },
     {
       "stunde": 3,
@@ -35,26 +45,36 @@
     },
     {
       "stunde": 4,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 5,
-      "fach": "Biologie",
-      "fach_kurz": "BI",
-      "lehrer": "BUT",
-      "raum": "BI006",
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH1",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 6,
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH1",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
-  "vtg_count": 2,
-  "generated_at": "2026-05-27T06:55:20.488029+00:00",
-  "pdf_stand": "2026-05-26T17:51:00+02:00"
+  "vtg_count": 0,
+  "generated_at": "2026-05-27T07:00:25.940032+00:00",
+  "pdf_stand": "2026-05-27T07:31:00+02:00"
 }
