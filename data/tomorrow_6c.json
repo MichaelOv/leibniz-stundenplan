@@ -9,18 +9,18 @@
       "fach_kurz": "IF",
       "lehrer": "WES",
       "raum": "442If",
-      "status": "frei",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei; verlegt auf Do. 28.5. 2. Std."
+      "hinweis": ""
     },
     {
       "stunde": 2,
       "fach": "Mathe",
       "fach_kurz": "M",
       "lehrer": "MAT",
-      "raum": "442If",
-      "status": "vertretung",
-      "vertreter": "WES",
+      "raum": "603",
+      "status": "normal",
+      "vertreter": "",
       "hinweis": ""
     },
     {
@@ -54,7 +54,7 @@
       "hinweis": ""
     }
   ],
-  "vtg_count": 2,
-  "generated_at": "2026-05-26T20:00:27.106733+00:00",
-  "pdf_stand": "2026-05-26T17:51:00+02:00"
+  "vtg_count": 0,
+  "generated_at": "2026-05-27T04:30:19.506647+00:00",
+  "pdf_stand": ""
 }
