@@ -32,14 +32,14 @@ def get_tomorrow(today_str):
         d += timedelta(days=1)
     return d.isoformat()
 
-def run(script, *args) -> bool:
+def run(script, *args) -> int:
+    """Gibt den Exit-Code zurück: 0=OK, 1=kein Plan verfügbar, 2=echter Fehler."""
     cmd = [PYTHON, str(BASE / script)] + list(args)
     result = subprocess.run(cmd, capture_output=True, text=True)
     print(result.stdout.strip())
     if result.returncode != 0:
         print("FEHLER in " + script + ": " + result.stderr.strip())
-        return False
-    return True
+    return result.returncode
 
 def untis_html_changed():
     try:
@@ -126,33 +126,41 @@ if __name__ == "__main__":
     tomorrow = get_tomorrow(today)
 
     print("=== Schritt 1: Vertretungsplan heute laden (" + today + ") ===")
-    ok1 = run("fetch_and_build.py", today, "latest_6c.json")
+    rc1 = run("fetch_and_build.py", today, "latest_6c.json")
+    if rc1 == 2:
+        print("KRITISCHER FEHLER in Schritt 1 – Pipeline abgebrochen.")
+        sys.exit(2)
 
     print("=== Schritt 2: Vertretungsplan morgen laden (" + tomorrow + ") ===")
-    ok2 = run("fetch_and_build.py", tomorrow, "latest_6c_tomorrow.json")
+    rc2 = run("fetch_and_build.py", tomorrow, "latest_6c_tomorrow.json")
+    if rc2 == 2:
+        print("KRITISCHER FEHLER in Schritt 2 – Pipeline abgebrochen.")
+        sys.exit(2)
 
     print("=== Schritt 3: Untis-Stundenplan laden ===")
     if untis_html_changed():
-        run("parse_untis.py")
+        if run("parse_untis.py") == 2:
+            print("KRITISCHER FEHLER in Schritt 3 – Pipeline abgebrochen.")
+            sys.exit(2)
     else:
         print("Untis-HTML unveraendert, ueberspringe Parse.")
 
     print("=== Schritt 4: Heute ===")
-    if ok1 and vtg_has_entries("latest_6c.json"):
+    if rc1 == 0 and vtg_has_entries("latest_6c.json"):
         build_and_notify(today, "today_6c.json", "Heute", vtg_file="latest_6c.json", notify=True)
     else:
         print("Kein Vertretungsplan für heute – zeige regulären Plan.")
-        if not ok1:
+        if rc1 != 0:
             empty = {"date": today, "class": "06c", "substitutions": []}
             (DATA / "latest_6c.json").write_text(json.dumps(empty))
         run("build_today.py", today, "today_6c.json", "latest_6c.json")
 
     print("=== Schritt 5: Morgen ===")
-    if ok2 and vtg_has_entries("latest_6c_tomorrow.json"):
+    if rc2 == 0 and vtg_has_entries("latest_6c_tomorrow.json"):
         build_and_notify(tomorrow, "tomorrow_6c.json", "Morgen", vtg_file="latest_6c_tomorrow.json", notify=False)
     else:
         print("Kein Vertretungsplan für morgen – zeige regulären Plan.")
-        if not ok2:
+        if rc2 != 0:
             empty = {"date": tomorrow, "class": "06c", "substitutions": []}
             (DATA / "latest_6c_tomorrow.json").write_text(json.dumps(empty))
         run("build_today.py", tomorrow, "tomorrow_6c.json", "latest_6c_tomorrow.json")

@@ -173,11 +173,11 @@ if __name__ == "__main__":
         session = get_authenticated_session()
         pdf_bytes = fetch_pdf(session, url)
         if not pdf_bytes:
-            sys.exit(1)
+            sys.exit(1)   # kein PDF – erwartet (exit 1)
         date_ok, pdf_stand = check_pdf_header(pdf_bytes, target_date)
         if not date_ok:
             print("PDF enthält nicht das Zieldatum – kein Plan verfügbar.")
-            sys.exit(1)
+            sys.exit(1)   # falsches Datum – erwartet (exit 1)
         print("PDF-Stand: " + str(pdf_stand))
         class_data = parse_class_data(pdf_bytes, TARGET_CLASS)
         output = {"date": target_date, "class": TARGET_CLASS, "substitutions": class_data, "pdf_stand": pdf_stand}
@@ -187,6 +187,9 @@ if __name__ == "__main__":
         with open(data_path, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)
         print("Fertig!")
+    except (ValueError, requests.RequestException) as e:
+        print("FEHLER: " + str(e), file=sys.stderr)
+        sys.exit(2)   # echter Fehler (Login, Netzwerk) – exit 2
     except Exception:
         traceback.print_exc()
-        sys.exit(1)
+        sys.exit(2)   # unerwartete Exception – exit 2
