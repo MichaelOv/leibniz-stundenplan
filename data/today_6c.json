@@ -29,8 +29,8 @@
       "fach_kurz": "M",
       "lehrer": "MAT",
       "raum": "603",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "KAH",
       "hinweis": ""
     },
     {
@@ -59,9 +59,9 @@
       "fach_kurz": "SP",
       "lehrer": "MAT",
       "raum": "SH1",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     },
     {
       "stunde": 6,
@@ -69,12 +69,12 @@
       "fach_kurz": "SP",
       "lehrer": "MAT",
       "raum": "SH1",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-05-28T20:00:28.763659+00:00",
-  "pdf_stand": "2026-05-27T07:31:00+02:00"
+  "vtg_count": 3,
+  "generated_at": "2026-05-29T04:30:22.430818+00:00",
+  "pdf_stand": "2026-05-29T05:53:00+02:00"
 }
