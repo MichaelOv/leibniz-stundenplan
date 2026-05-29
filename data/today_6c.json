@@ -19,8 +19,8 @@
       "fach_kurz": "RE",
       "lehrer": "EBR",
       "raum": "603",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "CAN",
       "hinweis": ""
     },
     {
@@ -74,7 +74,7 @@
       "hinweis": "frei"
     }
   ],
-  "vtg_count": 3,
-  "generated_at": "2026-05-29T05:30:25.448019+00:00",
-  "pdf_stand": "2026-05-29T05:53:00+02:00"
+  "vtg_count": 4,
+  "generated_at": "2026-05-29T05:35:18.167046+00:00",
+  "pdf_stand": "2026-05-29T07:29:00+02:00"
 }
