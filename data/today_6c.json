@@ -1,13 +1,13 @@
 {
-  "date": "2026-06-02",
-  "day": "Dienstag",
+  "date": "2026-06-03",
+  "day": "Mittwoch",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -15,19 +15,9 @@
     },
     {
       "stunde": 2,
-      "fach": "Islamische Rel.",
-      "fach_kurz": "IR",
-      "lehrer": "AVS",
-      "raum": "610",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
-    },
-    {
-      "stunde": 2,
-      "fach": "Religion",
-      "fach_kurz": "RE",
-      "lehrer": "EBR",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -35,46 +25,66 @@
     },
     {
       "stunde": 3,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.02Ku",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 4,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.02Ku",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 5,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Geschichte",
+      "fach_kurz": "GE",
+      "lehrer": "BOR",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Sport Schwimmen",
-      "fach_kurz": "SPSW",
+      "fach": "Sport",
+      "fach_kurz": "SP",
       "lehrer": "MAT",
-      "raum": "SW1",
+      "raum": "SH2",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
+    },
+    {
+      "stunde": 7,
+      "fach": "NK-IF",
+      "fach_kurz": "NK-IF",
+      "lehrer": "ROM",
+      "raum": "—",
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "NK entfällt!"
+    },
+    {
+      "stunde": 8,
+      "fach": "NK-IF",
+      "fach_kurz": "NK-IF",
+      "lehrer": "ROM",
+      "raum": "—",
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "NK entfällt!"
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-06-02T06:55:20.687324+00:00",
-  "pdf_stand": "2026-06-02T07:30:00+02:00"
+  "vtg_count": 2,
+  "generated_at": "2026-06-02T07:00:23.905603+00:00",
+  "pdf_stand": "2026-06-02T07:32:00+02:00"
 }
