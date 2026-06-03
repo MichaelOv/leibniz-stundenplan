@@ -9,8 +9,8 @@
       "fach_kurz": "M",
       "lehrer": "MAT",
       "raum": "603",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "BUY",
       "hinweis": ""
     },
     {
@@ -19,9 +19,9 @@
       "fach_kurz": "M",
       "lehrer": "MAT",
       "raum": "603",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
+      "status": "vertretung",
+      "vertreter": "GRU",
+      "hinweis": "D"
     },
     {
       "stunde": 3,
@@ -59,9 +59,9 @@
       "fach_kurz": "SP",
       "lehrer": "MAT",
       "raum": "SH2",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     },
     {
       "stunde": 7,
@@ -84,7 +84,7 @@
       "hinweis": "NK entfällt!"
     }
   ],
-  "vtg_count": 2,
-  "generated_at": "2026-06-03T05:40:19.717979+00:00",
-  "pdf_stand": "2026-06-02T07:32:00+02:00"
+  "vtg_count": 5,
+  "generated_at": "2026-06-03T05:45:27.049990+00:00",
+  "pdf_stand": "2026-06-03T07:42:00+02:00"
 }
