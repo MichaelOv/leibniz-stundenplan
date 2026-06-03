@@ -21,7 +21,7 @@
       "raum": "603",
       "status": "vertretung",
       "vertreter": "GRU",
-      "hinweis": "D"
+      "hinweis": "D statt Mo. 8.6. 1. Std."
     },
     {
       "stunde": 3,
@@ -85,6 +85,6 @@
     }
   ],
   "vtg_count": 5,
-  "generated_at": "2026-06-03T05:55:19.094817+00:00",
-  "pdf_stand": "2026-06-03T07:42:00+02:00"
+  "generated_at": "2026-06-03T06:01:00.931149+00:00",
+  "pdf_stand": "2026-06-03T07:56:00+02:00"
 }
