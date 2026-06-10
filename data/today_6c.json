@@ -28,9 +28,9 @@
       "fach": "Deutsch",
       "fach_kurz": "D",
       "lehrer": "GRU",
-      "raum": "603",
-      "status": "normal",
-      "vertreter": "",
+      "raum": "442If",
+      "status": "vertretung",
+      "vertreter": "WES",
       "hinweis": ""
     },
     {
@@ -39,8 +39,8 @@
       "fach_kurz": "D",
       "lehrer": "GRU",
       "raum": "603",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "BOR",
       "hinweis": ""
     },
     {
@@ -64,7 +64,7 @@
       "hinweis": ""
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-06-10T05:30:23.768002+00:00",
-  "pdf_stand": "2026-06-08T14:21:00+02:00"
+  "vtg_count": 2,
+  "generated_at": "2026-06-10T05:35:20.050727+00:00",
+  "pdf_stand": "2026-06-10T07:31:00+02:00"
 }
