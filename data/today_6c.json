@@ -1,17 +1,17 @@
 {
-  "date": "2026-06-10",
-  "day": "Mittwoch",
+  "date": "2026-06-11",
+  "day": "Donnerstag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
-      "raum": "603",
-      "status": "normal",
+      "fach": "Informatik",
+      "fach_kurz": "IF",
+      "lehrer": "WES",
+      "raum": "442If",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei; verlegt auf Mi. 10.6. 3. Std."
     },
     {
       "stunde": 2,
@@ -25,46 +25,36 @@
     },
     {
       "stunde": 3,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "442If",
-      "status": "vertretung",
-      "vertreter": "WES",
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
+      "raum": "603",
+      "status": "normal",
+      "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 4,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "603",
-      "status": "vertretung",
-      "vertreter": "BOR",
+      "fach": "Musik",
+      "fach_kurz": "MU",
+      "lehrer": "GER",
+      "raum": "A1.03Mu",
+      "status": "normal",
+      "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 5,
-      "fach": "Geschichte",
-      "fach_kurz": "GE",
-      "lehrer": "BOR",
-      "raum": "603",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
-    },
-    {
-      "stunde": 6,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "SH2",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
+      "fach": "Biologie",
+      "fach_kurz": "BI",
+      "lehrer": "BUT",
+      "raum": "BI006",
+      "status": "vertretung",
+      "vertreter": "BUT",
+      "hinweis": "Raumänderung wg. Klausur Q1"
     }
   ],
   "vtg_count": 2,
-  "generated_at": "2026-06-10T06:55:23.027268+00:00",
-  "pdf_stand": "2026-06-10T08:02:00+02:00"
+  "generated_at": "2026-06-10T07:01:05.705229+00:00",
+  "pdf_stand": "2026-06-10T07:31:00+02:00"
 }
