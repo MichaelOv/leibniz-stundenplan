@@ -49,12 +49,12 @@
       "fach_kurz": "BI",
       "lehrer": "BUT",
       "raum": "BI006",
-      "status": "vertretung",
-      "vertreter": "BUT",
-      "hinweis": "Raumänderung wg. Klausur Q1"
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "frei; verlegt auf Mo. 15.6. 3. Std."
     }
   ],
   "vtg_count": 2,
-  "generated_at": "2026-06-11T05:30:26.826992+00:00",
-  "pdf_stand": "2026-06-10T07:31:00+02:00"
+  "generated_at": "2026-06-11T05:35:24.565505+00:00",
+  "pdf_stand": "2026-06-11T07:26:00+02:00"
 }
