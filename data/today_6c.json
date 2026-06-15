@@ -28,9 +28,9 @@
       "fach": "Geschichte",
       "fach_kurz": "GE",
       "lehrer": "BOR",
-      "raum": "statt Do. 11.6. 5. Std.",
+      "raum": "BI006",
       "status": "vertretung",
-      "vertreter": "BI",
+      "vertreter": "BUT",
       "hinweis": ""
     },
     {
@@ -65,6 +65,6 @@
     }
   ],
   "vtg_count": 2,
-  "generated_at": "2026-06-12T20:00:49.205100+00:00",
-  "pdf_stand": "2026-06-12T07:34:00+02:00"
+  "generated_at": "2026-06-15T04:30:24.798377+00:00",
+  "pdf_stand": "2026-06-15T06:12:00+02:00"
 }
