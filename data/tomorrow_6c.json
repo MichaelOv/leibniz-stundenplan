@@ -1,14 +1,14 @@
 {
-  "date": "2026-06-17",
-  "day": "Mittwoch",
+  "date": "2026-06-18",
+  "day": "Donnerstag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
-      "raum": "603",
+      "fach": "Informatik",
+      "fach_kurz": "IF",
+      "lehrer": "WES",
+      "raum": "442If",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
@@ -25,66 +25,36 @@
     },
     {
       "stunde": 3,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "442If",
-      "status": "vertretung",
-      "vertreter": "WES",
-      "hinweis": ""
-    },
-    {
-      "stunde": 4,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "442If",
-      "status": "vertretung",
-      "vertreter": "WES",
-      "hinweis": ""
-    },
-    {
-      "stunde": 5,
-      "fach": "Geschichte",
-      "fach_kurz": "GE",
-      "lehrer": "BOR",
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
-      "stunde": 6,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "SH2",
+      "stunde": 4,
+      "fach": "Musik",
+      "fach_kurz": "MU",
+      "lehrer": "GER",
+      "raum": "A1.03Mu",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
-      "stunde": 7,
-      "fach": "NK-IF",
-      "fach_kurz": "NK-IF",
-      "lehrer": "ROM",
-      "raum": "—",
-      "status": "frei",
+      "stunde": 5,
+      "fach": "Biologie",
+      "fach_kurz": "BI",
+      "lehrer": "BUT",
+      "raum": "BI006",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "NK entfällt!"
-    },
-    {
-      "stunde": 8,
-      "fach": "NK-IF",
-      "fach_kurz": "NK-IF",
-      "lehrer": "ROM",
-      "raum": "—",
-      "status": "frei",
-      "vertreter": "",
-      "hinweis": "NK entfällt!"
+      "hinweis": ""
     }
   ],
-  "vtg_count": 4,
-  "generated_at": "2026-06-16T06:55:27.618373+00:00",
-  "pdf_stand": "2026-06-16T07:04:00+02:00"
+  "vtg_count": 0,
+  "generated_at": "2026-06-16T07:00:21.926352+00:00",
+  "pdf_stand": ""
 }
