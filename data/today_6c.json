@@ -1,17 +1,27 @@
 {
-  "date": "2026-06-18",
-  "day": "Donnerstag",
+  "date": "2026-06-19",
+  "day": "Freitag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Informatik",
-      "fach_kurz": "IF",
-      "lehrer": "WES",
-      "raum": "442If",
-      "status": "frei",
+      "fach": "Islamische Rel.",
+      "fach_kurz": "IR",
+      "lehrer": "AVS",
+      "raum": "610",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei; verlegt auf Mi. 17.6. 3. Std."
+      "hinweis": ""
+    },
+    {
+      "stunde": 1,
+      "fach": "Religion",
+      "fach_kurz": "RE",
+      "lehrer": "EBR",
+      "raum": "603",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
     },
     {
       "stunde": 2,
@@ -28,33 +38,43 @@
       "fach": "Englisch",
       "fach_kurz": "E",
       "lehrer": "MOR",
-      "raum": "603",
+      "raum": "D",
       "status": "vertretung",
       "vertreter": "603",
-      "hinweis": ""
+      "hinweis": "statt Mo. 22.6. 1. Std."
     },
     {
       "stunde": 4,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 5,
-      "fach": "Biologie",
-      "fach_kurz": "BI",
-      "lehrer": "BUT",
-      "raum": "BI006",
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH1",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 6,
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH1",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
-  "vtg_count": 2,
-  "generated_at": "2026-06-18T06:56:04.972069+00:00",
-  "pdf_stand": "2026-06-18T07:51:00+02:00"
+  "vtg_count": 1,
+  "generated_at": "2026-06-18T07:00:27.916498+00:00",
+  "pdf_stand": "2026-06-18T07:45:00+02:00"
 }
