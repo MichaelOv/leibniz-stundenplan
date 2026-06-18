@@ -38,10 +38,10 @@
       "fach": "Englisch",
       "fach_kurz": "E",
       "lehrer": "MOR",
-      "raum": "D",
+      "raum": "603",
       "status": "vertretung",
-      "vertreter": "603",
-      "hinweis": "statt Mo. 22.6. 1. Std."
+      "vertreter": "GRU",
+      "hinweis": "D statt Mo. 22.6. 1. Std."
     },
     {
       "stunde": 4,
@@ -75,6 +75,6 @@
     }
   ],
   "vtg_count": 1,
-  "generated_at": "2026-06-18T09:00:30.435990+00:00",
+  "generated_at": "2026-06-18T09:19:33.076773+00:00",
   "pdf_stand": "2026-06-18T07:45:00+02:00"
 }

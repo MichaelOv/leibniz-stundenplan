@@ -75,8 +75,15 @@ def parse_entry(lines, start):
     stunde  = lines[start+1] if start+1 < len(lines) else ""
     lehrer  = lines[start+2] if start+2 < len(lines) else ""
 
+    # PyMuPDF merged manchmal Lehrer- und Vertreter-Spalte in eine Zeile
+    # ("MOR GRU" statt zwei getrennter Felder) – zweiten Token voranstellen
+    extra_vertreter = None
+    if " " in lehrer:
+        parts = lehrer.split(None, 1)
+        lehrer, extra_vertreter = parts[0], parts[1]
+
     # Felder nach Lehrer dynamisch einlesen bis naechste Klasse
-    rest = []
+    rest = [extra_vertreter] if extra_vertreter else []
     j = start + 3
     while j < len(lines) and len(rest) < 6:
         val = lines[j].strip()
