@@ -49,9 +49,9 @@
       "fach_kurz": "M",
       "lehrer": "MAT",
       "raum": "603",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "Hitzefrei (06d) 5 HIL"
     },
     {
       "stunde": 6,
@@ -59,12 +59,12 @@
       "fach_kurz": "IF",
       "lehrer": "WES",
       "raum": "442If",
-      "status": "frei",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei; verlegt auf Mi. 17.6. 4. Std."
+      "hinweis": ""
     }
   ],
   "vtg_count": 2,
-  "generated_at": "2026-06-18T11:00:31.289480+00:00",
-  "pdf_stand": "2026-06-18T06:33:00+02:00"
+  "generated_at": "2026-06-18T12:00:21.900457+00:00",
+  "pdf_stand": "2026-06-18T13:20:00+02:00"
 }
