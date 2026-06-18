@@ -38,8 +38,9 @@ def class_matches(s, my_class):
     return False
 
 def is_next_class(s):
-    # Erkennt naechste Klassen-Zeile wie "06c", "07ab", "EF", "iföA"
-    return bool(re.match(r'^(0?\d[a-z]{1,5}|[A-Z]{2,3}|if[oö][A-Z])$', s.strip()))
+    # Erkennt naechste Klassen-Zeile wie "06c", "07ab", "EF", "Q1", "Q2", "iföA"
+    # Kein generisches [A-Z]{2,3} – das wuerde Fachkuerzel (GE, BI, MU, SP ...) matchen
+    return bool(re.match(r'^(0?\d[a-z]{1,5}|EF|Q[12]|if[oö][A-Z])$', s.strip()))
 
 def get_authenticated_session():
     session = requests.Session()
@@ -115,7 +116,13 @@ def parse_entry(lines, start):
             vertreter = v
 
     if len(rest) >= 2 and not raum:
-        raum = rest[1]
+        r1 = rest[1]
+        # PyMuPDF merged manchmal Raum- und Fach-Spalte ("A1.17 GE")
+        if " " in r1:
+            parts = r1.split(None, 1)
+            raum, fach = parts[0], parts[1]
+        else:
+            raum = r1
     elif len(rest) >= 2 and raum:
         fach = rest[1]
 
