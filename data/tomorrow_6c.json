@@ -55,26 +55,26 @@
     },
     {
       "stunde": 5,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
-      "raum": "603",
-      "status": "frei",
+      "fach": "Musik",
+      "fach_kurz": "MU",
+      "lehrer": "GER",
+      "raum": "A1.03Mu",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "Freisetzung"
+      "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Informatik",
-      "fach_kurz": "IF",
-      "lehrer": "WES",
-      "raum": "442If",
+      "fach": "Sport Schwimmen",
+      "fach_kurz": "SPSW",
+      "lehrer": "MAT",
+      "raum": "SW1",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
-  "vtg_count": 2,
-  "generated_at": "2026-06-19T12:12:37.113308+00:00",
-  "pdf_stand": "2026-06-19T12:05:00+02:00"
+  "vtg_count": 0,
+  "generated_at": "2026-06-19T12:14:31.424104+00:00",
+  "pdf_stand": "2026-06-19T07:21:00+02:00"
 }

@@ -51,7 +51,7 @@
       "raum": "603",
       "status": "frei",
       "vertreter": "",
-      "hinweis": "Freisetzung (06d) 5 HIL"
+      "hinweis": "Freisetzung"
     },
     {
       "stunde": 6,
@@ -65,6 +65,6 @@
     }
   ],
   "vtg_count": 2,
-  "generated_at": "2026-06-19T12:00:23.813649+00:00",
+  "generated_at": "2026-06-19T12:14:31.310145+00:00",
   "pdf_stand": "2026-06-19T12:05:00+02:00"
 }
