@@ -38,9 +38,11 @@ def class_matches(s, my_class):
     return False
 
 def is_next_class(s):
-    # Erkennt naechste Klassen-Zeile wie "06c", "07ab", "EF", "Q1", "Q2", "iföA"
-    # Kein generisches [A-Z]{2,3} – das wuerde Fachkuerzel (GE, BI, MU, SP ...) matchen
-    return bool(re.match(r'^(0?\d[a-z]{1,5}|EF|Q[12]|if[oö][A-Z])$', s.strip()))
+    # Erkennt Klassen wie "06c", "07ab", "EF", "Q1", "(06c)", "(06d)" (Gruppenvertretungen)
+    # Klammern entfernen: verhindert dass "(06d) 5 HIL" in den Text des Vorgaengers laeuft.
+    # Kein generisches [A-Z]{2,3} wg. Fachkuerzel-Kollision (GE, BI, MU, SP ...).
+    core = s.strip().strip("()")
+    return bool(re.match(r'^(0?\d[a-z]{1,5}|EF|Q[12]|if[oö][A-Z])$', core))
 
 def get_authenticated_session():
     session = requests.Session()
