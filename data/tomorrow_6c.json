@@ -49,12 +49,12 @@
       "fach_kurz": "BI",
       "lehrer": "BUT",
       "raum": "BI006",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "Hitzefrei"
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-06-23T14:00:33.365375+00:00",
-  "pdf_stand": ""
+  "vtg_count": 1,
+  "generated_at": "2026-06-23T15:00:26.920089+00:00",
+  "pdf_stand": "2026-06-23T16:32:00+02:00"
 }
