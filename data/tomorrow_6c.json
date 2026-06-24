@@ -19,9 +19,9 @@
       "fach_kurz": "RE",
       "lehrer": "EBR",
       "raum": "603",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     },
     {
       "stunde": 2,
@@ -74,7 +74,7 @@
       "hinweis": ""
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-06-24T13:00:24.588635+00:00",
-  "pdf_stand": "2026-06-24T07:32:00+02:00"
+  "vtg_count": 1,
+  "generated_at": "2026-06-24T14:00:28.523977+00:00",
+  "pdf_stand": "2026-06-24T15:12:00+02:00"
 }
