@@ -1,14 +1,24 @@
 {
-  "date": "2026-06-25",
-  "day": "Donnerstag",
+  "date": "2026-06-26",
+  "day": "Freitag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Informatik",
-      "fach_kurz": "IF",
-      "lehrer": "WES",
-      "raum": "442If",
+      "fach": "Islamische Rel.",
+      "fach_kurz": "IR",
+      "lehrer": "AVS",
+      "raum": "610",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 1,
+      "fach": "Religion",
+      "fach_kurz": "RE",
+      "lehrer": "EBR",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
@@ -35,26 +45,36 @@
     },
     {
       "stunde": 4,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 5,
-      "fach": "Biologie",
-      "fach_kurz": "BI",
-      "lehrer": "BUT",
-      "raum": "BI006",
-      "status": "frei",
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH1",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "Hitzefrei"
+      "hinweis": ""
+    },
+    {
+      "stunde": 6,
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH1",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
     }
   ],
-  "vtg_count": 1,
-  "generated_at": "2026-06-24T06:55:23.390609+00:00",
-  "pdf_stand": "2026-06-23T16:32:00+02:00"
+  "vtg_count": 0,
+  "generated_at": "2026-06-24T07:00:23.822651+00:00",
+  "pdf_stand": "2026-06-24T07:32:00+02:00"
 }
