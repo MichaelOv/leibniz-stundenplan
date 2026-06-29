@@ -1,13 +1,13 @@
 {
-  "date": "2026-06-30",
-  "day": "Dienstag",
+  "date": "2026-07-01",
+  "day": "Mittwoch",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -15,19 +15,9 @@
     },
     {
       "stunde": 2,
-      "fach": "Islamische Rel.",
-      "fach_kurz": "IR",
-      "lehrer": "AVS",
-      "raum": "610",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
-    },
-    {
-      "stunde": 2,
-      "fach": "Religion",
-      "fach_kurz": "RE",
-      "lehrer": "EBR",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -35,46 +25,46 @@
     },
     {
       "stunde": 3,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.02Ku",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 4,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
       "raum": "603",
-      "status": "vertretung",
-      "vertreter": "GRU",
-      "hinweis": "D statt Mo. 29.6. 1. Std."
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
     },
     {
       "stunde": 5,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Geschichte",
+      "fach_kurz": "GE",
+      "lehrer": "BOR",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Sport Schwimmen",
-      "fach_kurz": "SPSW",
+      "fach": "Sport",
+      "fach_kurz": "SP",
       "lehrer": "MAT",
-      "raum": "SW1",
+      "raum": "SH2",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
-  "vtg_count": 1,
-  "generated_at": "2026-06-29T06:55:25.336430+00:00",
-  "pdf_stand": "2026-06-29T07:56:00+02:00"
+  "vtg_count": 0,
+  "generated_at": "2026-06-29T07:00:23.176226+00:00",
+  "pdf_stand": ""
 }
