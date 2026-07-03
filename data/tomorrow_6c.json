@@ -29,8 +29,8 @@
       "fach_kurz": "RE",
       "lehrer": "EBR",
       "raum": "603",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "RIT",
       "hinweis": ""
     },
     {
@@ -69,12 +69,12 @@
       "fach_kurz": "SPSW",
       "lehrer": "MAT",
       "raum": "SW1",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-07-03T12:00:23.003669+00:00",
-  "pdf_stand": ""
+  "vtg_count": 2,
+  "generated_at": "2026-07-03T13:00:19.968929+00:00",
+  "pdf_stand": "2026-07-03T14:45:00+02:00"
 }
