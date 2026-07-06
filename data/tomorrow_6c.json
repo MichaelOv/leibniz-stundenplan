@@ -1,13 +1,13 @@
 {
-  "date": "2026-07-07",
-  "day": "Dienstag",
+  "date": "2026-07-08",
+  "day": "Mittwoch",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
@@ -15,66 +15,56 @@
     },
     {
       "stunde": 2,
-      "fach": "Islamische Rel.",
-      "fach_kurz": "IR",
-      "lehrer": "AVS",
-      "raum": "610",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
-      "hinweis": ""
-    },
-    {
-      "stunde": 2,
-      "fach": "Religion",
-      "fach_kurz": "RE",
-      "lehrer": "EBR",
-      "raum": "603",
-      "status": "vertretung",
-      "vertreter": "RIT",
       "hinweis": ""
     },
     {
       "stunde": 3,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.02Ku",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 4,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.02Ku",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 5,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Geschichte",
+      "fach_kurz": "GE",
+      "lehrer": "BOR",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Sport Schwimmen",
-      "fach_kurz": "SPSW",
+      "fach": "Sport",
+      "fach_kurz": "SP",
       "lehrer": "MAT",
-      "raum": "SW1",
-      "status": "frei",
+      "raum": "SH2",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei"
+      "hinweis": ""
     }
   ],
-  "vtg_count": 2,
-  "generated_at": "2026-07-06T06:55:21.844041+00:00",
-  "pdf_stand": "2026-07-03T14:45:00+02:00"
+  "vtg_count": 0,
+  "generated_at": "2026-07-06T07:00:20.293221+00:00",
+  "pdf_stand": ""
 }
