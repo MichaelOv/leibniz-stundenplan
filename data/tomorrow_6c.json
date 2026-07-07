@@ -49,9 +49,9 @@
       "fach_kurz": "GE",
       "lehrer": "BOR",
       "raum": "603",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
+      "status": "vertretung",
+      "vertreter": "GER",
+      "hinweis": "MU statt Di. 7.7. 5. Std.; Musik im Klassenraum"
     },
     {
       "stunde": 6,
@@ -64,7 +64,7 @@
       "hinweis": "frei"
     }
   ],
-  "vtg_count": 5,
-  "generated_at": "2026-07-07T05:35:23.359884+00:00",
-  "pdf_stand": "2026-07-06T16:17:00+02:00"
+  "vtg_count": 6,
+  "generated_at": "2026-07-07T05:40:20.003379+00:00",
+  "pdf_stand": "2026-07-07T07:36:00+02:00"
 }

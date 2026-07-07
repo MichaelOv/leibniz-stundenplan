@@ -39,9 +39,9 @@
       "fach_kurz": "KU",
       "lehrer": "NYE",
       "raum": "A2.02Ku",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     },
     {
       "stunde": 4,
@@ -49,9 +49,9 @@
       "fach_kurz": "KU",
       "lehrer": "NYE",
       "raum": "A2.02Ku",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     },
     {
       "stunde": 5,
@@ -59,9 +59,9 @@
       "fach_kurz": "MU",
       "lehrer": "GER",
       "raum": "A1.03Mu",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei; verlegt auf Mi. 8.7. 5. Std."
     },
     {
       "stunde": 6,
@@ -74,7 +74,7 @@
       "hinweis": "frei"
     }
   ],
-  "vtg_count": 2,
-  "generated_at": "2026-07-07T05:35:23.329819+00:00",
-  "pdf_stand": "2026-07-06T15:19:00+02:00"
+  "vtg_count": 5,
+  "generated_at": "2026-07-07T05:40:19.808418+00:00",
+  "pdf_stand": "2026-07-07T07:35:00+02:00"
 }
