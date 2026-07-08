@@ -1,33 +1,33 @@
 {
-  "date": "2026-07-08",
-  "day": "Mittwoch",
+  "date": "2026-07-09",
+  "day": "Donnerstag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
-      "raum": "603",
+      "fach": "Informatik",
+      "fach_kurz": "IF",
+      "lehrer": "WES",
+      "raum": "442If",
       "status": "frei",
       "vertreter": "",
-      "hinweis": "frei"
+      "hinweis": "GE frei; verlegt auf Do. 9.7. 2. Std."
     },
     {
       "stunde": 2,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
-      "raum": "603",
-      "status": "frei",
+      "fach": "Informatik",
+      "fach_kurz": "IF",
+      "lehrer": "WES",
+      "raum": "442If",
+      "status": "vertretung",
       "vertreter": "",
-      "hinweis": "frei"
+      "hinweis": "verlegt von 1. Std."
     },
     {
       "stunde": 3,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
       "raum": "603",
       "status": "frei",
       "vertreter": "",
@@ -35,36 +35,26 @@
     },
     {
       "stunde": 4,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "603",
+      "fach": "Musik",
+      "fach_kurz": "MU",
+      "lehrer": "GER",
+      "raum": "A1.03Mu",
       "status": "frei",
       "vertreter": "",
       "hinweis": "frei"
     },
     {
       "stunde": 5,
-      "fach": "Geschichte",
-      "fach_kurz": "GE",
-      "lehrer": "BOR",
-      "raum": "603",
-      "status": "vertretung",
-      "vertreter": "GER",
-      "hinweis": "MU statt Di. 7.7. 5. Std.; Musik im Klassenraum"
-    },
-    {
-      "stunde": 6,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "SH2",
+      "fach": "Biologie",
+      "fach_kurz": "BI",
+      "lehrer": "BUT",
+      "raum": "BI006",
       "status": "frei",
       "vertreter": "",
-      "hinweis": "frei"
+      "hinweis": "frei; verlegt auf Mo. 6.7. 5. Std."
     }
   ],
-  "vtg_count": 6,
-  "generated_at": "2026-07-08T06:55:20.266137+00:00",
-  "pdf_stand": "2026-07-08T07:43:00+02:00"
+  "vtg_count": 5,
+  "generated_at": "2026-07-08T07:00:22.372866+00:00",
+  "pdf_stand": "2026-07-08T07:44:00+02:00"
 }
