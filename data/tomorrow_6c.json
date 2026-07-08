@@ -29,9 +29,9 @@
       "fach_kurz": "E",
       "lehrer": "MOR",
       "raum": "603",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     },
     {
       "stunde": 4,
@@ -54,7 +54,7 @@
       "hinweis": "frei; verlegt auf Mo. 6.7. 5. Std."
     }
   ],
-  "vtg_count": 4,
-  "generated_at": "2026-07-08T05:45:19.321355+00:00",
-  "pdf_stand": "2026-07-07T10:16:00+02:00"
+  "vtg_count": 5,
+  "generated_at": "2026-07-08T05:50:21.730826+00:00",
+  "pdf_stand": "2026-07-08T07:44:00+02:00"
 }
