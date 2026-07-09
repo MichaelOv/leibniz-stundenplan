@@ -9,19 +9,19 @@
       "fach_kurz": "D",
       "lehrer": "GRU",
       "raum": "603",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei; verlegt auf Mo. 13.7. 2. Std."
     },
     {
       "stunde": 2,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
       "raum": "603",
-      "status": "normal",
+      "status": "vertretung",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "verlegt von 1. Std."
     },
     {
       "stunde": 3,
@@ -64,7 +64,7 @@
       "hinweis": ""
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-07-09T14:00:26.786021+00:00",
-  "pdf_stand": ""
+  "vtg_count": 2,
+  "generated_at": "2026-07-09T15:00:20.154272+00:00",
+  "pdf_stand": "2026-07-09T16:35:00+02:00"
 }
