@@ -1,80 +1,70 @@
 {
-  "date": "2026-07-10",
-  "day": "Freitag",
+  "date": "2026-07-13",
+  "day": "Montag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Islamische Rel.",
-      "fach_kurz": "IR",
-      "lehrer": "AVS",
-      "raum": "610",
-      "status": "normal",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei; verlegt auf Mo. 13.7. 2. Std."
     },
     {
-      "stunde": 1,
-      "fach": "Religion",
-      "fach_kurz": "RE",
-      "lehrer": "EBR",
+      "stunde": 2,
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
+      "status": "vertretung",
+      "vertreter": "",
+      "hinweis": "verlegt von 1. Std."
+    },
+    {
+      "stunde": 3,
+      "fach": "Geschichte",
+      "fach_kurz": "GE",
+      "lehrer": "BOR",
       "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
-      "stunde": 2,
+      "stunde": 4,
+      "fach": "Biologie",
+      "fach_kurz": "BI",
+      "lehrer": "BUT",
+      "raum": "BI001",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 5,
       "fach": "Mathe",
       "fach_kurz": "M",
       "lehrer": "MAT",
       "raum": "603",
-      "status": "vertretung",
-      "vertreter": "GRU",
-      "hinweis": "D statt Mo. 6.7. 1. Std."
-    },
-    {
-      "stunde": 3,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "603",
-      "status": "vertretung",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "verlegt von 4. Std."
-    },
-    {
-      "stunde": 4,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "603",
-      "status": "frei",
-      "vertreter": "",
-      "hinweis": "frei; verlegt auf Fr. 10.7. 3. Std."
-    },
-    {
-      "stunde": 5,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "SH1",
-      "status": "frei",
-      "vertreter": "",
-      "hinweis": "frei"
+      "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "SH1",
-      "status": "frei",
+      "fach": "Informatik",
+      "fach_kurz": "IF",
+      "lehrer": "WES",
+      "raum": "442If",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei"
+      "hinweis": ""
     }
   ],
-  "vtg_count": 5,
-  "generated_at": "2026-07-10T06:55:22.937352+00:00",
-  "pdf_stand": "2026-07-10T08:21:00+02:00"
+  "vtg_count": 2,
+  "generated_at": "2026-07-10T07:00:22.230808+00:00",
+  "pdf_stand": "2026-07-09T16:35:00+02:00"
 }
