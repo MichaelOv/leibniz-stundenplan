@@ -9,9 +9,9 @@
       "fach_kurz": "E",
       "lehrer": "MOR",
       "raum": "603",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "frei"
     },
     {
       "stunde": 2,
@@ -29,8 +29,8 @@
       "fach_kurz": "RE",
       "lehrer": "EBR",
       "raum": "603",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "ZIM",
       "hinweis": ""
     },
     {
@@ -74,7 +74,7 @@
       "hinweis": ""
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-07-10T11:00:23.409777+00:00",
-  "pdf_stand": ""
+  "vtg_count": 2,
+  "generated_at": "2026-07-10T12:00:28.318554+00:00",
+  "pdf_stand": "2026-07-10T13:29:00+02:00"
 }
