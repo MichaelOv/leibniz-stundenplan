@@ -30,7 +30,7 @@
       "lehrer": "EBR",
       "raum": "603",
       "status": "vertretung",
-      "vertreter": "ZIM",
+      "vertreter": "MON",
       "hinweis": ""
     },
     {
@@ -68,13 +68,13 @@
       "fach": "Sport Schwimmen",
       "fach_kurz": "SPSW",
       "lehrer": "MAT",
-      "raum": "SW1",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
+      "raum": "HP",
+      "status": "vertretung",
+      "vertreter": "MAT",
+      "hinweis": "SP Sport auf dem Hockeyplatz"
     }
   ],
-  "vtg_count": 2,
-  "generated_at": "2026-07-13T12:00:19.094451+00:00",
-  "pdf_stand": "2026-07-13T11:26:00+02:00"
+  "vtg_count": 3,
+  "generated_at": "2026-07-13T13:00:23.150222+00:00",
+  "pdf_stand": "2026-07-13T14:33:00+02:00"
 }
