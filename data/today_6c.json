@@ -1,70 +1,80 @@
 {
-  "date": "2026-07-13",
-  "day": "Montag",
+  "date": "2026-07-14",
+  "day": "Dienstag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
       "raum": "603",
       "status": "frei",
       "vertreter": "",
-      "hinweis": "frei; verlegt auf Mo. 13.7. 2. Std."
+      "hinweis": "frei"
     },
     {
       "stunde": 2,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
+      "fach": "Islamische Rel.",
+      "fach_kurz": "IR",
+      "lehrer": "AVS",
+      "raum": "610",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 2,
+      "fach": "Religion",
+      "fach_kurz": "RE",
+      "lehrer": "EBR",
       "raum": "603",
       "status": "vertretung",
-      "vertreter": "",
-      "hinweis": "verlegt von 1. Std."
+      "vertreter": "ZIM",
+      "hinweis": ""
     },
     {
       "stunde": 3,
-      "fach": "Geschichte",
-      "fach_kurz": "GE",
-      "lehrer": "BOR",
-      "raum": "603",
+      "fach": "Kunst",
+      "fach_kurz": "KU",
+      "lehrer": "NYE",
+      "raum": "A2.02Ku",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 4,
-      "fach": "Biologie",
-      "fach_kurz": "BI",
-      "lehrer": "BUT",
-      "raum": "BI001",
+      "fach": "Kunst",
+      "fach_kurz": "KU",
+      "lehrer": "NYE",
+      "raum": "A2.02Ku",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 5,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
-      "raum": "603",
+      "fach": "Musik",
+      "fach_kurz": "MU",
+      "lehrer": "GER",
+      "raum": "A1.03Mu",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Informatik",
-      "fach_kurz": "IF",
-      "lehrer": "WES",
-      "raum": "442If",
-      "status": "frei",
+      "fach": "Sport Schwimmen",
+      "fach_kurz": "SPSW",
+      "lehrer": "MAT",
+      "raum": "SW1",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "Hitzefrei"
+      "hinweis": ""
     }
   ],
-  "vtg_count": 3,
-  "generated_at": "2026-07-13T06:55:24.111862+00:00",
-  "pdf_stand": "2026-07-13T08:32:00+02:00"
+  "vtg_count": 2,
+  "generated_at": "2026-07-13T07:00:24.798848+00:00",
+  "pdf_stand": "2026-07-13T07:34:00+02:00"
 }
