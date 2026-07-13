@@ -44,6 +44,21 @@ def fach_name(kuerzel: str, fach_map: dict) -> str:
     key = kuerzel.lstrip(".")
     return fach_map.get(key, key)
 
+def resolve_vtg_fach(sub_fach: str, hinweis: str, fach_map: dict) -> str:
+    """Fachkürzel einer Vertretung bestimmen, wenn sie das Fach wechselt.
+    1. strukturiertes Fach aus dem Vertretungsplan (sub['fach'])
+    2. bekanntes Fachkürzel am Zeilenanfang direkt vor 'statt'/'verlegt'
+       ('BI statt Do. 9.7. ...'). Bewusst eng: das folgende Schlüsselwort
+       verhindert, dass z.B. Namens-Initialen ('M. Müller ...') als Fach
+       missdeutet werden.
+    Sonst '' (dann bleibt das reguläre Untis-Fach stehen, sicherer Fallback)."""
+    if sub_fach:
+        return sub_fach.lstrip(".")
+    m = re.match(r'\s*([A-ZÄÖÜ]{1,4})\s+(\w+)', hinweis or "")
+    if m and m.group(1) in fach_map and m.group(2).lower() in ("statt", "verlegt"):
+        return m.group(1)
+    return ""
+
 def parse_stunden(raw):
     """'7 - 8 ROM' → ([7,8], 'ROM'), '3' → ([3], ''), '1 - 2 MAT' → ([1,2], 'MAT')"""
     parts = str(raw).replace("-", " ").split()
@@ -148,6 +163,11 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
                     if raum_neu:
                         entry["raum"] = raum_neu
                     entry["hinweis"] = sub.get("text","")
+                    # Fachwechsel: Originalfach behalten (durchgestrichen), neues zusätzlich
+                    neu_fach = resolve_vtg_fach(sub.get("fach",""), sub.get("text",""), FACH)
+                    if neu_fach and neu_fach.lstrip(".") != entry["fach_kurz"]:
+                        entry["fach_neu"]      = fach_name(neu_fach, FACH)
+                        entry["fach_neu_kurz"] = neu_fach
             plan.append(entry)
 
     # Nicht gematchte Vertretungen (z.B. Gruppen wie 06ac)

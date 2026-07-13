@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import json, os, sys, re, traceback, logging
 from pathlib import Path
-from datetime import datetime, date, timezone, timedelta
+from datetime import datetime, date, timezone
+from zoneinfo import ZoneInfo
 import fitz
 import requests
 from dotenv import load_dotenv
@@ -159,7 +160,7 @@ def check_pdf_header(pdf_bytes, target_date):
     if m:
         try:
             dt = datetime.strptime(m.group(1) + " " + m.group(2), "%d.%m.%Y %H:%M")
-            pdf_stand = dt.replace(tzinfo=timezone(timedelta(hours=2))).isoformat()
+            pdf_stand = dt.replace(tzinfo=ZoneInfo("Europe/Berlin")).isoformat()
         except ValueError as e:
             print(f"Warnung: pdf_stand konnte nicht geparst werden: {e}")
     return date_ok, pdf_stand

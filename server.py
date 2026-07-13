@@ -3,7 +3,7 @@ import subprocess
 from pathlib import Path
 from flask import Flask, jsonify, send_from_directory
 
-app = Flask(__name__, static_folder='.')
+app = Flask(__name__, static_folder=None)
 BASE_DIR = Path(__file__).resolve().parent
 
 @app.route('/')

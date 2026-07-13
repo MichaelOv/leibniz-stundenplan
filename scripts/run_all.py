@@ -57,6 +57,17 @@ def untis_html_changed():
         print("Warnung: Untis-Check fehlgeschlagen: " + str(e))
         return True
 
+def prune_old_hashes(keep_days=14):
+    """Löscht datierte last_ntfy_hash_YYYY-MM-DD.txt, die älter als keep_days sind."""
+    cutoff = datetime.now(_TZ_BERLIN).date() - timedelta(days=keep_days)
+    for f in DATA.glob("last_ntfy_hash_*.txt"):
+        stamp = f.stem.replace("last_ntfy_hash_", "")
+        try:
+            if date.fromisoformat(stamp) < cutoff:
+                f.unlink()
+        except ValueError:
+            continue  # nicht-datierte Datei (z.B. _today) überspringen
+
 def vtg_has_entries(json_file) -> bool:
     try:
         with open(DATA / json_file) as f:
@@ -170,5 +181,7 @@ if __name__ == "__main__":
         "last_run_at": datetime.now(timezone.utc).isoformat()
     }
     (DATA / "config.json").write_text(json.dumps(config))
+
+    prune_old_hashes()
 
     print("=== Fertig ===")

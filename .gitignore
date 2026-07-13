@@ -3,5 +3,6 @@ venv/
 data/latest_6c.json
 data/latest_6c_tomorrow.json
 data/untis_last_modified.txt
+data/config.json
 __pycache__/
 *.pyc

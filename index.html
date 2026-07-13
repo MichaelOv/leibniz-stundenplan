@@ -59,7 +59,7 @@
     .tag.frei{background:rgba(139,26,26,.1);color:var(--color-frei)}
     .tag.info{background:rgba(0,0,0,.06);color:var(--color-text-muted)}
     .hinweis{font-size:var(--text-xs);color:var(--color-text-muted);margin-top:.2rem}
-    .vtg-name{font-size:var(--text-xs);color:var(--color-warning);margin-top:.2rem}
+    .vtg-name,.fach-neu{font-size:var(--text-xs);color:var(--color-warning);margin-top:.2rem}
     .fach-strike{text-decoration:line-through;opacity:.45}
     .empty{padding:var(--space-8);text-align:center;color:var(--color-text-muted)}
     .error-box{background:rgba(139,26,26,.08);border:1px solid rgba(139,26,26,.2);border-radius:var(--radius-md);padding:var(--space-4);color:var(--color-frei);font-size:var(--text-sm);margin-top:var(--space-4)}
@@ -219,9 +219,15 @@
       const tagLabel = labels[p.status] || p.status;
       const vtgLine  = p.vertreter ? '<div class="vtg-name">\u2192 ' + esc(p.vertreter) + '</div>' : '';
       const hinweis  = p.hinweis   ? '<div class="hinweis">' + esc(p.hinweis) + '</div>' : '';
-      const fachCell = p.status === 'frei'
-        ? '<span class="fach-strike">' + esc(p.fach) + '</span>'
-        : esc(p.fach);
+      let fachCell;
+      if (p.fach_neu) {
+        fachCell = '<span class="fach-strike">' + esc(p.fach) + '</span>'
+                 + '<div class="fach-neu">→ ' + esc(p.fach_neu) + '</div>';
+      } else if (p.status === 'frei') {
+        fachCell = '<span class="fach-strike">' + esc(p.fach) + '</span>';
+      } else {
+        fachCell = esc(p.fach);
+      }
       const zeit = ZEITEN[p.stunde] ? '<div style="font-size:.75em;opacity:.6">' + ZEITEN[p.stunde] + '</div>' : '';
       return '<tr class="row-' + p.status + '">'
         + '<td><strong>' + p.stunde + '</strong>' + zeit + '</td>'
