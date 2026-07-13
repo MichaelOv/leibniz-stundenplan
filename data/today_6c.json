@@ -59,12 +59,12 @@
       "fach_kurz": "IF",
       "lehrer": "WES",
       "raum": "442If",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "Hitzefrei"
     }
   ],
-  "vtg_count": 2,
-  "generated_at": "2026-07-13T06:30:20.321066+00:00",
-  "pdf_stand": "2026-07-13T07:33:00+02:00"
+  "vtg_count": 3,
+  "generated_at": "2026-07-13T06:35:24.258905+00:00",
+  "pdf_stand": "2026-07-13T08:32:00+02:00"
 }
