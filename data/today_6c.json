@@ -1,80 +1,70 @@
 {
-  "date": "2026-07-14",
-  "day": "Dienstag",
+  "date": "2026-07-15",
+  "day": "Mittwoch",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
       "raum": "603",
-      "status": "frei",
-      "vertreter": "",
-      "hinweis": "frei"
-    },
-    {
-      "stunde": 2,
-      "fach": "Islamische Rel.",
-      "fach_kurz": "IR",
-      "lehrer": "AVS",
-      "raum": "610",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 2,
-      "fach": "Religion",
-      "fach_kurz": "RE",
-      "lehrer": "EBR",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
       "raum": "603",
-      "status": "vertretung",
-      "vertreter": "MON",
+      "status": "normal",
+      "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 3,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.02Ku",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 4,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.02Ku",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 5,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Geschichte",
+      "fach_kurz": "GE",
+      "lehrer": "BOR",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Sport Schwimmen",
-      "fach_kurz": "SPSW",
+      "fach": "Sport",
+      "fach_kurz": "SP",
       "lehrer": "MAT",
-      "raum": "HP",
-      "status": "vertretung",
-      "vertreter": "MAT",
-      "hinweis": "SP Sport auf dem Hockeyplatz"
+      "raum": "SH2",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
     }
   ],
-  "vtg_count": 3,
-  "generated_at": "2026-07-14T06:55:22.904380+00:00",
-  "pdf_stand": "2026-07-14T07:49:00+02:00"
+  "vtg_count": 0,
+  "generated_at": "2026-07-14T07:00:28.320164+00:00",
+  "pdf_stand": ""
 }
