@@ -1,16 +1,46 @@
 {
-  "date": "2026-07-16",
-  "day": "Donnerstag",
+  "date": "2026-07-17",
+  "day": "Freitag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Informatik",
-      "fach_kurz": "IF",
-      "lehrer": "WES",
-      "raum": "442If",
+      "fach": "Islamische Rel.",
+      "fach_kurz": "IR",
+      "lehrer": "AVS",
+      "raum": "610",
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "Freisetzung"
+    },
+    {
+      "stunde": 1,
+      "fach": "Religion",
+      "fach_kurz": "RE",
+      "lehrer": "EBR",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 1,
+      "fach": "Gruppe",
+      "fach_kurz": "",
+      "lehrer": "MAT",
+      "raum": "Klassenleitungstag",
+      "status": "vertretung",
+      "vertreter": "603",
+      "hinweis": ""
+    },
+    {
+      "stunde": 1,
+      "fach": "Gruppe",
+      "fach_kurz": "",
+      "lehrer": "GRU",
+      "raum": "Klassenleitungstag",
+      "status": "vertretung",
+      "vertreter": "603",
       "hinweis": ""
     },
     {
@@ -24,37 +54,77 @@
       "hinweis": ""
     },
     {
+      "stunde": 2,
+      "fach": "Gruppe",
+      "fach_kurz": "",
+      "lehrer": "GRU",
+      "raum": "Klassenleitungstag",
+      "status": "vertretung",
+      "vertreter": "603",
+      "hinweis": ""
+    },
+    {
       "stunde": 3,
       "fach": "Englisch",
       "fach_kurz": "E",
       "lehrer": "MOR",
       "raum": "603",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 3,
+      "fach": "Gruppe",
+      "fach_kurz": "",
+      "lehrer": "GRU",
+      "raum": "Klassenleitungstag",
       "status": "vertretung",
-      "vertreter": "WAR",
-      "hinweis": "E"
+      "vertreter": "603",
+      "hinweis": ""
+    },
+    {
+      "stunde": 3,
+      "fach": "Gruppe",
+      "fach_kurz": "",
+      "lehrer": "MAT",
+      "raum": "Klassenleitungstag",
+      "status": "vertretung",
+      "vertreter": "603",
+      "hinweis": ""
     },
     {
       "stunde": 4,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 5,
-      "fach": "Biologie",
-      "fach_kurz": "BI",
-      "lehrer": "BUT",
-      "raum": "BI006",
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH1",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 6,
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH1",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
-  "vtg_count": 1,
-  "generated_at": "2026-07-15T06:55:20.311276+00:00",
-  "pdf_stand": "2026-07-13T14:30:00+02:00"
+  "vtg_count": 6,
+  "generated_at": "2026-07-15T07:00:28.056326+00:00",
+  "pdf_stand": "2026-07-14T14:57:00+02:00"
 }
