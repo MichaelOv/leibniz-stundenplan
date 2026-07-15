@@ -9,9 +9,9 @@
       "fach_kurz": "IR",
       "lehrer": "AVS",
       "raum": "610",
-      "status": "frei",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "Freisetzung"
+      "hinweis": ""
     },
     {
       "stunde": 1,
@@ -27,7 +27,7 @@
       "stunde": 1,
       "fach": "Gruppe",
       "fach_kurz": "",
-      "lehrer": "MAT",
+      "lehrer": "GRU",
       "raum": "Klassenleitungstag",
       "status": "vertretung",
       "vertreter": "603",
@@ -37,7 +37,7 @@
       "stunde": 1,
       "fach": "Gruppe",
       "fach_kurz": "",
-      "lehrer": "GRU",
+      "lehrer": "MAT",
       "raum": "Klassenleitungstag",
       "status": "vertretung",
       "vertreter": "603",
@@ -49,9 +49,9 @@
       "fach_kurz": "M",
       "lehrer": "MAT",
       "raum": "603",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
+      "status": "vertretung",
+      "vertreter": "MAT",
+      "hinweis": "Klassenleitungstag"
     },
     {
       "stunde": 2,
@@ -125,6 +125,6 @@
     }
   ],
   "vtg_count": 6,
-  "generated_at": "2026-07-15T07:00:28.056326+00:00",
-  "pdf_stand": "2026-07-14T14:57:00+02:00"
+  "generated_at": "2026-07-15T08:00:25.241312+00:00",
+  "pdf_stand": "2026-07-15T09:12:00+02:00"
 }
