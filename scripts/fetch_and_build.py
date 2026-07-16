@@ -115,6 +115,11 @@ def parse_entry(lines, start):
             parts = v.split(None, 1)
             vertreter = parts[0]
             raum      = parts[1]
+        elif any(ch.isdigit() for ch in v):
+            # Raum ohne Vertretungslehrer (z.B. Klassenleitungstag: "603").
+            # Vertreterkuerzel bestehen nur aus Buchstaben; ein Token mit Ziffer
+            # ist ein Raum, kein Vertreter.
+            raum = v
         else:
             vertreter = v
 

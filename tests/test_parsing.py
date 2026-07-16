@@ -5,7 +5,7 @@ still falsche Ergebnisse liefern könnten.
 """
 import pytest
 
-from fetch_and_build import class_matches, is_next_class
+from fetch_and_build import class_matches, is_next_class, parse_entry
 from parse_untis import extract_valid_from
 from build_today import parse_stunden, clean, clean_lehrer, fach_name, resolve_vtg_fach
 
@@ -48,6 +48,32 @@ class TestIsNextClass:
     def test_is_not_class(self, wert):
         # Fachkürzel und Räume dürfen NICHT als Klasse erkannt werden
         assert is_next_class(wert) is False
+
+
+class TestParseEntry:
+    def test_klassenleitungstag_raum_nicht_als_vertreter(self):
+        # Bug 17.7.: "603" (Raum) landete faelschlich als Vertreter,
+        # "Klassenleitungstag" als Raum.
+        lines = ["06c", "1", "GRU", "603", "Klassenleitungstag"]
+        entry, _ = parse_entry(lines, 0)
+        assert entry["vertreter"] == ""        # KEIN "603"
+        assert entry["raum"] == "603"          # Raum korrekt
+        assert entry["fach"] == "Klassenleitungstag"
+        assert "Klassenleitungstag" not in entry["raum"]
+
+    def test_normale_vertretung_bleibt_unveraendert(self):
+        # Vertreterkuerzel (Buchstaben) muss weiterhin als Vertreter erkannt werden
+        lines = ["06c", "3", "MOR", "SUB", "A12"]
+        entry, _ = parse_entry(lines, 0)
+        assert entry["vertreter"] == "SUB"
+        assert entry["raum"] == "A12"
+
+    def test_vertreter_und_raum_zusammen(self):
+        # PyMuPDF merged "SUB A12" in eine Zeile
+        lines = ["06c", "3", "MOR", "SUB A12"]
+        entry, _ = parse_entry(lines, 0)
+        assert entry["vertreter"] == "SUB"
+        assert entry["raum"] == "A12"
 
 
 class TestExtractValidFrom:

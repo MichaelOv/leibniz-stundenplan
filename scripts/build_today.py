@@ -157,7 +157,7 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
                 if "frei" in text or "entfall" in text or vtg.lower() in ("frei","entfall"):
                     entry["status"] = "frei"
                     entry["hinweis"] = sub.get("text","") or "Entfall"
-                elif vtg:
+                elif vtg and vtg != lehrer:
                     entry["status"] = "vertretung"
                     entry["vertreter"] = vtg
                     if raum_neu:
@@ -168,6 +168,11 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
                     if neu_fach and neu_fach.lstrip(".") != entry["fach_kurz"]:
                         entry["fach_neu"]      = fach_name(neu_fach, FACH)
                         entry["fach_neu_kurz"] = neu_fach
+                elif vtg == lehrer:
+                    # Lehrer vertritt sich selbst: kein echter Wechsel, nur Raum/Hinweis
+                    if raum_neu:
+                        entry["raum"] = raum_neu
+                    entry["hinweis"] = sub.get("text","")
             plan.append(entry)
 
     # Nicht gematchte Vertretungen (z.B. Gruppen wie 06ac)
@@ -213,6 +218,19 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
                 plan.append(extra)
 
     plan.sort(key=lambda x: x["stunde"])
+
+    # Doppelte Info-Zeilen zusammenfassen (gleiche Stunde/Fach/Raum/Hinweis,
+    # nur anderer Lehrer, z.B. Klassenleitungstag pro Lehrkraft gelistet).
+    seen_info = set()
+    deduped = []
+    for e in plan:
+        if e["status"] == "info":
+            key = (e["stunde"], e["fach"], e["raum"], e["hinweis"])
+            if key in seen_info:
+                continue
+            seen_info.add(key)
+        deduped.append(e)
+    plan = deduped
 
     # "verlegt auf X. Std." – Zielstunde mit korrektem Fach/Lehrer aktualisieren
     plan_by_stunde = {e["stunde"]: e for e in plan}
