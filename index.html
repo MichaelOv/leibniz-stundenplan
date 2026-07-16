@@ -85,8 +85,9 @@
         <button class="btn" id="todayBtn" onclick="switchDay('today')" style="opacity:1">Tag</button>
         <button class="btn" id="tomorrowBtn" onclick="switchDay('tomorrow')" style="opacity:.5">Tag</button>
       </div>
-      <a id="ntfyBtn" href="#" target="_blank" rel="noopener" class="btn" style="display:none">ntfy abonnieren</a>
-      <button class="btn" data-theme-toggle aria-label="Theme wechseln">&#9680;</button>
+      <button class="btn" data-theme-toggle aria-label="Theme wechseln" style="display:inline-flex;align-items:center;justify-content:center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
     </div>
   </header>
 
@@ -261,24 +262,6 @@
     if (!s) return '\u2014';
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
-
-  // ntfy Subscribe-Button laden
-  (async () => {
-    try {
-      const r = await fetch('data/config.json?t=' + Date.now());
-      const c = await r.json();
-      if (c.ntfy_topic) {
-        const btn = document.getElementById('ntfyBtn');
-        btn.href = 'https://ntfy.sh/' + c.ntfy_topic;
-        btn.style.display = '';
-      }
-      if (c.last_run_at) {
-        const run = new Date(c.last_run_at);
-        const runStr = run.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'});
-        document.getElementById('footerGenerated').textContent = 'Zuletzt geprüft: ' + runStr + ' Uhr';
-      }
-    } catch(e) {}
-  })();
 
   // Beide Tagnamen vorab laden
   (async () => {

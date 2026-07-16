@@ -248,6 +248,16 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
             target["lehrer"]    = entry["lehrer"]
             target["vertreter"] = ""
             target["hinweis"]   = f"verlegt von {entry['stunde']}. Std."
+
+    # Klassenleitungstag ersetzt den regulaeren Unterricht der betroffenen
+    # Stunden: in diesen Stunden nur die Info-Zeile behalten, nicht zusaetzlich
+    # die regulaeren Faecher anzeigen (sonst widerspruechlich).
+    kl_stunden = {e["stunde"] for e in plan
+                  if e["status"] == "info" and "klassenleitungstag" in e["fach"].lower()}
+    if kl_stunden:
+        plan = [e for e in plan
+                if e["stunde"] not in kl_stunden or e["status"] == "info"]
+
     output = {
         "date": target_date, "day": day_name, "class": "06c",
         "plan": plan,
