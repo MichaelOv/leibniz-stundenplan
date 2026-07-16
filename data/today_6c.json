@@ -25,22 +25,12 @@
     },
     {
       "stunde": 1,
-      "fach": "Gruppe",
-      "fach_kurz": "",
+      "fach": "Klassenleitungstag",
+      "fach_kurz": "Klassenleitungstag",
       "lehrer": "GRU",
-      "raum": "Klassenleitungstag",
-      "status": "vertretung",
-      "vertreter": "603",
-      "hinweis": ""
-    },
-    {
-      "stunde": 1,
-      "fach": "Gruppe",
-      "fach_kurz": "",
-      "lehrer": "MAT",
-      "raum": "Klassenleitungstag",
-      "status": "vertretung",
-      "vertreter": "603",
+      "raum": "603",
+      "status": "info",
+      "vertreter": "",
       "hinweis": ""
     },
     {
@@ -49,18 +39,18 @@
       "fach_kurz": "M",
       "lehrer": "MAT",
       "raum": "603",
-      "status": "vertretung",
-      "vertreter": "MAT",
+      "status": "normal",
+      "vertreter": "",
       "hinweis": "Klassenleitungstag"
     },
     {
       "stunde": 2,
-      "fach": "Gruppe",
-      "fach_kurz": "",
+      "fach": "Klassenleitungstag",
+      "fach_kurz": "Klassenleitungstag",
       "lehrer": "GRU",
-      "raum": "Klassenleitungstag",
-      "status": "vertretung",
-      "vertreter": "603",
+      "raum": "603",
+      "status": "info",
+      "vertreter": "",
       "hinweis": ""
     },
     {
@@ -75,22 +65,12 @@
     },
     {
       "stunde": 3,
-      "fach": "Gruppe",
-      "fach_kurz": "",
+      "fach": "Klassenleitungstag",
+      "fach_kurz": "Klassenleitungstag",
       "lehrer": "GRU",
-      "raum": "Klassenleitungstag",
-      "status": "vertretung",
-      "vertreter": "603",
-      "hinweis": ""
-    },
-    {
-      "stunde": 3,
-      "fach": "Gruppe",
-      "fach_kurz": "",
-      "lehrer": "MAT",
-      "raum": "Klassenleitungstag",
-      "status": "vertretung",
-      "vertreter": "603",
+      "raum": "603",
+      "status": "info",
+      "vertreter": "",
       "hinweis": ""
     },
     {
@@ -124,7 +104,7 @@
       "hinweis": ""
     }
   ],
-  "vtg_count": 6,
-  "generated_at": "2026-07-16T15:00:24.738932+00:00",
+  "vtg_count": 0,
+  "generated_at": "2026-07-16T16:00:31.951214+00:00",
   "pdf_stand": "2026-07-15T09:12:00+02:00"
 }
