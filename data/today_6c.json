@@ -1,40 +1,10 @@
 {
-  "date": "2026-07-17",
-  "day": "Freitag",
+  "date": "2026-07-20",
+  "day": "Montag",
   "class": "06c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Klassenleitungstag",
-      "fach_kurz": "Klassenleitungstag",
-      "lehrer": "GRU",
-      "raum": "603",
-      "status": "info",
-      "vertreter": "",
-      "hinweis": ""
-    },
-    {
-      "stunde": 2,
-      "fach": "Klassenleitungstag",
-      "fach_kurz": "Klassenleitungstag",
-      "lehrer": "GRU",
-      "raum": "603",
-      "status": "info",
-      "vertreter": "",
-      "hinweis": ""
-    },
-    {
-      "stunde": 3,
-      "fach": "Klassenleitungstag",
-      "fach_kurz": "Klassenleitungstag",
-      "lehrer": "GRU",
-      "raum": "603",
-      "status": "info",
-      "vertreter": "",
-      "hinweis": ""
-    },
-    {
-      "stunde": 4,
       "fach": "Deutsch",
       "fach_kurz": "D",
       "lehrer": "GRU",
@@ -44,27 +14,57 @@
       "hinweis": ""
     },
     {
+      "stunde": 2,
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
+      "raum": "603",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 3,
+      "fach": "Geschichte",
+      "fach_kurz": "GE",
+      "lehrer": "BOR",
+      "raum": "603",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
+      "stunde": 4,
+      "fach": "Biologie",
+      "fach_kurz": "BI",
+      "lehrer": "BUT",
+      "raum": "BI001",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": ""
+    },
+    {
       "stunde": 5,
-      "fach": "Sport",
-      "fach_kurz": "SP",
+      "fach": "Mathe",
+      "fach_kurz": "M",
       "lehrer": "MAT",
-      "raum": "SH1",
+      "raum": "603",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     },
     {
       "stunde": 6,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "SH1",
+      "fach": "Informatik",
+      "fach_kurz": "IF",
+      "lehrer": "WES",
+      "raum": "442If",
       "status": "normal",
       "vertreter": "",
       "hinweis": ""
     }
   ],
   "vtg_count": 0,
-  "generated_at": "2026-07-17T06:55:22.830857+00:00",
-  "pdf_stand": "2026-07-17T07:47:00+02:00"
+  "generated_at": "2026-07-17T07:00:24.596384+00:00",
+  "pdf_stand": ""
 }
