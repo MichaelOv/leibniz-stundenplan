@@ -6,6 +6,10 @@ concurrency:
   cancel-in-progress: false
 jobs:
   refresh:
+    # Ferien-Pause: Job stillgelegt, damit keine fehlschlagenden Laeufe/Mails
+    # entstehen (kein Vertretungsplan in den Ferien). Zum Reaktivieren diese
+    # 'if: false'-Zeile entfernen.
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
