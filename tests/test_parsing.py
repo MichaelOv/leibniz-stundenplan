@@ -5,7 +5,43 @@ still falsche Ergebnisse liefern könnten.
 """
 import pytest
 
-from fetch_and_build import class_matches, is_next_class, parse_entry
+import pytest as _pytest
+import requests
+from fetch_and_build import class_matches, is_next_class, parse_entry, fetch_pdf
+
+
+class _FakeResp:
+    def __init__(self, status_code, content=b""):
+        self.status_code = status_code
+        self.content = content
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            raise requests.exceptions.HTTPError(f"{self.status_code}")
+
+
+class _FakeSession:
+    def __init__(self, resp):
+        self._resp = resp
+    def get(self, url, timeout=None):
+        return self._resp
+
+
+class TestFetchPdf:
+    def test_404_ist_kein_fehler_sondern_none(self):
+        # Kern des Ferien /Morgen-Bugs: 404 darf NICHT raisen (Exit 2),
+        # sondern None liefern (-> Exit 1, regulaerer Plan).
+        assert fetch_pdf(_FakeSession(_FakeResp(404)), "u") is None
+
+    def test_200_ohne_pdf_ist_none(self):
+        assert fetch_pdf(_FakeSession(_FakeResp(200, b"<html>login")), "u") is None
+
+    def test_200_mit_pdf_gibt_bytes(self):
+        pdf = b"%PDF-1.7 ..."
+        assert fetch_pdf(_FakeSession(_FakeResp(200, pdf)), "u") == pdf
+
+    def test_500_bleibt_echter_fehler(self):
+        with _pytest.raises(requests.exceptions.HTTPError):
+            fetch_pdf(_FakeSession(_FakeResp(500)), "u")
 from parse_untis import extract_valid_from
 from build_today import parse_stunden, clean, clean_lehrer, fach_name, resolve_vtg_fach
 

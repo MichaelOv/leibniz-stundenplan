@@ -64,6 +64,11 @@ def get_authenticated_session():
 
 def fetch_pdf(session, url):
     r = session.get(url, timeout=30)
+    if r.status_code == 404:
+        # Kein Plan veroeffentlicht (Ferien, Wochenende, noch nicht hochgeladen)
+        # -> erwarteter Fall, kein kritischer Fehler.
+        print("KEIN PDF (404 – kein Plan veroeffentlicht)")
+        return None
     r.raise_for_status()
     if b"%PDF" not in r.content[:10]:
         print("KEIN PDF")
