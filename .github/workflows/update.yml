@@ -6,23 +6,36 @@ concurrency:
   cancel-in-progress: false
 jobs:
   refresh:
-    # Ferien-Pause: Job stillgelegt, damit keine fehlschlagenden Laeufe/Mails
-    # entstehen (kein Vertretungsplan in den Ferien). Zum Reaktivieren diese
-    # 'if: false'-Zeile entfernen.
-    if: false
     runs-on: ubuntu-latest
     steps:
+      # Ferien-Pause bis Ferienende: vor dem 2026-09-02 wird der Lauf
+      # uebersprungen (in den Ferien gibt es keinen Vertretungsplan, sonst
+      # nur Failure-Mails). Ab dem 2026-09-02 laeuft alles automatisch wieder.
+      - name: Ferien-Gate
+        id: gate
+        run: |
+          if [[ "$(date -u +%F)" < "2026-09-02" ]]; then
+            echo "active=false" >> "$GITHUB_OUTPUT"
+            echo "Ferien-Pause bis 2026-09-02 - Lauf uebersprungen."
+          else
+            echo "active=true" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/checkout@v4
+        if: steps.gate.outputs.active == 'true'
       - uses: actions/setup-python@v5
+        if: steps.gate.outputs.active == 'true'
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt
+        if: steps.gate.outputs.active == 'true'
       - run: python scripts/run_all.py
+        if: steps.gate.outputs.active == 'true'
         env:
           ISERV_USER: ${{ secrets.ISERV_USER }}
           ISERV_PASS: ${{ secrets.ISERV_PASS }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
       - uses: stefanzweifel/git-auto-commit-action@v5
+        if: steps.gate.outputs.active == 'true'
         with:
           commit_message: 'Automated timetable refresh'
           file_pattern: 'data/*.json data/last_ntfy_hash_*.txt'
