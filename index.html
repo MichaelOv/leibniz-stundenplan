@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stundenplan 6C - Leibniz-Gymnasium GE</title>
+  <title>Stundenplan 7C - Leibniz-Gymnasium GE</title>
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cabinet-grotesk@500,700&display=swap" rel="stylesheet">
   <style>
     :root,[data-theme="light"]{
@@ -76,7 +76,7 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 5h9l5 5v9H5z"/><path d="M14 5v5h5"/><path d="M8 14h8M8 18h5"/></svg>
       </div>
       <div>
-        <h1>Stundenplan 6C</h1>
+        <h1>Stundenplan 7C</h1>
         <p>Leibniz-Gymnasium GE</p>
       </div>
     </div>
@@ -100,7 +100,7 @@
     <div class="card stat">
       <span>Stunden heute</span>
       <strong id="statCount">&#8212;</strong>
-      <p>Klasse 6C</p>
+      <p>Klasse 7C</p>
     </div>
     <div class="card stat">
       <span>&#196;nderungen</span>
@@ -133,7 +133,7 @@
   </div>
 
   <footer class="footer">
-    <span>PlanFlow 6C &middot; Leibniz-Gymnasium</span>
+    <span>PlanFlow 7C &middot; Leibniz-Gymnasium</span>
     <span id="footerGenerated"></span>
   </footer>
 </div>
@@ -164,7 +164,7 @@
     errorBox.style.display = 'none';
     document.getElementById('statusPill').textContent = 'Lade...';
     try {
-      const file = currentDay === 'tomorrow' ? 'tomorrow_6c.json' : 'today_6c.json';
+      const file = currentDay === 'tomorrow' ? 'tomorrow_7c.json' : 'today_7c.json';
       const r = await fetch('data/' + file + '?t=' + Date.now());
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const d = await r.json();
@@ -266,12 +266,12 @@
   // Beide Tagnamen vorab laden
   (async () => {
     try {
-      const rt = await fetch('data/today_6c.json?t=' + Date.now());
+      const rt = await fetch('data/today_7c.json?t=' + Date.now());
       const dt = await rt.json();
       document.getElementById('todayBtn').textContent = dt.day || 'Tag 1';
     } catch(e) {}
     try {
-      const rm = await fetch('data/tomorrow_6c.json?t=' + Date.now());
+      const rm = await fetch('data/tomorrow_7c.json?t=' + Date.now());
       const dm = await rm.json();
       document.getElementById('tomorrowBtn').textContent = dm.day || 'Tag 2';
     } catch(e) {}

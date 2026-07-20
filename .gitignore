@@ -1,7 +1,7 @@
 .env
 venv/
-data/latest_6c.json
-data/latest_6c_tomorrow.json
+data/latest_7c.json
+data/latest_7c_tomorrow.json
 data/untis_last_modified.txt
 data/config.json
 __pycache__/

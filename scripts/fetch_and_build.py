@@ -19,7 +19,7 @@ except KeyError as e:
     sys.exit(1)
 BASE_URL  = "https://gym-leibniz-ge.de"
 ISERV_URL = BASE_URL + "/iserv/plan/show/raw/Vertretung%20Sch%C3%BCler/{date}-S.pdf"
-TARGET_CLASS = "06c"
+TARGET_CLASS = "07c"
 
 KNOWN_TEACHERS = re.compile(r'^[A-ZÄÖÜ]{2,6}$')
 KNOWN_ROOMS    = re.compile(r'^[A-Z0-9][A-Z0-9\.\-]{1,7}$', re.IGNORECASE)
@@ -39,7 +39,7 @@ def class_matches(s, my_class):
     return False
 
 def is_next_class(s):
-    # Erkennt Klassen wie "06c", "07ab", "EF", "Q1", "(06c)", "(06d)" (Gruppenvertretungen)
+    # Erkennt Klassen wie "07c", "07ab", "EF", "Q1", "(07c)", "(06d)" (Gruppenvertretungen)
     # Klammern entfernen: verhindert dass "(06d) 5 HIL" in den Text des Vorgaengers laeuft.
     # Kein generisches [A-Z]{2,3} wg. Fachkuerzel-Kollision (GE, BI, MU, SP ...).
     core = s.strip().strip("()")
@@ -208,7 +208,7 @@ if __name__ == "__main__":
         print("PDF-Stand: " + str(pdf_stand))
         class_data = parse_class_data(pdf_bytes, TARGET_CLASS)
         output = {"date": target_date, "class": TARGET_CLASS, "substitutions": class_data, "pdf_stand": pdf_stand}
-        out_file = sys.argv[2] if len(sys.argv) > 2 else "latest_6c.json"
+        out_file = sys.argv[2] if len(sys.argv) > 2 else "latest_7c.json"
         data_path = Path(__file__).resolve().parents[1] / "data" / out_file
         data_path.parent.mkdir(exist_ok=True)
         with open(data_path, "w", encoding="utf-8") as f:

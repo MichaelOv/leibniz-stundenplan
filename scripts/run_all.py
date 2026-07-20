@@ -44,7 +44,7 @@ def run(script, *args) -> int:
 def untis_html_changed():
     try:
         r = requests.head(
-            "https://leibniz-gymnasium.net/files/stpl/Kla1A_06c.htm",
+            "https://leibniz-gymnasium.net/files/stpl/Kla1A_07c.htm",
             timeout=10
         )
         last_mod = r.headers.get("Last-Modified", "")
@@ -79,7 +79,7 @@ def vtg_has_entries(json_file) -> bool:
         print(f"Warnung: {json_file} konnte nicht gelesen werden: {e}")
         return False
 
-def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=True):
+def build_and_notify(target, out_file, label, vtg_file="latest_7c.json", notify=True):
     print(f"=== {label}: Tagesplan zusammenfuehren ===")
     result = subprocess.run(
         [PYTHON, str(BASE / "build_today.py"), target, out_file, vtg_file],
@@ -119,7 +119,7 @@ def build_and_notify(target, out_file, label, vtg_file="latest_6c.json", notify=
             d = date.fromisoformat(target)
             day_label = DAYS_DE[d.weekday()] + " " + str(d.day) + "." + str(d.month) + "."
             ok = send_ntfy(
-                title="Änderung 6c " + day_label,
+                title="Änderung 7c " + day_label,
                 msg="\n".join(msg_zeilen),
                 priority=3,
                 hash_suffix=target
@@ -137,13 +137,13 @@ if __name__ == "__main__":
     tomorrow = get_tomorrow(today)
 
     print("=== Schritt 1: Vertretungsplan heute laden (" + today + ") ===")
-    rc1 = run("fetch_and_build.py", today, "latest_6c.json")
+    rc1 = run("fetch_and_build.py", today, "latest_7c.json")
     if rc1 == 2:
         print("KRITISCHER FEHLER in Schritt 1 – Pipeline abgebrochen.")
         sys.exit(2)
 
     print("=== Schritt 2: Vertretungsplan morgen laden (" + tomorrow + ") ===")
-    rc2 = run("fetch_and_build.py", tomorrow, "latest_6c_tomorrow.json")
+    rc2 = run("fetch_and_build.py", tomorrow, "latest_7c_tomorrow.json")
     if rc2 == 2:
         print("KRITISCHER FEHLER in Schritt 2 – Pipeline abgebrochen.")
         sys.exit(2)
@@ -157,24 +157,24 @@ if __name__ == "__main__":
         print("Untis-HTML unveraendert, ueberspringe Parse.")
 
     print("=== Schritt 4: Heute ===")
-    if rc1 == 0 and vtg_has_entries("latest_6c.json"):
-        build_and_notify(today, "today_6c.json", "Heute", vtg_file="latest_6c.json", notify=True)
+    if rc1 == 0 and vtg_has_entries("latest_7c.json"):
+        build_and_notify(today, "today_7c.json", "Heute", vtg_file="latest_7c.json", notify=True)
     else:
         print("Kein Vertretungsplan für heute – zeige regulären Plan.")
         if rc1 != 0:
-            empty = {"date": today, "class": "06c", "substitutions": []}
-            (DATA / "latest_6c.json").write_text(json.dumps(empty))
-        run("build_today.py", today, "today_6c.json", "latest_6c.json")
+            empty = {"date": today, "class": "07c", "substitutions": []}
+            (DATA / "latest_7c.json").write_text(json.dumps(empty))
+        run("build_today.py", today, "today_7c.json", "latest_7c.json")
 
     print("=== Schritt 5: Morgen ===")
-    if rc2 == 0 and vtg_has_entries("latest_6c_tomorrow.json"):
-        build_and_notify(tomorrow, "tomorrow_6c.json", "Morgen", vtg_file="latest_6c_tomorrow.json", notify=False)
+    if rc2 == 0 and vtg_has_entries("latest_7c_tomorrow.json"):
+        build_and_notify(tomorrow, "tomorrow_7c.json", "Morgen", vtg_file="latest_7c_tomorrow.json", notify=False)
     else:
         print("Kein Vertretungsplan für morgen – zeige regulären Plan.")
         if rc2 != 0:
-            empty = {"date": tomorrow, "class": "06c", "substitutions": []}
-            (DATA / "latest_6c_tomorrow.json").write_text(json.dumps(empty))
-        run("build_today.py", tomorrow, "tomorrow_6c.json", "latest_6c_tomorrow.json")
+            empty = {"date": tomorrow, "class": "07c", "substitutions": []}
+            (DATA / "latest_7c_tomorrow.json").write_text(json.dumps(empty))
+        run("build_today.py", tomorrow, "tomorrow_7c.json", "latest_7c_tomorrow.json")
 
     config = {
         "ntfy_topic": os.getenv("NTFY_TOPIC", ""),

@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 from constants import DAYS_DE
 
-UNTIS_URL = "https://leibniz-gymnasium.net/files/stpl/Kla1A_06c.htm"
+UNTIS_URL = "https://leibniz-gymnasium.net/files/stpl/Kla1A_07c.htm"
 
 def extract_valid_from(html_text: str) -> str | None:
     m = re.search(r'\(ab (\d{1,2}\.\d{1,2}\.\d{2,4})\)', html_text)
@@ -121,13 +121,13 @@ def parse_untis():
 
 if __name__ == "__main__":
     tt, valid_from = parse_untis()
-    out = Path(__file__).resolve().parents[1] / "data" / "untis_6c.json"
+    out = Path(__file__).resolve().parents[1] / "data" / "untis_7c.json"
     out.parent.mkdir(exist_ok=True)
     # Backup: wenn valid_from sich geändert hat, alten Plan sichern
     if out.exists() and valid_from:
         old = json.loads(out.read_text(encoding="utf-8"))
         if old.get("valid_from") != valid_from:
-            prev = out.parent / "untis_6c_prev.json"
+            prev = out.parent / "untis_7c_prev.json"
             shutil.copy2(out, prev)
             print("Backup gespeichert: " + str(prev))
     output = {"valid_from": valid_from} if valid_from else {}

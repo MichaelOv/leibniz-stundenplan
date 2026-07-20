@@ -17,10 +17,10 @@ def load_fach_map():
     return load_json(BASE / "data" / "fach_mapping.json")
 
 def load_untis(target_date: str) -> dict:
-    main = load_json(BASE / "data" / "untis_6c.json")
+    main = load_json(BASE / "data" / "untis_7c.json")
     valid_from = main.pop("valid_from", None)
     if valid_from and target_date < valid_from:
-        prev_path = BASE / "data" / "untis_6c_prev.json"
+        prev_path = BASE / "data" / "untis_7c_prev.json"
         if prev_path.exists():
             prev = load_json(prev_path)
             prev.pop("valid_from", None)
@@ -70,7 +70,7 @@ def parse_stunden(raw):
             lehrer_raw = p
     return stunden, lehrer_raw
 
-def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json"):
+def merge(target_date=None, out_file="today_7c.json", vtg_file="latest_7c.json"):
     FACH = load_fach_map()
     LEHRER_FACH = load_lehrer_fach()
 
@@ -87,8 +87,8 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
         sys.exit(1)
 
     day_name = DAYS_DE[weekday]
-    if not (BASE / "data" / "untis_6c.json").exists():
-        print("FEHLER: untis_6c.json fehlt – bitte parse_untis.py ausführen.")
+    if not (BASE / "data" / "untis_7c.json").exists():
+        print("FEHLER: untis_7c.json fehlt – bitte parse_untis.py ausführen.")
         sys.exit(1)
     untis = load_untis(target_date)
     vtg_data = load_json(BASE / "data" / vtg_file)
@@ -259,7 +259,7 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
                 if e["stunde"] not in kl_stunden or e["status"] == "info"]
 
     output = {
-        "date": target_date, "day": day_name, "class": "06c",
+        "date": target_date, "day": day_name, "class": "07c",
         "plan": plan,
         "vtg_count": len([p for p in plan if p["status"] in ("frei","vertretung")]),
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -278,6 +278,6 @@ def merge(target_date=None, out_file="today_6c.json", vtg_file="latest_6c.json")
         print("  Std " + str(p["stunde"]) + " " + p["fach"] + " (" + p["lehrer"] + ") " + p["raum"] + mark + vtg_str + hinweis)
 
 if __name__ == "__main__":
-    out = sys.argv[2] if len(sys.argv) > 2 else "today_6c.json"
-    vtg = sys.argv[3] if len(sys.argv) > 3 else "latest_6c.json"
+    out = sys.argv[2] if len(sys.argv) > 2 else "today_7c.json"
+    vtg = sys.argv[3] if len(sys.argv) > 3 else "latest_7c.json"
     merge(sys.argv[1] if len(sys.argv) > 1 else None, out_file=out, vtg_file=vtg)
