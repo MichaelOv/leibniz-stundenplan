@@ -136,6 +136,10 @@ if __name__ == "__main__":
     today = manual or get_today()
     tomorrow = get_tomorrow(today)
 
+    # Bewusst nur heute und morgen abrufen: die Schule veroeffentlicht praktisch
+    # nicht weiter im Voraus, und die Pipeline laeuft morgens alle 5 Minuten.
+    # Die Wochenuebersicht (Schritt 6) nutzt genau diese beiden Dateien und
+    # zeigt fuer die uebrigen Tage den regulaeren Plan.
     print("=== Schritt 1: Vertretungsplan heute laden (" + today + ") ===")
     rc1 = run("fetch_and_build.py", today, "latest_7c.json")
     if rc1 == 2:
@@ -175,6 +179,9 @@ if __name__ == "__main__":
             empty = {"date": tomorrow, "class": "07c", "substitutions": []}
             (DATA / "latest_7c_tomorrow.json").write_text(json.dumps(empty))
         run("build_today.py", tomorrow, "tomorrow_7c.json", "latest_7c_tomorrow.json")
+
+    print("=== Schritt 6: Wochenuebersicht ===")
+    run("build_week.py", today, "week_7c.json")
 
     config = {
         "ntfy_topic": os.getenv("NTFY_TOPIC", ""),

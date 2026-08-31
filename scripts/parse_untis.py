@@ -6,6 +6,11 @@ from constants import DAYS_DE
 
 UNTIS_URL = "https://leibniz-gymnasium.net/files/stpl/Kla1A_07c.htm"
 
+def extract_schuljahr(html_text: str) -> str | None:
+    """Schuljahr aus dem Untis-HTML lesen ('2025/26'). None, wenn nicht gefunden."""
+    m = re.search(r'(20\d{2}/\d{2})', html_text)
+    return m.group(1) if m else None
+
 def extract_valid_from(html_text: str) -> str | None:
     m = re.search(r'\(ab (\d{1,2}\.\d{1,2}\.\d{2,4})\)', html_text)
     if not m:
@@ -22,6 +27,9 @@ def parse_untis():
     valid_from = extract_valid_from(r.text)
     if valid_from:
         print("Gültig ab: " + valid_from)
+    schuljahr = extract_schuljahr(r.text)
+    if schuljahr:
+        print("Schuljahr laut Untis: " + schuljahr)
     soup = BeautifulSoup(r.content, "html.parser")
     tables = soup.find_all("table")
     if len(tables) < 2:
@@ -117,10 +125,10 @@ def parse_untis():
                             break
                 cur_col += cs
 
-    return timetable, valid_from
+    return timetable, valid_from, schuljahr
 
 if __name__ == "__main__":
-    tt, valid_from = parse_untis()
+    tt, valid_from, schuljahr = parse_untis()
     out = Path(__file__).resolve().parents[1] / "data" / "untis_7c.json"
     out.parent.mkdir(exist_ok=True)
     # Backup: wenn valid_from sich geändert hat, alten Plan sichern
@@ -130,7 +138,11 @@ if __name__ == "__main__":
             prev = out.parent / "untis_7c_prev.json"
             shutil.copy2(out, prev)
             print("Backup gespeichert: " + str(prev))
-    output = {"valid_from": valid_from} if valid_from else {}
+    output = {}
+    if valid_from:
+        output["valid_from"] = valid_from
+    if schuljahr:
+        output["schuljahr"] = schuljahr
     output.update(tt)
     with open(out, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)

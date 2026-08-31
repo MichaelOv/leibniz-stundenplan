@@ -42,8 +42,10 @@ class TestFetchPdf:
     def test_500_bleibt_echter_fehler(self):
         with _pytest.raises(requests.exceptions.HTTPError):
             fetch_pdf(_FakeSession(_FakeResp(500)), "u")
-from parse_untis import extract_valid_from
-from build_today import parse_stunden, clean, clean_lehrer, fach_name, resolve_vtg_fach
+from datetime import date
+from parse_untis import extract_valid_from, extract_schuljahr
+from constants import expected_schuljahr
+from build_today import parse_stunden, clean, clean_lehrer, fach_name, resolve_vtg_fach, ist_ausfall
 
 FACH_MAP = {"BI": "Biologie", "GE": "Geschichte", "M": "Mathe", ".IR": "Islamische Rel."}
 
@@ -112,6 +114,26 @@ class TestParseEntry:
         assert entry["raum"] == "A12"
 
 
+class TestExpectedSchuljahr:
+    @pytest.mark.parametrize("d, erwartet", [
+        (date(2026, 9, 2),  "2026/27"),   # Schuljahresbeginn
+        (date(2026, 8, 1),  "2026/27"),   # August zaehlt schon zum neuen Jahr
+        (date(2026, 7, 20), "2025/26"),   # Juli noch altes Jahr
+        (date(2027, 1, 15), "2026/27"),   # Januar gehoert zum Vorjahr-Start
+        (date(2029, 12, 1), "2029/30"),   # Jahrhundertwechsel-nahe Formatierung
+    ])
+    def test_schuljahr(self, d, erwartet):
+        assert expected_schuljahr(d) == erwartet
+
+
+class TestExtractSchuljahr:
+    def test_findet_schuljahr(self):
+        assert extract_schuljahr("Untis 2024 2025/26 Leibniz") == "2025/26"
+
+    def test_kein_schuljahr(self):
+        assert extract_schuljahr("kein Jahr hier") is None
+
+
 class TestExtractValidFrom:
     @pytest.mark.parametrize("html, erwartet", [
         ("Stundenplan (ab 5.5.25) gültig", "2025-05-05"),
@@ -169,6 +191,25 @@ class TestResolveVtgFach:
     def test_kuerzel_ohne_schluesselwort_ignoriert(self):
         # nur 'statt'/'verlegt' lösen einen Fachwechsel aus
         assert resolve_vtg_fach("", "GE Raumänderung", FACH_MAP) == ""
+
+
+class TestIstAusfall:
+    @pytest.mark.parametrize("text", [
+        "frei", "frei; verlegt auf Fr. 10.7. 2. Std.",
+        "entfällt", "Entfällt", "entfall", "Stunde entfällt ersatzlos",
+    ])
+    def test_ausfall_erkannt(self, text):
+        assert ist_ausfall(text) is True
+
+    @pytest.mark.parametrize("vtg", ["frei", "Entfällt", "entfall"])
+    def test_ausfall_ueber_vertreter_feld(self, vtg):
+        assert ist_ausfall("", vtg) is True
+
+    @pytest.mark.parametrize("text", [
+        "", "BI statt Do. 9.7. 5. Std.", "Raumänderung", "Klassenleitungstag",
+    ])
+    def test_kein_ausfall(self, text):
+        assert ist_ausfall(text) is False
 
 
 class TestFachName:

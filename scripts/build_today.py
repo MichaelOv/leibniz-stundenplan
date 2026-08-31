@@ -2,7 +2,7 @@
 import json, re, sys
 from pathlib import Path
 from datetime import datetime, date, timezone
-from constants import DAYS_DE
+from constants import DAYS_DE, expected_schuljahr
 
 BASE = Path(__file__).resolve().parents[1]
 
@@ -16,20 +16,27 @@ def load_json(path):
 def load_fach_map():
     return load_json(BASE / "data" / "fach_mapping.json")
 
-def load_untis(target_date: str) -> dict:
+def load_untis(target_date: str):
+    """Gibt (stundenplan, schuljahr) zurueck. Metadaten-Keys werden entfernt,
+    damit nur noch Stundennummern im Plan stehen."""
     main = load_json(BASE / "data" / "untis_7c.json")
     valid_from = main.pop("valid_from", None)
+    schuljahr = main.pop("schuljahr", None)
     if valid_from and target_date < valid_from:
         prev_path = BASE / "data" / "untis_7c_prev.json"
         if prev_path.exists():
             prev = load_json(prev_path)
             prev.pop("valid_from", None)
+            prev_schuljahr = prev.pop("schuljahr", None)
             print("Stundenplan: nutze Vorversion (gültig ab " + valid_from + ")")
-            return prev
-    return main
+            return prev, prev_schuljahr
+    return main, schuljahr
 
 def load_lehrer_fach():
     return load_json(BASE / "data" / "lehrer_fach.json")
+
+def load_lehrer_namen():
+    return load_json(BASE / "data" / "lehrer_namen.json")
 
 def clean(v):
     return "" if v in ("---", None) else str(v).strip()
@@ -59,6 +66,14 @@ def resolve_vtg_fach(sub_fach: str, hinweis: str, fach_map: dict) -> str:
         return m.group(1)
     return ""
 
+def ist_ausfall(text: str, vertreter: str = "") -> bool:
+    """Faellt die Stunde aus? Eine Stelle fuer beide Auswertungszweige, damit
+    Schreibweisen wie 'entfaellt' nicht nur an einer Stelle erkannt werden."""
+    t = (text or "").lower()
+    v = (vertreter or "").lower()
+    return ("frei" in t or "entfall" in t or "entfällt" in t
+            or v in ("frei", "entfall", "entfällt"))
+
 def parse_stunden(raw):
     """'7 - 8 ROM' → ([7,8], 'ROM'), '3' → ([3], ''), '1 - 2 MAT' → ([1,2], 'MAT')"""
     parts = str(raw).replace("-", " ").split()
@@ -70,9 +85,16 @@ def parse_stunden(raw):
             lehrer_raw = p
     return stunden, lehrer_raw
 
-def merge(target_date=None, out_file="today_7c.json", vtg_file="latest_7c.json"):
+def build_plan(target_date=None, vtg_file="latest_7c.json"):
+    """Baut den Tagesplan und gibt ihn als Dict zurueck.
+
+    Gibt None zurueck, wenn das Zieldatum auf ein Wochenende faellt oder der
+    Untis-Plan fehlt. Schreibt nichts und beendet den Prozess nicht, damit die
+    Funktion mehrfach pro Lauf verwendet werden kann (siehe build_week.py).
+    """
     FACH = load_fach_map()
     LEHRER_FACH = load_lehrer_fach()
+    LEHRER_NAMEN = load_lehrer_namen()
 
     if not target_date:
         now = datetime.now(timezone.utc)
@@ -83,14 +105,12 @@ def merge(target_date=None, out_file="today_7c.json", vtg_file="latest_7c.json")
         weekday = d.weekday()
 
     if weekday > 4:
-        print("FEHLER: Zieldatum ist ein Wochenende.")
-        sys.exit(1)
+        return None
 
     day_name = DAYS_DE[weekday]
     if not (BASE / "data" / "untis_7c.json").exists():
-        print("FEHLER: untis_7c.json fehlt – bitte parse_untis.py ausführen.")
-        sys.exit(1)
-    untis = load_untis(target_date)
+        return None
+    untis, untis_schuljahr = load_untis(target_date)
     vtg_data = load_json(BASE / "data" / vtg_file)
     subs = vtg_data.get("substitutions", [])
     pdf_stand = vtg_data.get("pdf_stand", "")
@@ -154,7 +174,7 @@ def merge(target_date=None, out_file="today_7c.json", vtg_file="latest_7c.json")
                 text = sub.get("text","").lower()
                 vtg  = sub.get("vertreter","")
                 raum_neu = sub.get("raum","")
-                if "frei" in text or "entfall" in text or vtg.lower() in ("frei","entfall"):
+                if ist_ausfall(text, vtg):
                     entry["status"] = "frei"
                     entry["hinweis"] = sub.get("text","") or "Entfall"
                 elif vtg and vtg != lehrer:
@@ -207,7 +227,7 @@ def merge(target_date=None, out_file="today_7c.json", vtg_file="latest_7c.json")
                 if fach.upper().startswith("NK") and not vtg and "entfall" not in text.lower() and "entfällt" not in text.lower():
                     continue
                 fname = fach_name(fach, FACH) if fach else "Gruppe"
-                status = "frei" if ("frei" in text.lower() or "entfall" in text.lower() or "entfällt" in text.lower() or vtg.lower() in ("frei","entfall")) else ("vertretung" if vtg else "info")
+                status = "frei" if ist_ausfall(text, vtg) else ("vertretung" if vtg else "info")
                 extra = {
                     "stunde": stunde_nr_u, "fach": fname, "fach_kurz": fach,
                     "lehrer": lhr, "raum": raum if raum else "\u2014",
@@ -258,19 +278,52 @@ def merge(target_date=None, out_file="today_7c.json", vtg_file="latest_7c.json")
         plan = [e for e in plan
                 if e["stunde"] not in kl_stunden or e["status"] == "info"]
 
+    # Klarnamen der Lehrkraefte ergaenzen (Kuerzel bleibt erhalten)
+    for e in plan:
+        e["lehrer_name"]    = LEHRER_NAMEN.get(e["lehrer"], "")
+        e["vertreter_name"] = LEHRER_NAMEN.get(e["vertreter"], "") if e["vertreter"] else ""
+
+    erwartet = expected_schuljahr(date.fromisoformat(target_date))
     output = {
         "date": target_date, "day": day_name, "class": "07c",
         "plan": plan,
         "vtg_count": len([p for p in plan if p["status"] in ("frei","vertretung")]),
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "pdf_stand": pdf_stand
+        "pdf_stand": pdf_stand,
+        "untis_schuljahr": untis_schuljahr or "",
+        "untis_stale": bool(untis_schuljahr and untis_schuljahr != erwartet),
     }
+    return output
+
+def merge(target_date=None, out_file="today_7c.json", vtg_file="latest_7c.json"):
+    """CLI-Wrapper: baut den Plan, schreibt ihn und gibt eine Zusammenfassung aus."""
+    if target_date:
+        d = date.fromisoformat(target_date)
+        if d.weekday() > 4:
+            print("FEHLER: Zieldatum ist ein Wochenende.")
+            sys.exit(1)
+    elif datetime.now(timezone.utc).weekday() > 4:
+        print("FEHLER: Zieldatum ist ein Wochenende.")
+        sys.exit(1)
+    if not (BASE / "data" / "untis_7c.json").exists():
+        print("FEHLER: untis_7c.json fehlt – bitte parse_untis.py ausführen.")
+        sys.exit(1)
+
+    output = build_plan(target_date, vtg_file=vtg_file)
+    if output is None:
+        print("FEHLER: Tagesplan konnte nicht gebaut werden.")
+        sys.exit(1)
+
+    plan = output["plan"]
     out_path = BASE / "data" / out_file
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
 
+    if output["untis_stale"]:
+        print("WARNUNG: Untis-Plan ist aus Schuljahr " + output["untis_schuljahr"]
+              + ", regulaere Stunden koennen falsch sein.")
     unique_stunden = len(set(p["stunde"] for p in plan))
-    print("Tag: " + day_name + " | " + str(unique_stunden) + " Stunden | " + str(output["vtg_count"]) + " Aenderungen")
+    print("Tag: " + output["day"] + " | " + str(unique_stunden) + " Stunden | " + str(output["vtg_count"]) + " Aenderungen")
     for p in plan:
         mark    = " [" + p["status"].upper() + "]" if p["status"] != "normal" else ""
         vtg_str = " -> " + p["vertreter"] if p["vertreter"] else ""

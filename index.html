@@ -4,27 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Stundenplan 7C - Leibniz-Gymnasium GE</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#01696f">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cabinet-grotesk@500,700&display=swap" rel="stylesheet">
   <style>
     :root,[data-theme="light"]{
       --text-xs:clamp(.75rem,.7rem + .25vw,.875rem);--text-sm:clamp(.875rem,.8rem + .35vw,1rem);--text-base:clamp(1rem,.95rem + .25vw,1.125rem);--text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);--text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
       --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;
       --color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;--color-border:#d4d1ca;--color-text:#28251d;--color-text-muted:#6f6d67;--color-primary:#01696f;--color-primary-highlight:#cedcd8;--color-success:#437a22;--color-warning:#964219;--color-frei:#8b1a1a;--radius-md:.75rem;--radius-lg:1rem;--shadow-sm:0 1px 2px rgba(0,0,0,.05);--font-body:'Satoshi',system-ui,sans-serif;--font-display:'Cabinet Grotesk',system-ui,sans-serif;
+      --fach-bg-s:55%;--fach-bg-l:93%;--fach-line-s:50%;--fach-line-l:52%;--fach-text-s:60%;--fach-text-l:28%;
     }
     [data-theme="dark"]{
       --color-bg:#171614;--color-surface:#1c1b19;--color-surface-2:#201f1d;--color-border:#393836;--color-text:#cdccca;--color-text-muted:#9d9b97;--color-primary:#4f98a3;--color-primary-highlight:#313b3b;--color-success:#6daa45;--color-warning:#bb653b;--color-frei:#c0392b;--shadow-sm:0 1px 2px rgba(0,0,0,.2);
+      --fach-bg-s:28%;--fach-bg-l:19%;--fach-line-s:45%;--fach-line-l:52%;--fach-text-s:45%;--fach-text-l:78%;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);line-height:1.55}
     a{color:inherit} button{font:inherit;cursor:pointer;border:none;background:none}
-    .shell{max-width:860px;margin:0 auto;padding:var(--space-4)}
+    .shell{max-width:960px;margin:0 auto;padding:var(--space-4)}
     .topbar{display:flex;justify-content:space-between;align-items:center;gap:var(--space-4);padding:var(--space-4) 0}
     .brand{display:flex;align-items:center;gap:var(--space-3)}
     .logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--color-primary),transparent 80%),var(--color-surface-2);display:grid;place-items:center;box-shadow:var(--shadow-sm)}
     .brand h1{font-family:var(--font-display);font-size:var(--text-xl);line-height:1}
     .brand p{color:var(--color-text-muted);font-size:var(--text-sm)}
-    .actions{display:flex;gap:var(--space-2)}
+    .actions{display:flex;gap:var(--space-2);align-items:center}
     .btn{
       padding:.6rem 1rem;
       border-radius:999px;
@@ -34,9 +40,10 @@
       min-height:44px;
       font-size:var(--text-sm);
     }
-    .btn:hover{
-      background:var(--color-surface-2);
-    }
+    .btn:hover{background:var(--color-surface-2)}
+    .tabs{display:flex;gap:4px;background:var(--color-surface);border-radius:999px;padding:3px}
+    .tabs .btn{border-color:transparent;background:transparent;padding:.5rem .9rem}
+    .tabs .btn[aria-selected="true"]{background:var(--color-surface-2);border-color:var(--color-border);font-weight:700}
     .hero{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-4);margin-top:var(--space-4)}
     .card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)}
     .stat{padding:var(--space-5)}
@@ -53,6 +60,8 @@
     tr:last-child td{border-bottom:none}
     tr.row-frei td{color:var(--color-text-muted)}
     tr.row-frei td:first-child{color:var(--color-text)}
+    tr.row-now{background:var(--color-primary-highlight)}
+    tr.row-now td:first-child{box-shadow:inset 3px 0 0 var(--color-primary)}
     .tag{display:inline-flex;padding:.25rem .55rem;border-radius:999px;font-size:var(--text-xs);font-weight:700}
     .tag.normal{background:rgba(67,122,34,.1);color:var(--color-success)}
     .tag.vertretung{background:rgba(150,66,25,.12);color:var(--color-warning)}
@@ -60,10 +69,55 @@
     .tag.info{background:rgba(0,0,0,.06);color:var(--color-text-muted)}
     .hinweis{font-size:var(--text-xs);color:var(--color-text-muted);margin-top:.2rem}
     .vtg-name,.fach-neu{font-size:var(--text-xs);color:var(--color-warning);margin-top:.2rem}
+    .lehrer-kurz{font-size:var(--text-xs);color:var(--color-text-muted)}
     .fach-strike{text-decoration:line-through;opacity:.45}
+    .fach-dot{display:inline-block;width:.6rem;height:.6rem;border-radius:3px;margin-right:.45rem;vertical-align:baseline;background:hsl(var(--hue) var(--fach-line-s) var(--fach-line-l))}
     .empty{padding:var(--space-8);text-align:center;color:var(--color-text-muted)}
     .error-box{background:rgba(139,26,26,.08);border:1px solid rgba(139,26,26,.2);border-radius:var(--radius-md);padding:var(--space-4);color:var(--color-frei);font-size:var(--text-sm);margin-top:var(--space-4)}
+    .warn-box{background:rgba(150,66,25,.1);border:1px solid rgba(150,66,25,.28);border-radius:var(--radius-md);padding:var(--space-4);color:var(--color-warning);font-size:var(--text-sm);margin-top:var(--space-4)}
+    .now-box{display:flex;flex-wrap:wrap;gap:var(--space-4);align-items:baseline;margin-bottom:var(--space-4);padding:var(--space-3) var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface-2);font-size:var(--text-sm)}
+    .now-box b{font-weight:700}
+    .now-box .sep{color:var(--color-text-muted)}
+    .now-box .abweichung{color:var(--color-warning);font-weight:700}
     .footer{margin:var(--space-8) 0 var(--space-4);font-size:var(--text-xs);color:var(--color-text-muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--space-2)}
+
+    /* Wochenansicht: ab 720px Raster, darunter Tageskarten (gleiches Markup) */
+    .wk-grid{display:grid;grid-template-columns:auto repeat(5,minmax(0,1fr));gap:6px;align-items:stretch}
+    .wk-std{display:flex;flex-direction:column;justify-content:center;font-size:var(--text-xs);color:var(--color-text-muted);padding-right:var(--space-2);text-align:right;white-space:nowrap}
+    .wk-std b{font-size:var(--text-sm);color:var(--color-text)}
+    .wk-dayhead{font-family:var(--font-display);font-size:var(--text-sm);padding:var(--space-2);border-bottom:2px solid var(--color-border)}
+    .wk-dayhead .datum{display:block;font-family:var(--font-body);font-size:var(--text-xs);color:var(--color-text-muted);font-weight:400}
+    .wk-dayhead .nur-reg{display:inline-block;margin-top:.2rem;font-family:var(--font-body);font-size:.7rem;font-weight:400;color:var(--color-text-muted)}
+    .wk-cell{display:flex;flex-direction:column;gap:3px;min-height:2.6rem}
+    .wk-cell .cell-std{display:none}
+    .wk-lesson{
+      background:hsl(var(--hue) var(--fach-bg-s) var(--fach-bg-l));
+      border-left:3px solid hsl(var(--hue) var(--fach-line-s) var(--fach-line-l));
+      color:hsl(var(--hue) var(--fach-text-s) var(--fach-text-l));
+      border-radius:6px;padding:.3rem .45rem;font-size:var(--text-xs);line-height:1.3;
+    }
+    .wk-lesson .fach{font-weight:700;display:block}
+    .wk-lesson .meta{color:var(--color-text-muted);font-size:.72rem;display:block}
+    .wk-lesson.is-frei{background:transparent;border-left-color:var(--color-frei);color:var(--color-text-muted)}
+    .wk-lesson.is-frei .fach{text-decoration:line-through}
+    .wk-lesson.is-vertretung{border-left-color:var(--color-warning)}
+    .wk-lesson.is-info{background:transparent;border-left-color:var(--color-text-muted);color:var(--color-text-muted)}
+    .wk-lesson.is-now{outline:2px solid var(--color-primary);outline-offset:1px}
+
+    @media(max-width:719px){
+      .wk-grid{display:block}
+      .wk-std{display:none}
+      .wk-dayhead{margin-top:var(--space-5);border-bottom:1px solid var(--color-border);padding-left:0}
+      .wk-cell{flex-direction:row;align-items:stretch;gap:var(--space-3);padding:.35rem 0;border-bottom:1px solid var(--color-border)}
+      .wk-cell:last-child{border-bottom:none}
+      .wk-cell .cell-std{display:flex;flex-direction:column;justify-content:center;min-width:4.2rem;font-size:var(--text-xs);color:var(--color-text-muted)}
+      .wk-cell .cell-std b{color:var(--color-text);font-size:var(--text-sm)}
+      .wk-cell .cell-lessons{flex:1;display:flex;flex-direction:column;gap:3px}
+      .wk-lesson{font-size:var(--text-sm);padding:.4rem .55rem}
+    }
+    @media(min-width:720px){
+      .wk-cell .cell-lessons{display:contents}
+    }
     @media(max-width:640px){.hero{grid-template-columns:1fr 1fr}.hero .stat:last-child{grid-column:1/-1}.plan-header{flex-direction:column;align-items:flex-start;gap:var(--space-2)}.topbar{flex-wrap:wrap}.brand h1{font-size:var(--text-lg)}}
     @media(max-width:400px){.hero{grid-template-columns:1fr}}
   </style>
@@ -81,9 +135,10 @@
       </div>
     </div>
     <div class="actions">
-      <div style="display:flex;gap:4px;background:var(--color-surface);border-radius:8px;padding:3px">
-        <button class="btn" id="todayBtn" onclick="switchDay('today')" style="opacity:1">Tag</button>
-        <button class="btn" id="tomorrowBtn" onclick="switchDay('tomorrow')" style="opacity:.5">Tag</button>
+      <div class="tabs" role="tablist">
+        <button class="btn" id="todayBtn" role="tab" aria-selected="true" onclick="switchDay('today')">Tag</button>
+        <button class="btn" id="tomorrowBtn" role="tab" aria-selected="false" onclick="switchDay('tomorrow')">Tag</button>
+        <button class="btn" id="weekBtn" role="tab" aria-selected="false" onclick="switchDay('week')">Woche</button>
       </div>
       <button class="btn" data-theme-toggle aria-label="Theme wechseln" style="display:inline-flex;align-items:center;justify-content:center">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -93,12 +148,12 @@
 
   <div class="hero">
     <div class="card stat">
-      <span>Tag</span>
+      <span id="statDayLabel">Tag</span>
       <strong id="statDay">&#8212;</strong>
       <p id="statDate">Lade...</p>
     </div>
     <div class="card stat">
-      <span>Stunden heute</span>
+      <span id="statCountLabel">Stunden heute</span>
       <strong id="statCount">&#8212;</strong>
       <p>Klasse 7C</p>
     </div>
@@ -110,26 +165,36 @@
   </div>
 
   <div id="errorBox" style="display:none" class="error-box"></div>
+  <div id="staleBox" style="display:none" class="warn-box"></div>
 
   <div class="card plan-card">
     <div class="plan-header">
-      <h2>Tagesplan</h2>
+      <h2 id="planTitle">Tagesplan</h2>
       <span class="pill" id="statusPill">Lade...</span>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Std</th>
-          <th>Fach</th>
-          <th>Lehrkraft</th>
-          <th>Raum</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody id="planBody">
-        <tr><td colspan="5" class="empty">Daten werden geladen&#8230;</td></tr>
-      </tbody>
-    </table>
+
+    <div id="nowBox" class="now-box" style="display:none"></div>
+
+    <div id="dayView">
+      <table>
+        <thead>
+          <tr>
+            <th>Std</th>
+            <th>Fach</th>
+            <th>Lehrkraft</th>
+            <th>Raum</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="planBody">
+          <tr><td colspan="5" class="empty">Daten werden geladen&#8230;</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="weekView" style="display:none">
+      <div class="wk-grid" id="weekGrid"></div>
+    </div>
   </div>
 
   <footer class="footer">
@@ -150,12 +215,138 @@
     localStorage.setItem('theme', theme);
   });
 
+  // Stunde -> [Beginn, Ende]
+  const ZEITEN = {
+    1: ['08:20','09:05'],
+    2: ['09:10','09:55'],
+    3: ['10:15','11:00'],
+    4: ['11:05','11:50'],
+    5: ['12:05','12:50'],
+    6: ['12:55','13:40'],
+    7: ['13:50','14:35'],
+    8: ['14:40','15:25'],
+    9: ['15:25','16:10']
+  };
+
+  // Farbton je Fach. Unbekannte Kuerzel bekommen einen stabilen Hash-Farbton.
+  const FACH_HUE = {
+    D:212, E:32, M:265, GE:22, BI:135, IF:190, RE:290, IR:315,
+    SP:0, SPSW:348, SPSM:0, MU:330, KU:48, PH:200, CH:100, GEO:160, EK:160, SW:245
+  };
+  function hueOf(kurz) {
+    if (!kurz) return 220;
+    const k = String(kurz).replace(/^\.+/, '').toUpperCase();
+    if (FACH_HUE[k] !== undefined) return FACH_HUE[k];
+    let h = 0;
+    for (let i = 0; i < k.length; i++) h = (h * 31 + k.charCodeAt(i)) % 360;
+    return h;
+  }
+
+  function zeitLabel(std) {
+    const z = ZEITEN[std];
+    return z ? z[0].replace(/^0/, '') + ' - ' + z[1] : '';
+  }
+  function toMin(hhmm) {
+    const [h, m] = hhmm.split(':').map(Number);
+    return h * 60 + m;
+  }
+  function localToday() {
+    const n = new Date();
+    return n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0')
+         + '-' + String(n.getDate()).padStart(2,'0');
+  }
+  function nowMin() {
+    const n = new Date();
+    return n.getHours() * 60 + n.getMinutes();
+  }
+
+  /** Erste und letzte tatsaechlich stattfindende Stunde eines Tages. */
+  function rahmen(plan) {
+    const aktiv = plan.filter(p => p.status !== 'frei' && ZEITEN[p.stunde]);
+    const alle  = plan.filter(p => ZEITEN[p.stunde]);
+    if (!aktiv.length) return null;
+    const stdA = aktiv.map(p => p.stunde), stdAll = alle.map(p => p.stunde);
+    return {
+      start: Math.min(...stdA), ende: Math.max(...stdA),
+      startRegulaer: Math.min(...stdAll), endeRegulaer: Math.max(...stdAll)
+    };
+  }
+
+  /** Laufende bzw. naechste Stunde, nur sinnvoll fuer den heutigen Tag. */
+  function jetztInfo(plan) {
+    const m = nowMin();
+    const kandidaten = plan
+      .filter(p => ZEITEN[p.stunde] && p.status !== 'frei')
+      .sort((a,b) => a.stunde - b.stunde);
+    for (const p of kandidaten) {
+      const [s,e] = ZEITEN[p.stunde];
+      if (m >= toMin(s) && m < toMin(e)) return {aktuell: p, restMin: toMin(e) - m};
+    }
+    const naechste = kandidaten.find(p => m < toMin(ZEITEN[p.stunde][0]));
+    return naechste ? {naechste, bisMin: toMin(ZEITEN[naechste.stunde][0]) - m} : {};
+  }
+
+  function stundenWort(n) { return n === 1 ? 'eine Stunde' : n + ' Stunden'; }
+
+  function renderNowBox(plan, dateIso) {
+    const box = document.getElementById('nowBox');
+    const r = rahmen(plan);
+    if (!r) { box.style.display = 'none'; return; }
+
+    const teile = [];
+    const istHeute = dateIso === localToday();
+    if (istHeute) {
+      const j = jetztInfo(plan);
+      if (j.aktuell) {
+        teile.push('<span><b>Jetzt:</b> ' + j.aktuell.stunde + '. Std ' + esc(j.aktuell.fach)
+          + (j.aktuell.raum ? ', Raum ' + esc(j.aktuell.raum) : '')
+          + ' <span class="sep">(noch ' + j.restMin + ' min)</span></span>');
+      } else if (j.naechste) {
+        const bis = j.bisMin >= 60
+          ? Math.floor(j.bisMin/60) + ' h ' + (j.bisMin%60) + ' min'
+          : j.bisMin + ' min';
+        teile.push('<span><b>Als Nächstes:</b> ' + j.naechste.stunde + '. Std '
+          + esc(j.naechste.fach) + ' <span class="sep">(in ' + bis + ')</span></span>');
+      } else {
+        teile.push('<span><b>Unterricht beendet</b></span>');
+      }
+    }
+
+    const startStr = ZEITEN[r.start] ? ZEITEN[r.start][0].replace(/^0/,'') : '';
+    const endeStr  = ZEITEN[r.ende]  ? ZEITEN[r.ende][1] : '';
+    let startTxt = '<b>Start</b> ' + startStr;
+    if (r.start > r.startRegulaer) {
+      startTxt += ' <span class="abweichung">('
+        + stundenWort(r.start - r.startRegulaer) + ' später)</span>';
+    }
+    let endeTxt = '<b>Schluss</b> ' + endeStr;
+    if (r.ende < r.endeRegulaer) {
+      endeTxt += ' <span class="abweichung">('
+        + stundenWort(r.endeRegulaer - r.ende) + ' früher)</span>';
+    }
+    teile.push('<span>' + startTxt + '</span>', '<span>' + endeTxt + '</span>');
+
+    box.innerHTML = teile.join('');
+    box.style.display = 'flex';
+  }
+
+  function lehrerZelle(p) {
+    const name = p.lehrer_name || '';
+    const haupt = name ? esc(name) + '<div class="lehrer-kurz">' + esc(p.lehrer) + '</div>'
+                       : esc(p.lehrer);
+    if (!p.vertreter) return haupt;
+    const vName = p.vertreter_name ? esc(p.vertreter_name) + ' (' + esc(p.vertreter) + ')'
+                                   : esc(p.vertreter);
+    return haupt + '<div class="vtg-name">→ ' + vName + '</div>';
+  }
+
   let currentDay = 'today';
 
-  window.switchDay = function(day) {
-    currentDay = day;
-    document.getElementById('todayBtn').style.opacity = day === 'today' ? '1' : '.5';
-    document.getElementById('tomorrowBtn').style.opacity = day === 'tomorrow' ? '1' : '.5';
+  window.switchDay = function(view) {
+    currentDay = view;
+    for (const [id, val] of [['todayBtn','today'], ['tomorrowBtn','tomorrow'], ['weekBtn','week']]) {
+      document.getElementById(id).setAttribute('aria-selected', String(val === view));
+    }
     load();
   }
 
@@ -163,63 +354,89 @@
     const errorBox = document.getElementById('errorBox');
     errorBox.style.display = 'none';
     document.getElementById('statusPill').textContent = 'Lade...';
+    const files = {today:'today_7c.json', tomorrow:'tomorrow_7c.json', week:'week_7c.json'};
     try {
-      const file = currentDay === 'tomorrow' ? 'tomorrow_7c.json' : 'today_7c.json';
-      const r = await fetch('data/' + file + '?t=' + Date.now());
+      const r = await fetch('data/' + files[currentDay] + '?t=' + Date.now());
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const d = await r.json();
-      render(d);
+      if (currentDay === 'week') renderWeek(d); else render(d);
+      renderStale(d);
     } catch(e) {
-      errorBox.textContent = 'Fehler beim Laden: ' + e.message + ' \u2014 Ist server.py gestartet?';
+      errorBox.textContent = 'Fehler beim Laden: ' + e.message + ' (läuft server.py?)';
       errorBox.style.display = 'block';
       document.getElementById('statusPill').textContent = 'Fehler';
       document.getElementById('planBody').innerHTML =
-        '<tr><td colspan="5" class="empty">Keine Daten verf\u00fcgbar.</td></tr>';
+        '<tr><td colspan="5" class="empty">Keine Daten verfügbar.</td></tr>';
+    }
+  }
+
+  function renderStale(d) {
+    const box = document.getElementById('staleBox');
+    if (d.untis_stale) {
+      box.textContent = 'Achtung: Der Stundenplan stammt noch aus dem Schuljahr '
+        + (d.untis_schuljahr || 'davor')
+        + '. Die regulären Stunden können falsch sein, Vertretungen sind aktuell.';
+      box.style.display = 'block';
+    } else {
+      box.style.display = 'none';
+    }
+  }
+
+  function setStand(d) {
+    const standSrc = d.pdf_stand || d.generated_at;
+    const gen = standSrc ? new Date(standSrc) : null;
+    const genStr = gen ? gen.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) : '—';
+    document.getElementById('statGenerated').textContent = 'Stand ' + genStr + ' Uhr';
+
+    const runGen = d.generated_at ? new Date(d.generated_at) : null;
+    const runStr = runGen ? runGen.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) : '—';
+    document.getElementById('footerGenerated').textContent = 'Zuletzt geprüft: ' + runStr + ' Uhr';
+  }
+
+  function setPill(vtgCount) {
+    const pill = document.getElementById('statusPill');
+    if (!vtgCount) {
+      pill.textContent = 'Kein Ausfall';
+      pill.style.cssText = '';
+    } else {
+      pill.textContent = vtgCount + ' Änderung' + (vtgCount > 1 ? 'en' : '');
+      pill.style.background = 'rgba(150,66,25,.14)';
+      pill.style.color = 'var(--color-warning)';
     }
   }
 
   function render(d) {
-    document.getElementById('statDay').textContent   = d.day || '\u2014';
-    if (currentDay === 'today') {
-      document.getElementById('todayBtn').textContent = d.day || 'Heute';
-    } else {
-      document.getElementById('tomorrowBtn').textContent = d.day || 'Morgen';
-    }
+    document.getElementById('dayView').style.display = '';
+    document.getElementById('weekView').style.display = 'none';
+    document.getElementById('planTitle').textContent = 'Tagesplan';
+    document.getElementById('statDayLabel').textContent = 'Tag';
+    document.getElementById('statCountLabel').textContent = 'Stunden';
+
+    document.getElementById('statDay').textContent = d.day || '—';
+    const btnId = currentDay === 'today' ? 'todayBtn' : 'tomorrowBtn';
+    document.getElementById(btnId).textContent = d.day || (currentDay === 'today' ? 'Heute' : 'Morgen');
     document.getElementById('statDate').textContent  = formatDate(d.date);
     document.getElementById('statCount').textContent = d.plan ? new Set(d.plan.map(p => p.stunde)).size : 0;
     document.getElementById('statVtg').textContent   = d.vtg_count || 0;
-
-    const standSrc = d.pdf_stand || d.generated_at;
-    const gen = standSrc ? new Date(standSrc) : null;
-    const genStr = gen ? gen.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) : '\u2014';
-    document.getElementById('statGenerated').textContent = 'Stand ' + genStr + ' Uhr';
-
-    const runSrc = d.generated_at;
-    const runGen = runSrc ? new Date(runSrc) : null;
-    const runStr = runGen ? runGen.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) : '\u2014';
-    document.getElementById('footerGenerated').textContent = 'Zuletzt gepr\u00fcft: ' + runStr + ' Uhr';
-
-    const pill = document.getElementById('statusPill');
-    if (!d.vtg_count || d.vtg_count === 0) {
-      pill.textContent = 'Kein Ausfall';
-      pill.style.cssText = '';
-    } else {
-      pill.textContent = d.vtg_count + ' \u00c4nderung' + (d.vtg_count > 1 ? 'en' : '');
-      pill.style.background = 'rgba(150,66,25,.14)';
-      pill.style.color = 'var(--color-warning)';
-    }
+    setStand(d);
+    setPill(d.vtg_count);
 
     const tbody = document.getElementById('planBody');
     if (!d.plan || d.plan.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" class="empty">Keine Eintr\u00e4ge f\u00fcr diesen Tag.</td></tr>';
+      document.getElementById('nowBox').style.display = 'none';
+      tbody.innerHTML = '<tr><td colspan="5" class="empty">Keine Einträge für diesen Tag.</td></tr>';
       return;
     }
 
+    renderNowBox(d.plan, d.date);
+    const j = d.date === localToday() ? jetztInfo(d.plan) : {};
+    const aktuelleStd = j.aktuell ? j.aktuell.stunde : null;
+
     tbody.innerHTML = d.plan.map(p => {
-      const labels = {normal:'Regul\u00e4r', vertretung:'Vertretung', frei:'F\u00e4llt aus', info:'Info'};
+      const labels = {normal:'Regulär', vertretung:'Vertretung', frei:'Fällt aus', info:'Info'};
       const tagLabel = labels[p.status] || p.status;
-      const vtgLine  = p.vertreter ? '<div class="vtg-name">\u2192 ' + esc(p.vertreter) + '</div>' : '';
-      const hinweis  = p.hinweis   ? '<div class="hinweis">' + esc(p.hinweis) + '</div>' : '';
+      const hinweis  = p.hinweis ? '<div class="hinweis">' + esc(p.hinweis) + '</div>' : '';
+      const dot = '<span class="fach-dot" style="--hue:' + hueOf(p.fach_kurz) + '"></span>';
       let fachCell;
       if (p.fach_neu) {
         fachCell = '<span class="fach-strike">' + esc(p.fach) + '</span>'
@@ -229,15 +446,86 @@
       } else {
         fachCell = esc(p.fach);
       }
-      const zeit = ZEITEN[p.stunde] ? '<div style="font-size:.75em;opacity:.6">' + ZEITEN[p.stunde] + '</div>' : '';
-      return '<tr class="row-' + p.status + '">'
+      const zeit = ZEITEN[p.stunde]
+        ? '<div style="font-size:.75em;opacity:.6">' + zeitLabel(p.stunde) + '</div>' : '';
+      const nowCls = p.stunde === aktuelleStd ? ' row-now' : '';
+      return '<tr class="row-' + p.status + nowCls + '">'
         + '<td><strong>' + p.stunde + '</strong>' + zeit + '</td>'
-        + '<td>' + fachCell + '</td>'
-        + '<td>' + esc(p.lehrer) + vtgLine + '</td>'
+        + '<td>' + dot + fachCell + '</td>'
+        + '<td>' + lehrerZelle(p) + '</td>'
         + '<td>' + esc(p.raum) + '</td>'
         + '<td><span class="tag ' + p.status + '">' + tagLabel + '</span>' + hinweis + '</td>'
         + '</tr>';
     }).join('');
+  }
+
+  function renderWeek(w) {
+    document.getElementById('dayView').style.display = 'none';
+    document.getElementById('weekView').style.display = '';
+    document.getElementById('nowBox').style.display = 'none';
+    document.getElementById('planTitle').textContent = 'Wochenplan';
+    document.getElementById('statDayLabel').textContent = 'Woche';
+    document.getElementById('statCountLabel').textContent = 'Stunden gesamt';
+    document.getElementById('weekBtn').textContent = 'Woche';
+
+    const days = w.days || [];
+    const stundenGesamt = days.reduce((n, t) => n + new Set(t.plan.map(p => p.stunde)).size, 0);
+    const vtgGesamt = days.reduce((n, t) => n + (t.vtg_count || 0), 0);
+    document.getElementById('statDay').textContent =
+      days.length ? 'KW ' + kwNummer(days[0].date) : 'KW';
+    document.getElementById('statDate').textContent = days.length
+      ? kurzDatum(days[0].date) + ' bis ' + formatDate(days[days.length-1].date) : '';
+    document.getElementById('statCount').textContent = stundenGesamt;
+    document.getElementById('statVtg').textContent = vtgGesamt;
+    setStand(w);
+    setPill(vtgGesamt);
+
+    const grid = document.getElementById('weekGrid');
+    if (!days.length) {
+      grid.innerHTML = '<div class="empty">Keine Wochendaten verfügbar.</div>';
+      return;
+    }
+
+    let maxStd = 0;
+    days.forEach(t => t.plan.forEach(p => { if (p.stunde > maxStd) maxStd = p.stunde; }));
+    maxStd = Math.max(maxStd, 6);
+
+    let html = '';
+    for (let s = 1; s <= maxStd; s++) {
+      html += '<div class="wk-std" style="grid-row:' + (s+1) + ';grid-column:1">'
+            + '<b>' + s + '</b><span>' + zeitLabel(s) + '</span></div>';
+    }
+
+    const heute = localToday();
+    days.forEach((t, di) => {
+      const col = di + 2;
+      const nurReg = t.has_vertretungsplan ? ''
+        : '<span class="nur-reg">nur regulärer Plan</span>';
+      html += '<div class="wk-dayhead" style="grid-row:1;grid-column:' + col + '">'
+            + esc(t.day) + '<span class="datum">' + kurzDatum(t.date) + '</span>'
+            + nurReg + '</div>';
+
+      const byStd = {};
+      t.plan.forEach(p => { (byStd[p.stunde] = byStd[p.stunde] || []).push(p); });
+      const jetzt = t.date === heute ? jetztInfo(t.plan) : {};
+      const aktuelleStd = jetzt.aktuell ? jetzt.aktuell.stunde : null;
+
+      Object.keys(byStd).map(Number).sort((a,b) => a-b).forEach(s => {
+        const lessons = byStd[s].map(p => {
+          const cls = 'wk-lesson is-' + p.status + (s === aktuelleStd ? ' is-now' : '');
+          const fach = p.fach_neu ? p.fach_neu : p.fach;
+          const meta = [p.lehrer_name || p.lehrer, p.raum].filter(Boolean).join(' · ');
+          return '<div class="' + cls + '" style="--hue:' + hueOf(p.fach_neu ? p.fach_neu_kurz : p.fach_kurz) + '">'
+               + '<span class="fach">' + esc(fach) + '</span>'
+               + '<span class="meta">' + esc(meta) + '</span></div>';
+        }).join('');
+        html += '<div class="wk-cell" style="grid-row:' + (s+1) + ';grid-column:' + col + '">'
+              + '<div class="cell-std"><b>' + s + '</b><span>' + zeitLabel(s) + '</span></div>'
+              + '<div class="cell-lessons">' + lessons + '</div>'
+              + '</div>';
+      });
+    });
+    grid.innerHTML = html;
   }
 
   function formatDate(iso) {
@@ -245,39 +533,45 @@
     return new Date(iso + 'T00:00:00').toLocaleDateString('de-DE',
       {weekday:'long', day:'numeric', month:'long', year:'numeric'});
   }
-
-  const ZEITEN = {
-    1: '8:20 – 9:05',
-    2: '9:10 – 9:55',
-    3: '10:15 – 11:00',
-    4: '11:05 – 11:50',
-    5: '12:05 – 12:50',
-    6: '12:55 – 13:40',
-    7: '13:50 – 14:35',
-    8: '14:40 – 15:25',
-    9: '15:25 – 16:10'
-  };
+  /** ISO-8601-Kalenderwoche (Woche mit dem ersten Donnerstag des Jahres). */
+  function kwNummer(iso) {
+    const d = new Date(iso + 'T00:00:00');
+    const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7));
+    const jahresStart = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+    return Math.ceil(((t - jahresStart) / 86400000 + 1) / 7);
+  }
+  function kurzDatum(iso) {
+    if (!iso) return '';
+    return new Date(iso + 'T00:00:00').toLocaleDateString('de-DE',
+      {day:'2-digit', month:'2-digit'});
+  }
 
   function esc(s) {
-    if (!s) return '\u2014';
+    if (!s) return '—';
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  // Beide Tagnamen vorab laden
+  // Tagnamen auf den beiden Tages-Reitern vorab setzen
   (async () => {
-    try {
-      const rt = await fetch('data/today_7c.json?t=' + Date.now());
-      const dt = await rt.json();
-      document.getElementById('todayBtn').textContent = dt.day || 'Tag 1';
-    } catch(e) {}
-    try {
-      const rm = await fetch('data/tomorrow_7c.json?t=' + Date.now());
-      const dm = await rm.json();
-      document.getElementById('tomorrowBtn').textContent = dm.day || 'Tag 2';
-    } catch(e) {}
+    for (const [file, id, fallback] of [
+      ['today_7c.json', 'todayBtn', 'Tag 1'],
+      ['tomorrow_7c.json', 'tomorrowBtn', 'Tag 2']
+    ]) {
+      try {
+        const r = await fetch('data/' + file + '?t=' + Date.now());
+        const d = await r.json();
+        document.getElementById(id).textContent = d.day || fallback;
+      } catch(e) {}
+    }
   })();
+
   load();
   setInterval(load, 5 * 60 * 1000);
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  }
 })();
 </script>
 </body>
