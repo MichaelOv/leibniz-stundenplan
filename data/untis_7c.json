@@ -1,190 +1,224 @@
 {
-  "valid_from": "2026-06-15",
+  "valid_from": "2026-08-31",
+  "schuljahr": "2026/27",
   "1": {
     "Montag": [
       {
-        "fach": "D",
-        "lehrer": "GRU",
-        "raum": "603"
+        "fach": "M",
+        "lehrer": "MAT",
+        "raum": "433"
       }
     ],
     "Dienstag": [
       {
-        "fach": "E",
-        "lehrer": "MOR",
-        "raum": "603"
-      }
-    ],
-    "Mittwoch": [
+        "fach": ".F7",
+        "lehrer": "BIL",
+        "raum": "433"
+      },
       {
-        "fach": "M",
-        "lehrer": "MAT",
-        "raum": "603"
+        "fach": "L7",
+        "lehrer": "ZIM",
+        "raum": "102"
       }
     ],
     "Donnerstag": [
       {
-        "fach": "IF",
-        "lehrer": "WES",
-        "raum": "442If"
+        "fach": "E",
+        "lehrer": "MOR",
+        "raum": "433"
       }
     ],
     "Freitag": [
       {
-        "fach": ".IR",
-        "lehrer": "AVS",
-        "raum": "610"
-      },
-      {
-        "fach": "RE",
-        "lehrer": "EBR",
-        "raum": "603"
+        "fach": "PK",
+        "lehrer": "BON",
+        "raum": "433"
       }
     ]
   },
   "2": {
-    "Mittwoch": [
+    "Montag": [
       {
         "fach": "M",
         "lehrer": "MAT",
-        "raum": "603"
-      }
-    ],
-    "Montag": [
-      {
-        "fach": "E",
-        "lehrer": "MOR",
-        "raum": "603"
+        "raum": "433"
       }
     ],
     "Dienstag": [
       {
-        "fach": ".IR",
-        "lehrer": "AVS",
-        "raum": "610"
+        "fach": ".F7",
+        "lehrer": "BIL",
+        "raum": "433"
       },
       {
-        "fach": "RE",
-        "lehrer": "EBR",
-        "raum": "603"
+        "fach": "L7",
+        "lehrer": "ZIM",
+        "raum": "102"
       }
     ],
     "Donnerstag": [
       {
-        "fach": "M",
-        "lehrer": "MAT",
-        "raum": "603"
+        "fach": "E",
+        "lehrer": "MOR",
+        "raum": "433"
+      }
+    ],
+    "Mittwoch": [
+      {
+        "fach": "E",
+        "lehrer": "MOR",
+        "raum": "433"
       }
     ],
     "Freitag": [
       {
-        "fach": "M",
-        "lehrer": "MAT",
-        "raum": "603"
+        "fach": "D",
+        "lehrer": "GRU",
+        "raum": "433"
       }
     ]
   },
   "3": {
     "Montag": [
       {
-        "fach": "GE",
-        "lehrer": "BOR",
-        "raum": "603"
+        "fach": "D",
+        "lehrer": "GRU",
+        "raum": "433"
       }
     ],
     "Dienstag": [
       {
-        "fach": "KU",
-        "lehrer": "NYE",
-        "raum": "A2.02Ku"
+        "fach": "EK",
+        "lehrer": "MAN",
+        "raum": "433"
       }
     ],
     "Mittwoch": [
       {
-        "fach": "D",
-        "lehrer": "GRU",
-        "raum": "603"
+        "fach": "SP",
+        "lehrer": "MAT",
+        "raum": "SH2"
       }
     ],
     "Donnerstag": [
       {
-        "fach": "E",
-        "lehrer": "MOR",
-        "raum": "603"
+        "fach": ".F7",
+        "lehrer": "BIL",
+        "raum": "433"
+      },
+      {
+        "fach": "L7",
+        "lehrer": "ZIM",
+        "raum": "102"
       }
     ],
     "Freitag": [
       {
-        "fach": "E",
-        "lehrer": "MOR",
-        "raum": "603"
+        "fach": "M",
+        "lehrer": "MAT",
+        "raum": "433"
       }
     ]
   },
   "4": {
-    "Dienstag": [
-      {
-        "fach": "KU",
-        "lehrer": "NYE",
-        "raum": "A2.02Ku"
-      }
-    ],
-    "Mittwoch": [
+    "Montag": [
       {
         "fach": "D",
         "lehrer": "GRU",
-        "raum": "603"
-      }
-    ],
-    "Montag": [
-      {
-        "fach": "BI",
-        "lehrer": "BUT",
-        "raum": "BI001"
+        "raum": "433"
       }
     ],
     "Donnerstag": [
       {
-        "fach": "MU",
-        "lehrer": "GER",
-        "raum": "A1.03Mu"
+        "fach": ".F7",
+        "lehrer": "BIL",
+        "raum": "433"
+      },
+      {
+        "fach": "L7",
+        "lehrer": "ZIM",
+        "raum": "102"
+      }
+    ],
+    "Dienstag": [
+      {
+        "fach": ".ER",
+        "lehrer": "PER",
+        "raum": "433"
+      },
+      {
+        "fach": "IR",
+        "lehrer": "AVS",
+        "raum": "434"
+      },
+      {
+        "fach": "KR",
+        "lehrer": "VOS",
+        "raum": "102"
+      },
+      {
+        "fach": "PP",
+        "lehrer": "LUD",
+        "raum": "609"
+      }
+    ],
+    "Mittwoch": [
+      {
+        "fach": "M",
+        "lehrer": "MAT",
+        "raum": "433"
       }
     ],
     "Freitag": [
       {
-        "fach": "D",
-        "lehrer": "GRU",
-        "raum": "603"
+        "fach": "CH",
+        "lehrer": "WIN",
+        "raum": "CH106"
       }
     ]
   },
   "5": {
     "Montag": [
       {
-        "fach": "M",
-        "lehrer": "MAT",
-        "raum": "603"
+        "fach": "EK",
+        "lehrer": "MAN",
+        "raum": "433"
       }
     ],
     "Dienstag": [
       {
-        "fach": "MU",
-        "lehrer": "GER",
-        "raum": "A1.03Mu"
+        "fach": "PK",
+        "lehrer": "BON",
+        "raum": "433"
       }
     ],
     "Mittwoch": [
       {
-        "fach": "GE",
-        "lehrer": "BOR",
-        "raum": "603"
+        "fach": "KU",
+        "lehrer": "NYE",
+        "raum": "A2.03Ku"
       }
     ],
     "Donnerstag": [
       {
-        "fach": "BI",
-        "lehrer": "BUT",
-        "raum": "BI006"
+        "fach": ".ER",
+        "lehrer": "PER",
+        "raum": "609"
+      },
+      {
+        "fach": "IR",
+        "lehrer": "AVS",
+        "raum": "434"
+      },
+      {
+        "fach": "KR",
+        "lehrer": "VOS",
+        "raum": "102"
+      },
+      {
+        "fach": "PP",
+        "lehrer": "LUD",
+        "raum": "433"
       }
     ],
     "Freitag": [
@@ -196,52 +230,36 @@
     ]
   },
   "6": {
-    "Freitag": [
+    "Mittwoch": [
       {
-        "fach": "SP",
-        "lehrer": "MAT",
-        "raum": "SH1"
+        "fach": "KU",
+        "lehrer": "NYE",
+        "raum": "A2.03Ku"
       }
     ],
     "Montag": [
       {
-        "fach": "IF",
-        "lehrer": "WES",
-        "raum": "442If"
+        "fach": "E",
+        "lehrer": "MOR",
+        "raum": "433"
       }
     ],
     "Dienstag": [
       {
-        "fach": "SPSW",
-        "lehrer": "MAT",
-        "raum": "SW1"
+        "fach": "CH",
+        "lehrer": "WIN",
+        "raum": "CH104"
       }
     ],
-    "Mittwoch": [
+    "Donnerstag": [
       {
-        "fach": "SP",
-        "lehrer": "MAT",
-        "raum": "SH2"
+        "fach": "D",
+        "lehrer": "GRU",
+        "raum": "433"
       }
     ]
   },
-  "7": {
-    "Mittwoch": [
-      {
-        "fach": ".NK-IF",
-        "lehrer": "ROM",
-        "raum": "PH204"
-      }
-    ]
-  },
-  "8": {
-    "Mittwoch": [
-      {
-        "fach": ".NK-IF",
-        "lehrer": "ROM",
-        "raum": "PH204"
-      }
-    ]
-  },
+  "7": {},
+  "8": {},
   "9": {}
 }

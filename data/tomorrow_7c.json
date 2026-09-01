@@ -1,80 +1,72 @@
 {
-  "date": "2026-07-21",
-  "day": "Dienstag",
-  "class": "06c",
+  "date": "2026-09-02",
+  "day": "Mittwoch",
+  "class": "07c",
   "plan": [
     {
-      "stunde": 1,
+      "stunde": 2,
       "fach": "Englisch",
       "fach_kurz": "E",
       "lehrer": "MOR",
-      "raum": "603",
+      "raum": "433",
       "status": "normal",
       "vertreter": "",
-      "hinweis": ""
-    },
-    {
-      "stunde": 2,
-      "fach": "Islamische Rel.",
-      "fach_kurz": "IR",
-      "lehrer": "AVS",
-      "raum": "610",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
-    },
-    {
-      "stunde": 2,
-      "fach": "Religion",
-      "fach_kurz": "RE",
-      "lehrer": "EBR",
-      "raum": "603",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": ""
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
     },
     {
       "stunde": 3,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.02Ku",
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH2",
       "status": "normal",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
     },
     {
       "stunde": 4,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.02Ku",
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
+      "raum": "433",
       "status": "normal",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
     },
     {
       "stunde": 5,
-      "fach": "Musik",
-      "fach_kurz": "MU",
-      "lehrer": "GER",
-      "raum": "A1.03Mu",
+      "fach": "Kunst",
+      "fach_kurz": "KU",
+      "lehrer": "NYE",
+      "raum": "A2.03Ku",
       "status": "normal",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
     },
     {
       "stunde": 6,
-      "fach": "Sport Schwimmen",
-      "fach_kurz": "SPSW",
-      "lehrer": "MAT",
-      "raum": "SW1",
+      "fach": "Kunst",
+      "fach_kurz": "KU",
+      "lehrer": "NYE",
+      "raum": "A2.03Ku",
       "status": "normal",
       "vertreter": "",
-      "hinweis": ""
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
     }
   ],
   "vtg_count": 0,
-  "generated_at": "2026-07-17T20:00:24.324579+00:00",
-  "pdf_stand": ""
+  "generated_at": "2026-09-01T07:30:11.941397+00:00",
+  "pdf_stand": "",
+  "untis_schuljahr": "2026/27",
+  "untis_stale": false
 }
