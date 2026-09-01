@@ -91,6 +91,13 @@
     .empty{padding:var(--space-8);text-align:center;color:var(--color-text-muted)}
     .error-box{background:rgba(139,26,26,.08);border:1px solid rgba(139,26,26,.2);border-radius:var(--radius-md);padding:var(--space-4);color:var(--color-frei);font-size:var(--text-sm);margin-top:var(--space-4)}
     .warn-box{background:rgba(150,66,25,.1);border:1px solid rgba(150,66,25,.28);border-radius:var(--radius-md);padding:var(--space-4);color:var(--color-warning);font-size:var(--text-sm);margin-top:var(--space-4)}
+    .kurse-panel{margin-top:var(--space-4);padding:var(--space-4)}
+    .kurse-hilfe{font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-3)}
+    .kurse-feld{display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center;margin-bottom:var(--space-2)}
+    .kurse-feld label{font-size:var(--text-sm);min-width:9rem}
+    .kurse-feld select{font:inherit;font-size:var(--text-sm);padding:.45rem .6rem;min-height:44px;
+      border:1px solid var(--color-border);border-radius:var(--radius-md);
+      background:var(--color-surface-2);color:var(--color-text)}
     .now-box{display:flex;flex-wrap:wrap;gap:var(--space-4);align-items:baseline;margin-bottom:var(--space-4);padding:var(--space-3) var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface-2);font-size:var(--text-sm)}
     .now-box b{font-weight:700}
     .now-box .sep{color:var(--color-text-muted)}
@@ -172,6 +179,8 @@
         <button class="btn" id="weekBtn" role="tab" aria-selected="true"
                 aria-controls="planPanel" tabindex="0" onclick="switchDay('week')">Woche</button>
       </div>
+      <button class="btn" id="kurseBtn" aria-expanded="false" aria-controls="kursePanel"
+              hidden onclick="toggleKurse()">Kurse</button>
       <button class="btn" data-theme-toggle aria-pressed="false" aria-label="Dunkles Design einschalten"
               style="display:inline-flex;align-items:center;justify-content:center">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -195,6 +204,12 @@
       <strong id="statVtg">&#8212;</strong>
       <p id="statGenerated">&#8212;</p>
     </div>
+  </div>
+
+  <div id="kursePanel" class="card kurse-panel" role="group" aria-label="Kurswahl" hidden>
+    <p class="kurse-hilfe">In diesen Stunden stehen mehrere Kurse parallel. Wähle aus,
+      welche belegt sind. Die Auswahl gilt nur auf diesem Gerät.</p>
+    <div id="kurseFelder"></div>
   </div>
 
   <div id="errorBox" style="display:none" class="error-box" role="alert"></div>
@@ -387,6 +402,101 @@
 
   let currentDay = 'week';   // Woche ist die Startansicht
 
+  // ---- Kurswahl -----------------------------------------------------------
+  // Parallel liegende Kurse (z.B. Latein/Franzoesisch) erkennt das Frontend
+  // daran, dass in derselben Stunde mehrere echte Faecher stehen. Ueber die
+  // Woche zusammengefasst ergibt das die Wahlgruppen.
+  let kursGruppen = [];
+  let fachNamen = {};
+  let kurswahl = {};
+  try { kurswahl = JSON.parse(localStorage.getItem('kurswahl') || '{}'); } catch(e) {}
+
+  function ermittleGruppen(days) {
+    const eltern = {};
+    const finde = x => eltern[x] === x ? x : (eltern[x] = finde(eltern[x]));
+    const vereine = (a, b) => { eltern[finde(a)] = finde(b); };
+
+    days.forEach(tag => {
+      const proStunde = {};
+      tag.plan.forEach(p => {
+        // Info-Zeilen (z.B. Klassenleitungstag) sind keine Wahlkurse
+        if (p.status === 'info' || !p.fach_kurz) return;
+        fachNamen[p.fach_kurz] = p.fach;
+        (proStunde[p.stunde] = proStunde[p.stunde] || []).push(p.fach_kurz);
+      });
+      Object.values(proStunde).forEach(liste => {
+        const kuerzel = [...new Set(liste)];
+        if (kuerzel.length < 2) return;
+        kuerzel.forEach(k => { if (!(k in eltern)) eltern[k] = k; });
+        kuerzel.slice(1).forEach(k => vereine(kuerzel[0], k));
+      });
+    });
+
+    const nachWurzel = {};
+    Object.keys(eltern).forEach(k => {
+      const w = finde(k);
+      (nachWurzel[w] = nachWurzel[w] || []).push(k);
+    });
+    return Object.values(nachWurzel).map(m => {
+      const mitglieder = m.sort();
+      return { id: mitglieder.join('|'), mitglieder };
+    }).sort((a, b) => a.id.localeCompare(b.id));
+  }
+
+  /** Nicht gewaehlte Parallelkurse ausblenden. Info-Zeilen bleiben immer. */
+  function filtereKurse(plan) {
+    const gewaehlt = {};
+    kursGruppen.forEach(g => {
+      const wahl = kurswahl[g.id];
+      if (wahl && g.mitglieder.includes(wahl)) {
+        g.mitglieder.forEach(m => { if (m !== wahl) gewaehlt[m] = false; });
+      }
+    });
+    return plan.filter(p => p.status === 'info' || gewaehlt[p.fach_kurz] !== false);
+  }
+
+  let panelSignatur = null;
+
+  function zeichneKursPanel() {
+    const btn = document.getElementById('kurseBtn');
+    const felder = document.getElementById('kurseFelder');
+    if (!kursGruppen.length) { btn.hidden = true; return; }
+    btn.hidden = false;
+    // Nur neu aufbauen, wenn sich die Gruppen selbst geaendert haben. Sonst
+    // wuerde jede Auswahl das Panel ersetzen und den Tastaturfokus verlieren.
+    const signatur = kursGruppen.map(g => g.id).join(';;');
+    if (signatur === panelSignatur) return;
+    panelSignatur = signatur;
+    felder.innerHTML = kursGruppen.map((g, i) => {
+      const optionen = ['<option value="">Alle anzeigen</option>'].concat(
+        g.mitglieder.map(m => '<option value="' + esc(m) + '"'
+          + (kurswahl[g.id] === m ? ' selected' : '') + '>'
+          + esc(fachNamen[m] || m) + '</option>')).join('');
+      const label = g.mitglieder.map(m => fachNamen[m] || m).join(' / ');
+      return '<div class="kurse-feld">'
+           + '<label for="kurs' + i + '">' + esc(label) + '</label>'
+           + '<select id="kurs' + i + '" data-gruppe="' + esc(g.id) + '">' + optionen + '</select>'
+           + '</div>';
+    }).join('');
+    felder.querySelectorAll('select').forEach(sel => {
+      sel.addEventListener('change', () => {
+        const id = sel.dataset.gruppe;
+        if (sel.value) kurswahl[id] = sel.value; else delete kurswahl[id];
+        localStorage.setItem('kurswahl', JSON.stringify(kurswahl));
+        load();
+      });
+    });
+  }
+
+  window.toggleKurse = function() {
+    const panel = document.getElementById('kursePanel');
+    const btn = document.getElementById('kurseBtn');
+    const auf = panel.hidden;
+    panel.hidden = !auf;
+    btn.setAttribute('aria-expanded', String(auf));
+  };
+  // -------------------------------------------------------------------------
+
   const TABS = [['todayBtn','today'], ['tomorrowBtn','tomorrow'], ['weekBtn','week']];
 
   window.switchDay = function(view, fokus) {
@@ -476,6 +586,8 @@
   }
 
   function render(d) {
+    d = Object.assign({}, d, { plan: filtereKurse(d.plan || []) });
+    d.vtg_count = d.plan.filter(p => p.status === 'frei' || p.status === 'vertretung').length;
     document.getElementById('dayView').style.display = '';
     document.getElementById('weekView').style.display = 'none';
     document.getElementById('planTitle').textContent = 'Tagesplan';
@@ -538,7 +650,17 @@
     document.getElementById('statCountLabel').textContent = 'Stunden gesamt';
     document.getElementById('weekBtn').textContent = 'Woche';
 
-    const days = w.days || [];
+    let days = w.days || [];
+    // Wahlgruppen aus der vollstaendigen Woche ableiten (beste Datenbasis)
+    kursGruppen = ermittleGruppen(days);
+    zeichneKursPanel();
+    days = days.map(t => {
+      const plan = filtereKurse(t.plan);
+      return Object.assign({}, t, {
+        plan,
+        vtg_count: plan.filter(p => p.status === 'frei' || p.status === 'vertretung').length
+      });
+    });
     const stundenGesamt = days.reduce((n, t) => n + new Set(t.plan.map(p => p.stunde)).size, 0);
     const vtgGesamt = days.reduce((n, t) => n + (t.vtg_count || 0), 0);
     document.getElementById('statDay').textContent =
