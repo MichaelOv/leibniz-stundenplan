@@ -13,15 +13,27 @@
     :root,[data-theme="light"]{
       --text-xs:clamp(.75rem,.7rem + .25vw,.875rem);--text-sm:clamp(.875rem,.8rem + .35vw,1rem);--text-base:clamp(1rem,.95rem + .25vw,1.125rem);--text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);--text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
       --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;
-      --color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;--color-border:#d4d1ca;--color-text:#28251d;--color-text-muted:#6f6d67;--color-primary:#01696f;--color-primary-highlight:#cedcd8;--color-success:#437a22;--color-warning:#964219;--color-frei:#8b1a1a;--radius-md:.75rem;--radius-lg:1rem;--shadow-sm:0 1px 2px rgba(0,0,0,.05);--font-body:'Satoshi',system-ui,sans-serif;--font-display:'Cabinet Grotesk',system-ui,sans-serif;
+      --color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;--color-border:#d4d1ca;--color-text:#28251d;--color-text-muted:#6f6d67;--color-primary:#01696f;--color-primary-highlight:#cedcd8;--color-success:#3a6a1d;--color-warning:#964219;--color-frei:#8b1a1a;--radius-md:.75rem;--radius-lg:1rem;--shadow-sm:0 1px 2px rgba(0,0,0,.05);--font-body:'Satoshi',system-ui,sans-serif;--font-display:'Cabinet Grotesk',system-ui,sans-serif;
       --fach-bg-s:55%;--fach-bg-l:93%;--fach-line-s:50%;--fach-line-l:52%;--fach-text-s:60%;--fach-text-l:28%;
+      /* Meta-Text auf getoenter Flaeche: aus dem Fach-Farbton abgeleitet,
+         damit der Kontrast in jedem Farbton ueber WCAG AA (4.5) bleibt. */
+      --fach-meta-s:30%;--fach-meta-l:30%;
     }
     [data-theme="dark"]{
-      --color-bg:#171614;--color-surface:#1c1b19;--color-surface-2:#201f1d;--color-border:#393836;--color-text:#cdccca;--color-text-muted:#9d9b97;--color-primary:#4f98a3;--color-primary-highlight:#313b3b;--color-success:#6daa45;--color-warning:#bb653b;--color-frei:#c0392b;--shadow-sm:0 1px 2px rgba(0,0,0,.2);
+      --color-bg:#171614;--color-surface:#1c1b19;--color-surface-2:#201f1d;--color-border:#393836;--color-text:#cdccca;--color-text-muted:#9d9b97;--color-primary:#6fb4bf;--color-primary-highlight:#313b3b;--color-success:#6daa45;--color-warning:#cf7b50;--color-frei:#e8806b;--shadow-sm:0 1px 2px rgba(0,0,0,.2);
       --fach-bg-s:28%;--fach-bg-l:19%;--fach-line-s:45%;--fach-line-l:52%;--fach-text-s:45%;--fach-text-l:78%;
+      --fach-meta-s:25%;--fach-meta-l:72%;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
+    /* Nur visuell verbergen: bleibt fuer Screenreader lesbar. */
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+      overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+    :focus-visible{outline:3px solid var(--color-primary);outline-offset:2px;border-radius:4px}
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+    }
     body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);line-height:1.55}
     a{color:inherit} button{font:inherit;cursor:pointer;border:none;background:none}
     .shell{max-width:960px;margin:0 auto;padding:var(--space-4)}
@@ -71,6 +83,7 @@
     .tag.frei{background:rgba(139,26,26,.1);color:var(--color-frei)}
     .tag.info{background:rgba(0,0,0,.06);color:var(--color-text-muted)}
     .hinweis{font-size:var(--text-xs);color:var(--color-text-muted);margin-top:.2rem}
+    .zeit{font-size:var(--text-xs);color:var(--color-text-muted)}
     .vtg-name,.fach-neu{font-size:var(--text-xs);color:var(--color-warning);margin-top:.2rem}
     .lehrer-kurz{font-size:var(--text-xs);color:var(--color-text-muted)}
     .fach-strike{text-decoration:line-through;opacity:.45}
@@ -92,7 +105,11 @@
     .wk-dayhead .datum{display:block;font-family:var(--font-body);font-size:var(--text-xs);color:var(--color-text-muted);font-weight:400}
     .wk-dayhead .nur-reg{display:inline-block;margin-top:.2rem;font-family:var(--font-body);font-size:.7rem;font-weight:400;color:var(--color-text-muted)}
     .wk-cell{display:flex;flex-direction:column;gap:3px;min-height:2.6rem}
-    .wk-cell .cell-std{display:none}
+    /* Am Desktop steht die Stunde links in der eigenen Spalte. In der Zelle
+       bleibt sie trotzdem im Accessibility-Baum, damit Screenreader je Zelle
+       "3. Stunde, 10:15 - 11:00" vorlesen. Daher verbergen statt display:none. */
+    .wk-cell .cell-std{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+      overflow:hidden;clip-path:inset(50%);white-space:nowrap}
     .wk-lesson{
       background:hsl(var(--hue) var(--fach-bg-s) var(--fach-bg-l));
       border-left:3px solid hsl(var(--hue) var(--fach-line-s) var(--fach-line-l));
@@ -100,7 +117,7 @@
       border-radius:6px;padding:.3rem .45rem;font-size:var(--text-xs);line-height:1.3;
     }
     .wk-lesson .fach{font-weight:700;display:block}
-    .wk-lesson .meta{color:var(--color-text-muted);font-size:.72rem;display:block}
+    .wk-lesson .meta{color:hsl(var(--hue) var(--fach-meta-s) var(--fach-meta-l));font-size:.72rem;display:block}
     .wk-lesson.is-frei{background:transparent;border-left-color:var(--color-frei);color:var(--color-text-muted)}
     .wk-lesson.is-frei .fach{text-decoration:line-through}
     .wk-lesson.is-vertretung{border-left-color:var(--color-warning)}
@@ -113,7 +130,9 @@
       .wk-dayhead{margin-top:var(--space-5);border-bottom:1px solid var(--color-border);padding-left:0}
       .wk-cell{flex-direction:row;align-items:stretch;gap:var(--space-3);padding:.35rem 0;border-bottom:1px solid var(--color-border)}
       .wk-cell:last-child{border-bottom:none}
-      .wk-cell .cell-std{display:flex;flex-direction:column;justify-content:center;min-width:4.2rem;font-size:var(--text-xs);color:var(--color-text-muted)}
+      .wk-cell .cell-std{position:static;width:auto;height:auto;margin:0;clip-path:none;
+        display:flex;flex-direction:column;justify-content:center;min-width:4.2rem;
+        font-size:var(--text-xs);color:var(--color-text-muted)}
       .wk-cell .cell-std b{color:var(--color-text);font-size:var(--text-sm)}
       .wk-cell .cell-lessons{flex:1;display:flex;flex-direction:column;gap:3px}
       .wk-lesson{font-size:var(--text-sm);padding:.4rem .55rem}
@@ -145,13 +164,17 @@
       </div>
     </div>
     <div class="actions">
-      <div class="tabs" role="tablist">
-        <button class="btn" id="todayBtn" role="tab" aria-selected="true" onclick="switchDay('today')">Tag</button>
-        <button class="btn" id="tomorrowBtn" role="tab" aria-selected="false" onclick="switchDay('tomorrow')">Tag</button>
-        <button class="btn" id="weekBtn" role="tab" aria-selected="false" onclick="switchDay('week')">Woche</button>
+      <div class="tabs" role="tablist" aria-label="Zeitraum wählen">
+        <button class="btn" id="todayBtn" role="tab" aria-selected="false"
+                aria-controls="planPanel" tabindex="-1" onclick="switchDay('today')">Tag</button>
+        <button class="btn" id="tomorrowBtn" role="tab" aria-selected="false"
+                aria-controls="planPanel" tabindex="-1" onclick="switchDay('tomorrow')">Tag</button>
+        <button class="btn" id="weekBtn" role="tab" aria-selected="true"
+                aria-controls="planPanel" tabindex="0" onclick="switchDay('week')">Woche</button>
       </div>
-      <button class="btn" data-theme-toggle aria-label="Theme wechseln" style="display:inline-flex;align-items:center;justify-content:center">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <button class="btn" data-theme-toggle aria-pressed="false" aria-label="Dunkles Design einschalten"
+              style="display:inline-flex;align-items:center;justify-content:center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       </button>
     </div>
   </header>
@@ -174,8 +197,8 @@
     </div>
   </div>
 
-  <div id="errorBox" style="display:none" class="error-box"></div>
-  <div id="staleBox" style="display:none" class="warn-box"></div>
+  <div id="errorBox" style="display:none" class="error-box" role="alert"></div>
+  <div id="staleBox" style="display:none" class="warn-box" role="status"></div>
 
   <div class="card plan-card">
     <div class="plan-header">
@@ -183,17 +206,20 @@
       <span class="pill" id="statusPill">Lade...</span>
     </div>
 
+    <div id="planPanel" role="tabpanel" aria-labelledby="weekBtn" aria-live="polite" tabindex="0">
+
     <div id="nowBox" class="now-box" style="display:none"></div>
 
     <div id="dayView" class="table-wrap">
       <table>
+        <caption class="sr-only" id="tableCaption">Tagesplan der Klasse 7c</caption>
         <thead>
           <tr>
-            <th>Std</th>
-            <th>Fach</th>
-            <th>Lehrkraft</th>
-            <th>Raum</th>
-            <th>Status</th>
+            <th scope="col">Std</th>
+            <th scope="col">Fach</th>
+            <th scope="col">Lehrkraft</th>
+            <th scope="col">Raum</th>
+            <th scope="col">Status</th>
           </tr>
         </thead>
         <tbody id="planBody">
@@ -205,6 +231,8 @@
     <div id="weekView" style="display:none">
       <div class="wk-grid" id="weekGrid"></div>
     </div>
+
+    </div><!-- /planPanel -->
   </div>
 
   <footer class="footer">
@@ -218,10 +246,17 @@
   const toggle = document.querySelector('[data-theme-toggle]');
   let theme = localStorage.getItem('theme') ||
     (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  document.documentElement.setAttribute('data-theme', theme);
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', theme);
+    const dunkel = theme === 'dark';
+    toggle.setAttribute('aria-pressed', String(dunkel));
+    toggle.setAttribute('aria-label',
+      dunkel ? 'Helles Design einschalten' : 'Dunkles Design einschalten');
+  }
+  applyTheme();
   toggle.addEventListener('click', () => {
     theme = theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', theme);
+    applyTheme();
     localStorage.setItem('theme', theme);
   });
 
@@ -350,15 +385,40 @@
     return haupt + '<div class="vtg-name">→ ' + vName + '</div>';
   }
 
-  let currentDay = 'today';
+  let currentDay = 'week';   // Woche ist die Startansicht
 
-  window.switchDay = function(view) {
+  const TABS = [['todayBtn','today'], ['tomorrowBtn','tomorrow'], ['weekBtn','week']];
+
+  window.switchDay = function(view, fokus) {
     currentDay = view;
-    for (const [id, val] of [['todayBtn','today'], ['tomorrowBtn','tomorrow'], ['weekBtn','week']]) {
-      document.getElementById(id).setAttribute('aria-selected', String(val === view));
+    for (const [id, val] of TABS) {
+      const el = document.getElementById(id);
+      const aktiv = val === view;
+      el.setAttribute('aria-selected', String(aktiv));
+      // Roving tabindex: nur der aktive Reiter ist per Tab erreichbar,
+      // zwischen den Reitern wird mit den Pfeiltasten gewechselt.
+      el.tabIndex = aktiv ? 0 : -1;
+      if (aktiv) {
+        document.getElementById('planPanel').setAttribute('aria-labelledby', id);
+        if (fokus) el.focus();
+      }
     }
     load();
   }
+
+  // Pfeiltasten, Pos1 und Ende gemaess WAI-ARIA Tabs-Pattern
+  document.querySelector('[role="tablist"]').addEventListener('keydown', ev => {
+    const idx = TABS.findIndex(([id]) => id === document.activeElement.id);
+    if (idx < 0) return;
+    let ziel = null;
+    if (ev.key === 'ArrowRight') ziel = (idx + 1) % TABS.length;
+    else if (ev.key === 'ArrowLeft') ziel = (idx - 1 + TABS.length) % TABS.length;
+    else if (ev.key === 'Home') ziel = 0;
+    else if (ev.key === 'End') ziel = TABS.length - 1;
+    if (ziel === null) return;
+    ev.preventDefault();
+    switchDay(TABS[ziel][1], true);
+  });
 
   async function load() {
     const errorBox = document.getElementById('errorBox');
@@ -446,7 +506,7 @@
       const labels = {normal:'Regulär', vertretung:'Vertretung', frei:'Fällt aus', info:'Info'};
       const tagLabel = labels[p.status] || p.status;
       const hinweis  = p.hinweis ? '<div class="hinweis">' + esc(p.hinweis) + '</div>' : '';
-      const dot = '<span class="fach-dot" style="--hue:' + hueOf(p.fach_kurz) + '"></span>';
+      const dot = '<span class="fach-dot" aria-hidden="true" style="--hue:' + hueOf(p.fach_kurz) + '"></span>';
       let fachCell;
       if (p.fach_neu) {
         fachCell = '<span class="fach-strike">' + esc(p.fach) + '</span>'
@@ -457,7 +517,7 @@
         fachCell = esc(p.fach);
       }
       const zeit = ZEITEN[p.stunde]
-        ? '<div style="font-size:.75em;opacity:.6">' + zeitLabel(p.stunde) + '</div>' : '';
+        ? '<div class="zeit">' + zeitLabel(p.stunde) + '</div>' : '';
       const nowCls = p.stunde === aktuelleStd ? ' row-now' : '';
       return '<tr class="row-' + p.status + nowCls + '">'
         + '<td><strong>' + p.stunde + '</strong>' + zeit + '</td>'
@@ -502,7 +562,7 @@
 
     let html = '';
     for (let s = 1; s <= maxStd; s++) {
-      html += '<div class="wk-std" style="grid-row:' + (s+1) + ';grid-column:1">'
+      html += '<div class="wk-std" aria-hidden="true" style="grid-row:' + (s+1) + ';grid-column:1">'
             + '<b>' + s + '</b><span>' + zeitLabel(s) + '</span></div>';
     }
 
@@ -511,9 +571,9 @@
       const col = di + 2;
       const nurReg = t.has_vertretungsplan ? ''
         : '<span class="nur-reg">nur regulärer Plan</span>';
-      html += '<div class="wk-dayhead" style="grid-row:1;grid-column:' + col + '">'
+      html += '<h3 class="wk-dayhead" style="grid-row:1;grid-column:' + col + '">'
             + esc(t.day) + '<span class="datum">' + kurzDatum(t.date) + '</span>'
-            + nurReg + '</div>';
+            + nurReg + '</h3>';
 
       const byStd = {};
       t.plan.forEach(p => { (byStd[p.stunde] = byStd[p.stunde] || []).push(p); });
@@ -535,7 +595,8 @@
                + '<span class="meta">' + esc(meta) + '</span></div>';
         }).join('');
         html += '<div class="wk-cell" style="grid-row:' + (s+1) + ';grid-column:' + col + '">'
-              + '<div class="cell-std"><b>' + s + '</b><span>' + zeitLabel(s) + '</span></div>'
+              + '<div class="cell-std"><b>' + s + '<span class="sr-only">. Stunde</span></b>'
+              + '<span>' + zeitLabel(s) + '</span></div>'
               + '<div class="cell-lessons">' + lessons + '</div>'
               + '</div>';
       });
@@ -567,14 +628,20 @@
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  // Tagname des zweiten Reiters vorab setzen. Der erste Reiter wird beim
-  // initialen load() ohnehin beschriftet, ein zweiter Abruf waere doppelt.
+  // Beide Tagesreiter beschriften. Startansicht ist die Woche, daher laedt
+  // load() keinen der beiden Tage und es entsteht kein doppelter Abruf.
   (async () => {
-    try {
-      const r = await fetch('data/tomorrow_7c.json?t=' + Date.now());
-      const d = await r.json();
-      document.getElementById('tomorrowBtn').textContent = d.day || 'Tag 2';
-    } catch(e) {}
+    for (const [file, id, fallback] of [
+      ['today_7c.json', 'todayBtn', 'Tag 1'],
+      ['tomorrow_7c.json', 'tomorrowBtn', 'Tag 2']
+    ]) {
+      if (currentDay === (id === 'todayBtn' ? 'today' : 'tomorrow')) continue;
+      try {
+        const r = await fetch('data/' + file + '?t=' + Date.now());
+        const d = await r.json();
+        document.getElementById(id).textContent = d.day || fallback;
+      } catch(e) {}
+    }
   })();
 
   load();
