@@ -54,6 +54,9 @@
     .plan-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5)}
     .plan-header h2{font-family:var(--font-display);font-size:var(--text-lg)}
     .pill{display:inline-flex;gap:.45rem;align-items:center;background:var(--color-primary-highlight);color:var(--color-primary);padding:.35rem .7rem;border-radius:999px;font-size:var(--text-xs);font-weight:700;letter-spacing:.02em}
+    /* Die Tabelle scrollt notfalls in sich, damit die Seite selbst nie
+       horizontal scrollt (schmale Geraete ab 320px). */
+    .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
     table{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
     th,td{padding:.75rem var(--space-3);border-bottom:1px solid var(--color-border);text-align:left;vertical-align:middle}
     th{font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted);font-weight:500}
@@ -119,7 +122,14 @@
       .wk-cell .cell-lessons{display:contents}
     }
     @media(max-width:640px){.hero{grid-template-columns:1fr 1fr}.hero .stat:last-child{grid-column:1/-1}.plan-header{flex-direction:column;align-items:flex-start;gap:var(--space-2)}.topbar{flex-wrap:wrap}.brand h1{font-size:var(--text-lg)}}
-    @media(max-width:400px){.hero{grid-template-columns:1fr}}
+    @media(max-width:400px){
+      .hero{grid-template-columns:1fr}
+      .shell{padding:var(--space-2)}
+      .plan-card{padding:var(--space-3)}
+      th,td{padding:.6rem var(--space-2)}
+      .actions{flex-wrap:wrap}
+      .tabs .btn{padding:.5rem .65rem}
+    }
   </style>
 </head>
 <body>
@@ -175,7 +185,7 @@
 
     <div id="nowBox" class="now-box" style="display:none"></div>
 
-    <div id="dayView">
+    <div id="dayView" class="table-wrap">
       <table>
         <thead>
           <tr>
@@ -514,7 +524,12 @@
         const lessons = byStd[s].map(p => {
           const cls = 'wk-lesson is-' + p.status + (s === aktuelleStd ? ' is-now' : '');
           const fach = p.fach_neu ? p.fach_neu : p.fach;
-          const meta = [p.lehrer_name || p.lehrer, p.raum].filter(Boolean).join(' · ');
+          // Bei Vertretung die tatsaechlich unterrichtende Person zeigen,
+          // nicht die urspruengliche. Der Pfeil markiert den Wechsel.
+          const wer = p.vertreter
+            ? '→ ' + (p.vertreter_name || p.vertreter)
+            : (p.lehrer_name || p.lehrer);
+          const meta = [wer, p.raum].filter(Boolean).join(' · ');
           return '<div class="' + cls + '" style="--hue:' + hueOf(p.fach_neu ? p.fach_neu_kurz : p.fach_kurz) + '">'
                + '<span class="fach">' + esc(fach) + '</span>'
                + '<span class="meta">' + esc(meta) + '</span></div>';
@@ -552,18 +567,14 @@
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  // Tagnamen auf den beiden Tages-Reitern vorab setzen
+  // Tagname des zweiten Reiters vorab setzen. Der erste Reiter wird beim
+  // initialen load() ohnehin beschriftet, ein zweiter Abruf waere doppelt.
   (async () => {
-    for (const [file, id, fallback] of [
-      ['today_7c.json', 'todayBtn', 'Tag 1'],
-      ['tomorrow_7c.json', 'tomorrowBtn', 'Tag 2']
-    ]) {
-      try {
-        const r = await fetch('data/' + file + '?t=' + Date.now());
-        const d = await r.json();
-        document.getElementById(id).textContent = d.day || fallback;
-      } catch(e) {}
-    }
+    try {
+      const r = await fetch('data/tomorrow_7c.json?t=' + Date.now());
+      const d = await r.json();
+      document.getElementById('tomorrowBtn').textContent = d.day || 'Tag 2';
+    } catch(e) {}
   })();
 
   load();

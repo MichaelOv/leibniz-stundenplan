@@ -5,7 +5,7 @@
  * Stundenplaene anzeigen, also genau den Fehler, den dieses Projekt vermeiden
  * soll. Die App-Shell (HTML, Manifest, Icons) darf dagegen cache-first sein.
  */
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SHELL_CACHE = 'shell-' + VERSION;
 const DATA_CACHE  = 'data-' + VERSION;
 
@@ -46,14 +46,20 @@ self.addEventListener('fetch', event => {
 
   // Plandaten: immer zuerst aus dem Netz, Cache nur wenn offline.
   if (url.pathname.includes('/data/') && url.pathname.endsWith('.json')) {
+    // Ohne Query-String cachen: die Seite haengt einen Cache-Buster (?t=...)
+    // an jede Anfrage. Mit Query als Schluessel wuerde der Cache bei jedem
+    // Laden weiter wachsen und beim Offline-Zugriff nie treffen.
+    const cacheKey = new Request(url.origin + url.pathname);
     event.respondWith(
       fetch(req)
         .then(res => {
-          const copy = res.clone();
-          caches.open(DATA_CACHE).then(c => c.put(req, copy));
+          if (res.ok) {
+            const copy = res.clone();
+            caches.open(DATA_CACHE).then(c => c.put(cacheKey, copy));
+          }
           return res;
         })
-        .catch(() => caches.match(req).then(hit => hit || Response.error()))
+        .catch(() => caches.match(cacheKey).then(hit => hit || Response.error()))
     );
     return;
   }
@@ -63,11 +69,15 @@ self.addEventListener('fetch', event => {
     caches.match(req).then(hit => {
       const netz = fetch(req)
         .then(res => {
-          const copy = res.clone();
-          caches.open(SHELL_CACHE).then(c => c.put(req, copy));
+          if (res.ok) {
+            const copy = res.clone();
+            caches.open(SHELL_CACHE).then(c => c.put(req, copy));
+          }
           return res;
         })
-        .catch(() => hit);
+        // Weder Cache noch Netz: eine echte Response liefern, sonst wirft
+        // respondWith() auf undefined.
+        .catch(() => hit || Response.error());
       return hit || netz;
     })
   );
