@@ -128,6 +128,21 @@
     .wk-lesson.is-info{background:transparent;border-left-color:var(--color-text-muted);color:var(--color-text-muted)}
     .wk-lesson.is-now{outline:2px solid var(--color-primary);outline-offset:1px}
 
+    /* Dark Mode: gleiche Untis-Farbtoene, aber abgedunkelt, damit die grellen
+       Vollton-Flaechen nicht blenden. Schrift wechselt dabei auf Weiss:
+       gemessen mindestens 5.5:1 (schlechtester Fall Gelb), also WCAG AA. */
+    [data-theme="dark"] .wk-lesson{
+      background:color-mix(in srgb, var(--fach-color), black 58%);
+      border-left-color:color-mix(in srgb, var(--fach-color), black 20%);
+      color:#fff;
+    }
+    [data-theme="dark"] .wk-lesson .meta{color:#fff}
+    [data-theme="dark"] .wk-lesson.is-frei,
+    [data-theme="dark"] .wk-lesson.is-info{background:transparent;color:var(--color-text-muted)}
+    [data-theme="dark"] .wk-lesson.is-frei .meta,
+    [data-theme="dark"] .wk-lesson.is-info .meta{color:var(--color-text-muted)}
+    [data-theme="dark"] .fach-dot{border-color:rgba(255,255,255,.3)}
+
     @media(max-width:719px){
       .wk-grid{display:block}
       .wk-std{display:none}
