@@ -14,15 +14,9 @@
       --text-xs:clamp(.75rem,.7rem + .25vw,.875rem);--text-sm:clamp(.875rem,.8rem + .35vw,1rem);--text-base:clamp(1rem,.95rem + .25vw,1.125rem);--text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);--text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
       --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;
       --color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;--color-border:#d4d1ca;--color-text:#28251d;--color-text-muted:#6f6d67;--color-primary:#01696f;--color-primary-highlight:#cedcd8;--color-success:#3a6a1d;--color-warning:#964219;--color-frei:#8b1a1a;--radius-md:.75rem;--radius-lg:1rem;--shadow-sm:0 1px 2px rgba(0,0,0,.05);--font-body:'Satoshi',system-ui,sans-serif;--font-display:'Cabinet Grotesk',system-ui,sans-serif;
-      --fach-bg-s:55%;--fach-bg-l:93%;--fach-line-s:50%;--fach-line-l:52%;--fach-text-s:60%;--fach-text-l:28%;
-      /* Meta-Text auf getoenter Flaeche: aus dem Fach-Farbton abgeleitet,
-         damit der Kontrast in jedem Farbton ueber WCAG AA (4.5) bleibt. */
-      --fach-meta-s:30%;--fach-meta-l:30%;
     }
     [data-theme="dark"]{
       --color-bg:#171614;--color-surface:#1c1b19;--color-surface-2:#201f1d;--color-border:#393836;--color-text:#cdccca;--color-text-muted:#9d9b97;--color-primary:#6fb4bf;--color-primary-highlight:#313b3b;--color-success:#6daa45;--color-warning:#cf7b50;--color-frei:#e8806b;--shadow-sm:0 1px 2px rgba(0,0,0,.2);
-      --fach-bg-s:28%;--fach-bg-l:19%;--fach-line-s:45%;--fach-line-l:52%;--fach-text-s:45%;--fach-text-l:78%;
-      --fach-meta-s:25%;--fach-meta-l:72%;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
@@ -87,7 +81,7 @@
     .vtg-name,.fach-neu{font-size:var(--text-xs);color:var(--color-warning);margin-top:.2rem}
     .lehrer-kurz{font-size:var(--text-xs);color:var(--color-text-muted)}
     .fach-strike{text-decoration:line-through;opacity:.45}
-    .fach-dot{display:inline-block;width:.6rem;height:.6rem;border-radius:3px;margin-right:.45rem;vertical-align:baseline;background:hsl(var(--hue) var(--fach-line-s) var(--fach-line-l))}
+    .fach-dot{display:inline-block;width:.6rem;height:.6rem;border-radius:3px;margin-right:.45rem;vertical-align:baseline;background:var(--fach-color);border:1px solid rgba(0,0,0,.25)}
     .empty{padding:var(--space-8);text-align:center;color:var(--color-text-muted)}
     .error-box{background:rgba(139,26,26,.08);border:1px solid rgba(139,26,26,.2);border-radius:var(--radius-md);padding:var(--space-4);color:var(--color-frei);font-size:var(--text-sm);margin-top:var(--space-4)}
     .warn-box{background:rgba(150,66,25,.1);border:1px solid rgba(150,66,25,.28);border-radius:var(--radius-md);padding:var(--space-4);color:var(--color-warning);font-size:var(--text-sm);margin-top:var(--space-4)}
@@ -118,14 +112,17 @@
     .wk-cell .cell-std{position:absolute;width:1px;height:1px;padding:0;margin:-1px;
       overflow:hidden;clip-path:inset(50%);white-space:nowrap}
     .wk-lesson{
-      background:hsl(var(--hue) var(--fach-bg-s) var(--fach-bg-l));
-      border-left:3px solid hsl(var(--hue) var(--fach-line-s) var(--fach-line-l));
-      color:hsl(var(--hue) var(--fach-text-s) var(--fach-text-l));
+      background:var(--fach-color);
+      border-left:3px solid color-mix(in srgb, var(--fach-color), black 35%);
+      /* Schwarze Schrift wie im Untis-Plan: auf allen Untis-Farben mindestens
+         5.25:1, damit auch auf dem gesaettigten Rot noch WCAG AA erfuellt ist. */
+      color:#000;
       border-radius:6px;padding:.3rem .45rem;font-size:var(--text-xs);line-height:1.3;
     }
     .wk-lesson .fach{font-weight:700;display:block}
-    .wk-lesson .meta{color:hsl(var(--hue) var(--fach-meta-s) var(--fach-meta-l));font-size:.72rem;display:block}
+    .wk-lesson .meta{color:#000;font-size:.72rem;display:block}
     .wk-lesson.is-frei{background:transparent;border-left-color:var(--color-frei);color:var(--color-text-muted)}
+    .wk-lesson.is-frei .meta,.wk-lesson.is-info .meta{color:var(--color-text-muted)}
     .wk-lesson.is-frei .fach{text-decoration:line-through}
     .wk-lesson.is-vertretung{border-left-color:var(--color-warning)}
     .wk-lesson.is-info{background:transparent;border-left-color:var(--color-text-muted);color:var(--color-text-muted)}
@@ -288,18 +285,24 @@
     9: ['15:25','16:10']
   };
 
-  // Farbton je Fach. Unbekannte Kuerzel bekommen einen stabilen Hash-Farbton.
-  const FACH_HUE = {
-    D:212, E:32, M:265, GE:22, BI:135, IF:190, RE:290, IR:315,
-    SP:0, SPSW:348, SPSM:0, MU:330, KU:48, PH:200, CH:100, GEO:160, EK:160, SW:245
+  // Exakte Fachfarben aus dem Untis-Export der Schule (bgcolor im HTML).
+  // Untis faerbt nach Fachgruppe, mehrere Faecher teilen sich daher eine Farbe.
+  const FACH_COLOR = {
+    SP:'#FF0000', SPSW:'#FF0000', SPSM:'#FF0000',
+    PK:'#FF8040', SW:'#FF8040', GE:'#FF8040', EK:'#FF8040', GEO:'#FF8040',
+    CH:'#FFFF00', BI:'#FFFF00', PH:'#FFFF00',
+    D:'#9DFF9D', L7:'#00FF00', F7:'#00FF00',
+    E:'#00FF80', M:'#80FFFF', IF:'#00FFFF',
+    KU:'#9F80FF', MU:'#9F80FF',
+    ER:'#FF00FF', RE:'#FF00FF', KR:'#FF00FF', IR:'#FF00FF', PP:'#FF00FF'
   };
-  function hueOf(kurz) {
-    if (!kurz) return 220;
+  // Faecher ohne Untis-Farbe (z.B. nur im Vertretungsplan) bleiben neutral.
+  const FACH_COLOR_FALLBACK = '#E4E1DA';
+
+  function farbeVon(kurz) {
+    if (!kurz) return FACH_COLOR_FALLBACK;
     const k = String(kurz).replace(/^\.+/, '').toUpperCase();
-    if (FACH_HUE[k] !== undefined) return FACH_HUE[k];
-    let h = 0;
-    for (let i = 0; i < k.length; i++) h = (h * 31 + k.charCodeAt(i)) % 360;
-    return h;
+    return FACH_COLOR[k] || FACH_COLOR_FALLBACK;
   }
 
   function zeitLabel(std) {
@@ -618,7 +621,7 @@
       const labels = {normal:'Regulär', vertretung:'Vertretung', frei:'Fällt aus', info:'Info'};
       const tagLabel = labels[p.status] || p.status;
       const hinweis  = p.hinweis ? '<div class="hinweis">' + esc(p.hinweis) + '</div>' : '';
-      const dot = '<span class="fach-dot" aria-hidden="true" style="--hue:' + hueOf(p.fach_kurz) + '"></span>';
+      const dot = '<span class="fach-dot" aria-hidden="true" style="--fach-color:' + farbeVon(p.fach_kurz) + '"></span>';
       let fachCell;
       if (p.fach_neu) {
         fachCell = '<span class="fach-strike">' + esc(p.fach) + '</span>'
@@ -712,7 +715,7 @@
             ? '→ ' + (p.vertreter_name || p.vertreter)
             : (p.lehrer_name || p.lehrer);
           const meta = [wer, p.raum].filter(Boolean).join(' · ');
-          return '<div class="' + cls + '" style="--hue:' + hueOf(p.fach_neu ? p.fach_neu_kurz : p.fach_kurz) + '">'
+          return '<div class="' + cls + '" style="--fach-color:' + farbeVon(p.fach_neu ? p.fach_neu_kurz : p.fach_kurz) + '">'
                + '<span class="fach">' + esc(fach) + '</span>'
                + '<span class="meta">' + esc(meta) + '</span></div>';
         }).join('');
