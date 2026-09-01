@@ -221,13 +221,25 @@
         }
       ],
       "vtg_count": 0,
-      "has_vertretungsplan": true,
+      "has_vertretungsplan": false,
       "pdf_stand": ""
     },
     {
       "date": "2026-09-02",
       "day": "Mittwoch",
       "plan": [
+        {
+          "stunde": 1,
+          "fach": "LL",
+          "fach_kurz": "LL",
+          "lehrer": "MAT",
+          "raum": "433",
+          "status": "info",
+          "vertreter": "",
+          "hinweis": "Klassenleitungsstunde",
+          "lehrer_name": "",
+          "vertreter_name": ""
+        },
         {
           "stunde": 2,
           "fach": "Englisch",
@@ -291,7 +303,7 @@
       ],
       "vtg_count": 0,
       "has_vertretungsplan": true,
-      "pdf_stand": ""
+      "pdf_stand": "2026-08-31T15:18:00+02:00"
     },
     {
       "date": "2026-09-03",
@@ -431,8 +443,8 @@
         }
       ],
       "vtg_count": 0,
-      "has_vertretungsplan": false,
-      "pdf_stand": ""
+      "has_vertretungsplan": true,
+      "pdf_stand": "2026-08-31T15:20:00+02:00"
     },
     {
       "date": "2026-09-04",
@@ -506,5 +518,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-01T07:30:11.974254+00:00"
+  "generated_at": "2026-09-01T08:00:26.983711+00:00"
 }
