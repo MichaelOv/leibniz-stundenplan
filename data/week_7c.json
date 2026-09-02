@@ -497,6 +497,18 @@
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
+        },
+        {
+          "stunde": 6,
+          "fach": "Sport",
+          "fach_kurz": "SP",
+          "lehrer": "MAT",
+          "raum": "SH1",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
+          "lehrer_name": "",
+          "vertreter_name": ""
         }
       ],
       "vtg_count": 0,
@@ -506,5 +518,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-02T07:00:24.996855+00:00"
+  "generated_at": "2026-09-02T08:00:23.087711+00:00"
 }
