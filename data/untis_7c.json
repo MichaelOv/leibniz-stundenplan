@@ -237,6 +237,13 @@
         "raum": "A2.03Ku"
       }
     ],
+    "Freitag": [
+      {
+        "fach": "SP",
+        "lehrer": "MAT",
+        "raum": "SH1"
+      }
+    ],
     "Montag": [
       {
         "fach": "E",

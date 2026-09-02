@@ -221,3 +221,59 @@ class TestFachName:
 
     def test_unbekanntes_kuerzel_bleibt(self):
         assert fach_name("XX", {}) == "XX"
+
+
+@pytest.fixture(scope="module")
+def plan():
+    from pathlib import Path
+    from parse_untis import parse_untis_html
+    pfad = Path(__file__).parent / "fixtures" / "untis_7c_2026-27.htm"
+    return parse_untis_html(pfad.read_bytes())
+
+
+class TestUntisGrid:
+    """Parser gegen den echten Untis-Export vom 01.09.2026 (Schuljahr 2026/27).
+
+    Der Plan wurde gegen das gerenderte Layout im Browser abgeglichen, ist also
+    die tatsaechliche Wahrheit. Regression fuer zwei Fehler: verschachtelte
+    Tabellenzellen verschoben die Spaltenzaehlung, wodurch Doppelstunden am
+    Zeilenende (Freitag) verloren gingen; die Tagesbreite von 13 statt 12
+    Spalten liess Spalte 13 zusaetzlich auf Montag passen.
+    """
+    ERWARTET = {
+        1: {"Montag": ["M"], "Dienstag": [".F7", "L7"], "Donnerstag": ["E"], "Freitag": ["PK"]},
+        2: {"Montag": ["M"], "Dienstag": [".F7", "L7"], "Mittwoch": ["E"],
+            "Donnerstag": ["E"], "Freitag": ["D"]},
+        3: {"Montag": ["D"], "Dienstag": ["EK"], "Mittwoch": ["SP"],
+            "Donnerstag": [".F7", "L7"], "Freitag": ["M"]},
+        4: {"Montag": ["D"], "Dienstag": [".ER", "IR", "KR", "PP"], "Mittwoch": ["M"],
+            "Donnerstag": [".F7", "L7"], "Freitag": ["CH"]},
+        5: {"Montag": ["EK"], "Dienstag": ["PK"], "Mittwoch": ["KU"],
+            "Donnerstag": [".ER", "IR", "KR", "PP"], "Freitag": ["SP"]},
+        6: {"Montag": ["E"], "Dienstag": ["CH"], "Mittwoch": ["KU"],
+            "Donnerstag": ["D"], "Freitag": ["SP"]},
+    }
+
+    def test_kopfdaten(self, plan):
+        _, valid_from, schuljahr = plan
+        assert valid_from == "2026-08-31"
+        assert schuljahr == "2026/27"
+
+    @pytest.mark.parametrize("stunde", sorted(ERWARTET))
+    def test_stunde(self, plan, stunde):
+        tt = plan[0]
+        ist = {tag: sorted(l["fach"] for l in les)
+               for tag, les in tt.get(stunde, {}).items() if les}
+        soll = {tag: sorted(f) for tag, f in self.ERWARTET[stunde].items()}
+        assert ist == soll
+
+    def test_doppelstunde_am_zeilenende(self, plan):
+        # Sport freitags 5. UND 6. Stunde: genau der Fall, der vorher fehlte
+        tt = plan[0]
+        assert [l["fach"] for l in tt[5]["Freitag"]] == ["SP"]
+        assert [l["fach"] for l in tt[6]["Freitag"]] == ["SP"]
+
+    def test_keine_stunden_nach_der_sechsten(self, plan):
+        tt = plan[0]
+        for stunde in (7, 8, 9):
+            assert not any(tt.get(stunde, {}).values())

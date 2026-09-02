@@ -21,26 +21,38 @@ def extract_valid_from(html_text: str) -> str | None:
     return f"{year}-{int(month):02d}-{int(day):02d}"
 
 def parse_untis():
+    """Laedt das Untis-HTML und gibt (stundenplan, valid_from, schuljahr) zurueck."""
     r = requests.get(UNTIS_URL, timeout=30)
     r.raise_for_status()
     r.encoding = r.apparent_encoding
-    valid_from = extract_valid_from(r.text)
+    return parse_untis_html(r.content, r.text)
+
+def parse_untis_html(html_bytes, html_text=None):
+    """Parst das Untis-HTML. Getrennt vom Abruf, damit der Parser gegen eine
+    gespeicherte Seite getestet werden kann (siehe tests/fixtures)."""
+    if html_text is None:
+        html_text = html_bytes.decode("cp1252", errors="replace")
+    valid_from = extract_valid_from(html_text)
     if valid_from:
         print("Gültig ab: " + valid_from)
-    schuljahr = extract_schuljahr(r.text)
+    schuljahr = extract_schuljahr(html_text)
     if schuljahr:
         print("Schuljahr laut Untis: " + schuljahr)
-    soup = BeautifulSoup(r.content, "html.parser")
+    soup = BeautifulSoup(html_bytes, "html.parser")
     tables = soup.find_all("table")
     if len(tables) < 2:
         print("FEHLER: Untis-HTML hat unerwartete Struktur (zu wenige Tabellen).")
         sys.exit(1)
     main_rows = tables[1].find_all("tr")
 
-    # Tag-Startspalten aus Header
+    # Tag-Startspalten aus Header.
+    # recursive=False ist wichtig: jede Tageszelle enthaelt eine verschachtelte
+    # Tabelle mit Fach/Lehrer/Raum. Ohne die Einschraenkung zaehlt find_all
+    # deren Zellen mit, die Spaltenzaehlung verrutscht nach rechts und
+    # Doppelstunden am Zeilenende (z.B. Freitag) werden nicht erkannt.
     day_start_cols = {}
     col = 0
-    for cell in main_rows[0].find_all(["td","th"]):
+    for cell in main_rows[0].find_all(["td","th"], recursive=False):
         cs = int(cell.get("colspan", 1))
         txt = cell.get_text(strip=True)
         if cs == 12 and txt in DAYS_DE.values():
@@ -96,7 +108,7 @@ def parse_untis():
         day_skip_next = {d: False for d in all_days}
         stunden_row = None
         for row in main_rows:
-            cells_r = row.find_all(["td","th"])
+            cells_r = row.find_all(["td","th"], recursive=False)
             if cells_r and cells_r[0].get_text(strip=True) == str(stunde):
                 stunden_row = row
                 break
@@ -104,7 +116,7 @@ def parse_untis():
         if stunden_row:
             cur_col = 0
             first = True
-            for cell in stunden_row.find_all(["td","th"]):
+            for cell in stunden_row.find_all(["td","th"], recursive=False):
                 cs = int(cell.get("colspan", 1))
                 rs = int(cell.get("rowspan", 1))
                 if first:
@@ -113,7 +125,7 @@ def parse_untis():
                     continue
                 if cs == 12:
                     for dcol, day in day_start_cols.items():
-                        if dcol <= cur_col < dcol + 13:
+                        if dcol <= cur_col < dcol + 12:
                             if rs >= 4:
                                 day_skip_next[day] = True
                                 if day in timetable[stunde]:
