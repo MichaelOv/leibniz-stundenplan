@@ -232,7 +232,7 @@
           "stunde": 1,
           "fach": "Klassenleitungsstunde",
           "fach_kurz": "LL",
-          "lehrer": "MAT",
+          "lehrer": "GRU",
           "raum": "433",
           "status": "info",
           "vertreter": "",
@@ -303,7 +303,7 @@
       ],
       "vtg_count": 0,
       "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-02T07:34:00+02:00"
+      "pdf_stand": "2026-09-02T08:02:00+02:00"
     },
     {
       "date": "2026-09-03",
@@ -518,5 +518,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-02T06:05:21.490838+00:00"
+  "generated_at": "2026-09-02T06:10:28.517811+00:00"
 }
