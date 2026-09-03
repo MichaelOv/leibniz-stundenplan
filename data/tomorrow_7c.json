@@ -1,34 +1,10 @@
 {
-  "date": "2026-09-04",
-  "day": "Freitag",
+  "date": "2026-09-07",
+  "day": "Montag",
   "class": "07c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Politik",
-      "fach_kurz": "PK",
-      "lehrer": "BON",
-      "raum": "433",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": "",
-      "lehrer_name": "",
-      "vertreter_name": ""
-    },
-    {
-      "stunde": 2,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "433",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": "",
-      "lehrer_name": "",
-      "vertreter_name": ""
-    },
-    {
-      "stunde": 3,
       "fach": "Mathe",
       "fach_kurz": "M",
       "lehrer": "MAT",
@@ -40,11 +16,35 @@
       "vertreter_name": ""
     },
     {
+      "stunde": 2,
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
+      "raum": "433",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
+      "stunde": 3,
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "433",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
       "stunde": 4,
-      "fach": "Chemie",
-      "fach_kurz": "CH",
-      "lehrer": "WIN",
-      "raum": "CH106",
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "433",
       "status": "normal",
       "vertreter": "",
       "hinweis": "",
@@ -53,10 +53,10 @@
     },
     {
       "stunde": 5,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "SH1",
+      "fach": "Erdkunde",
+      "fach_kurz": "EK",
+      "lehrer": "MAN",
+      "raum": "433",
       "status": "normal",
       "vertreter": "",
       "hinweis": "",
@@ -65,10 +65,10 @@
     },
     {
       "stunde": 6,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "SH1",
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
+      "raum": "433",
       "status": "normal",
       "vertreter": "",
       "hinweis": "",
@@ -77,8 +77,8 @@
     }
   ],
   "vtg_count": 0,
-  "generated_at": "2026-09-03T06:55:29.102757+00:00",
-  "pdf_stand": "2026-09-03T07:54:00+02:00",
+  "generated_at": "2026-09-03T07:00:22.042447+00:00",
+  "pdf_stand": "",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
 }

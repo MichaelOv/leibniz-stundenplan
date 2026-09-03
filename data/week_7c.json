@@ -374,10 +374,10 @@
           "fach": "Evangelische Rel.",
           "fach_kurz": "ER",
           "lehrer": "PER",
-          "raum": "601",
+          "raum": "609",
           "status": "normal",
           "vertreter": "",
-          "hinweis": "ER Raumänderung wg. Klassenbedarfs",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -431,8 +431,8 @@
         }
       ],
       "vtg_count": 0,
-      "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-03T08:01:00+02:00"
+      "has_vertretungsplan": false,
+      "pdf_stand": ""
     },
     {
       "date": "2026-09-04",
@@ -518,5 +518,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-03T06:55:29.125319+00:00"
+  "generated_at": "2026-09-03T07:00:22.075579+00:00"
 }
