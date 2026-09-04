@@ -320,3 +320,53 @@ class TestKlassenDiagnose:
 
         monkeypatch.setattr(fb.fitz, "open", lambda **kw: FakeDoc())
         assert fb.klassen_im_pdf(b"egal") == {}
+
+
+class TestAnzeigeUndBenachrichtigung:
+    """Anzeige zeigt den laufenden Schultag, die Benachrichtigung darf
+    davon abweichen (ab 9 Uhr geht es um den naechsten Tag)."""
+
+    def _run_all(self, monkeypatch, iso, stunde):
+        import importlib
+        from datetime import datetime
+        from zoneinfo import ZoneInfo
+        import run_all
+        importlib.reload(run_all)
+        tz = ZoneInfo("Europe/Berlin")
+        fest = datetime.fromisoformat(iso).replace(hour=stunde, tzinfo=tz)
+
+        class FakeDatetime(datetime):
+            @classmethod
+            def now(cls, tzinfo=None):
+                return fest
+
+        monkeypatch.setattr(run_all, "datetime", FakeDatetime)
+        return run_all
+
+    @pytest.mark.parametrize("iso, stunde, erwartet_heute", [
+        ("2026-09-04", 7,  "2026-09-04"),   # Freitag frueh -> heute
+        ("2026-09-04", 12, "2026-09-04"),   # Freitag mittags -> weiterhin heute
+        ("2026-09-04", 20, "2026-09-04"),   # Freitag abends -> weiterhin heute
+        ("2026-09-05", 10, "2026-09-07"),   # Samstag -> Montag
+        ("2026-09-06", 10, "2026-09-07"),   # Sonntag -> Montag
+    ])
+    def test_anzeige_zeigt_laufenden_schultag(self, monkeypatch, iso, stunde, erwartet_heute):
+        ra = self._run_all(monkeypatch, iso, stunde)
+        assert ra.get_today() == erwartet_heute
+
+    @pytest.mark.parametrize("iso, stunde, erwartet_ziel", [
+        ("2026-09-02", 7,  "heute"),    # vor 9 Uhr -> heute
+        ("2026-09-02", 9,  "morgen"),   # ab 9 Uhr -> morgen
+        ("2026-09-02", 15, "morgen"),
+        ("2026-09-05", 7,  "morgen"),   # Wochenende -> naechster Schultag
+    ])
+    def test_benachrichtigungsziel(self, monkeypatch, iso, stunde, erwartet_ziel):
+        ra = self._run_all(monkeypatch, iso, stunde)
+        heute = ra.get_today()
+        morgen = ra.get_tomorrow(heute)
+        ziel = ra.notify_ziel(heute, morgen)
+        assert ziel == (heute if erwartet_ziel == "heute" else morgen)
+
+    def test_morgen_ueberspringt_wochenende(self, monkeypatch):
+        ra = self._run_all(monkeypatch, "2026-09-04", 12)
+        assert ra.get_tomorrow("2026-09-04") == "2026-09-07"

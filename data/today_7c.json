@@ -1,13 +1,13 @@
 {
-  "date": "2026-09-07",
-  "day": "Montag",
+  "date": "2026-09-04",
+  "day": "Freitag",
   "class": "07c",
   "plan": [
     {
       "stunde": 1,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
+      "fach": "Politik",
+      "fach_kurz": "PK",
+      "lehrer": "BON",
       "raum": "433",
       "status": "normal",
       "vertreter": "",
@@ -17,6 +17,18 @@
     },
     {
       "stunde": 2,
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "433",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
+      "stunde": 3,
       "fach": "Mathe",
       "fach_kurz": "M",
       "lehrer": "MAT",
@@ -28,23 +40,11 @@
       "vertreter_name": ""
     },
     {
-      "stunde": 3,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "433",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": "",
-      "lehrer_name": "",
-      "vertreter_name": ""
-    },
-    {
       "stunde": 4,
-      "fach": "Deutsch",
-      "fach_kurz": "D",
-      "lehrer": "GRU",
-      "raum": "433",
+      "fach": "Chemie",
+      "fach_kurz": "CH",
+      "lehrer": "WIN",
+      "raum": "CH106",
       "status": "normal",
       "vertreter": "",
       "hinweis": "",
@@ -53,10 +53,10 @@
     },
     {
       "stunde": 5,
-      "fach": "Erdkunde",
-      "fach_kurz": "EK",
-      "lehrer": "MAN",
-      "raum": "433",
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH1",
       "status": "normal",
       "vertreter": "",
       "hinweis": "",
@@ -65,10 +65,10 @@
     },
     {
       "stunde": 6,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
-      "raum": "433",
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH1",
       "status": "normal",
       "vertreter": "",
       "hinweis": "",
@@ -77,8 +77,8 @@
     }
   ],
   "vtg_count": 0,
-  "generated_at": "2026-09-04T10:00:29.834805+00:00",
-  "pdf_stand": "2026-09-03T16:52:00+02:00",
+  "generated_at": "2026-09-04T10:22:38.043591+00:00",
+  "pdf_stand": "2026-09-04T06:07:00+02:00",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
 }

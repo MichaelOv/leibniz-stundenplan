@@ -17,11 +17,15 @@ PYTHON = sys.executable
 DATA = BASE.parent / "data"
 
 def get_today():
-    now = datetime.now(_TZ_BERLIN)
-    if now.hour >= NOTIFY_HOUR_CUTOFF:
-        candidate = now.date() + timedelta(days=1)
-    else:
-        candidate = now.date()
+    """Aktueller Schultag fuer die Anzeige: heute, am Wochenende der Montag.
+
+    Bewusst ohne Uhrzeit-Logik. Frueher sprang diese Funktion ab 9 Uhr auf den
+    Folgetag, weil sie zugleich das Ziel der Benachrichtigung bestimmte. Damit
+    zeigte das Dashboard waehrend des Unterrichts nicht mehr den laufenden Tag
+    und konnte die aktuelle Stunde nicht markieren. Fuer die Benachrichtigung
+    gibt es jetzt notify_ziel().
+    """
+    candidate = datetime.now(_TZ_BERLIN).date()
     while candidate.weekday() > 4:
         candidate += timedelta(days=1)
     return candidate.isoformat()
@@ -31,6 +35,18 @@ def get_tomorrow(today_str):
     while d.weekday() > 4:
         d += timedelta(days=1)
     return d.isoformat()
+
+def notify_ziel(today_str, tomorrow_str):
+    """Tag, auf den sich die Push-Benachrichtigung bezieht.
+
+    Vor 9 Uhr der laufende Tag (man will vor der Schule wissen, was ausfaellt),
+    danach der naechste Schultag. Unveraendertes Verhalten, nur von der
+    Anzeigelogik getrennt.
+    """
+    now = datetime.now(_TZ_BERLIN)
+    if now.date().weekday() > 4 or now.hour >= NOTIFY_HOUR_CUTOFF:
+        return tomorrow_str
+    return today_str
 
 def run(script, *args) -> int:
     """Gibt den Exit-Code zurück: 0=OK, 1=kein Plan verfügbar, 2=echter Fehler."""
@@ -160,9 +176,11 @@ if __name__ == "__main__":
     else:
         print("Untis-HTML unveraendert, ueberspringe Parse.")
 
-    print("=== Schritt 4: Heute ===")
+    ziel = notify_ziel(today, tomorrow)
+    print("=== Schritt 4: Heute (" + today + ") ===")
     if rc1 == 0 and vtg_has_entries("latest_7c.json"):
-        build_and_notify(today, "today_7c.json", "Heute", vtg_file="latest_7c.json", notify=True)
+        build_and_notify(today, "today_7c.json", "Heute", vtg_file="latest_7c.json",
+                         notify=(ziel == today))
     else:
         print("Kein Vertretungsplan für heute – zeige regulären Plan.")
         if rc1 != 0:
@@ -170,9 +188,10 @@ if __name__ == "__main__":
             (DATA / "latest_7c.json").write_text(json.dumps(empty))
         run("build_today.py", today, "today_7c.json", "latest_7c.json")
 
-    print("=== Schritt 5: Morgen ===")
+    print("=== Schritt 5: Morgen (" + tomorrow + ") ===")
     if rc2 == 0 and vtg_has_entries("latest_7c_tomorrow.json"):
-        build_and_notify(tomorrow, "tomorrow_7c.json", "Morgen", vtg_file="latest_7c_tomorrow.json", notify=False)
+        build_and_notify(tomorrow, "tomorrow_7c.json", "Morgen", vtg_file="latest_7c_tomorrow.json",
+                         notify=(ziel == tomorrow))
     else:
         print("Kein Vertretungsplan für morgen – zeige regulären Plan.")
         if rc2 != 0:

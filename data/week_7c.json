@@ -1,9 +1,9 @@
 {
-  "week_start": "2026-09-07",
+  "week_start": "2026-08-31",
   "class": "07c",
   "days": [
     {
-      "date": "2026-09-07",
+      "date": "2026-08-31",
       "day": "Montag",
       "plan": [
         {
@@ -80,11 +80,11 @@
         }
       ],
       "vtg_count": 0,
-      "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-03T16:52:00+02:00"
+      "has_vertretungsplan": false,
+      "pdf_stand": ""
     },
     {
-      "date": "2026-09-08",
+      "date": "2026-09-01",
       "day": "Dienstag",
       "plan": [
         {
@@ -221,11 +221,11 @@
         }
       ],
       "vtg_count": 0,
-      "has_vertretungsplan": true,
+      "has_vertretungsplan": false,
       "pdf_stand": ""
     },
     {
-      "date": "2026-09-09",
+      "date": "2026-09-02",
       "day": "Mittwoch",
       "plan": [
         {
@@ -294,7 +294,7 @@
       "pdf_stand": ""
     },
     {
-      "date": "2026-09-10",
+      "date": "2026-09-03",
       "day": "Donnerstag",
       "plan": [
         {
@@ -435,7 +435,7 @@
       "pdf_stand": ""
     },
     {
-      "date": "2026-09-11",
+      "date": "2026-09-04",
       "day": "Freitag",
       "plan": [
         {
@@ -512,11 +512,11 @@
         }
       ],
       "vtg_count": 0,
-      "has_vertretungsplan": false,
-      "pdf_stand": ""
+      "has_vertretungsplan": true,
+      "pdf_stand": "2026-09-04T06:07:00+02:00"
     }
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-04T10:00:29.897530+00:00"
+  "generated_at": "2026-09-04T10:22:38.117792+00:00"
 }
