@@ -72,9 +72,17 @@ class TestClassMatches:
     @pytest.mark.parametrize("kandidat, ziel", [
         ("06a", "06c"),      # anderer Buchstabe
         ("07c", "06c"),      # anderer Jahrgang
+        ("17c", "07c"),      # 17 ist nicht 7, trotz numerischem Vergleich
+        ("08c", "07c"),
     ])
     def test_no_match(self, kandidat, ziel):
         assert class_matches(kandidat, ziel) is False
+
+    @pytest.mark.parametrize("kandidat", ["7c", "7C", "7bc", "7ac"])
+    def test_ohne_fuehrende_null(self, kandidat):
+        # Schreibt die Schule "7c" statt "07c", darf der Eintrag nicht
+        # stillschweigend verloren gehen.
+        assert class_matches(kandidat, "07c") is True
 
 
 class TestIsNextClass:
@@ -277,3 +285,38 @@ class TestUntisGrid:
         tt = plan[0]
         for stunde in (7, 8, 9):
             assert not any(tt.get(stunde, {}).values())
+
+
+class TestKlassenDiagnose:
+    """Die Diagnose unterscheidet 'keine Vertretung' von 'nicht erkannt'."""
+
+    def test_zaehlt_klassen(self, monkeypatch):
+        import fetch_and_build as fb
+
+        class FakeSeite:
+            def get_text(self, was):
+                return [(0, 0, 0, 0, "07c\n1\nGRU\n603\nfrei\n08a\n2\nMOR\n")]
+
+        class FakeDoc:
+            def __iter__(self): return iter([FakeSeite()])
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+
+        monkeypatch.setattr(fb.fitz, "open", lambda **kw: FakeDoc())
+        gefunden = fb.klassen_im_pdf(b"egal")
+        assert gefunden == {"07c": 1, "08a": 1}
+
+    def test_leeres_pdf_meldet_nichts(self, monkeypatch):
+        import fetch_and_build as fb
+
+        class FakeSeite:
+            def get_text(self, was):
+                return [(0, 0, 0, 0, "Kein Unterrichtsausfall\n")]
+
+        class FakeDoc:
+            def __iter__(self): return iter([FakeSeite()])
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+
+        monkeypatch.setattr(fb.fitz, "open", lambda **kw: FakeDoc())
+        assert fb.klassen_im_pdf(b"egal") == {}

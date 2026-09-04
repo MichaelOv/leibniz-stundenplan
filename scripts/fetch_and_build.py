@@ -34,7 +34,9 @@ def class_matches(s, my_class):
     if jg and bst:
         vjg   = re.search(r'(\d+)', s)
         vrest = re.sub(r'\d+', '', s)
-        if vjg and vjg.group(1) == jg.group(1) and bst.group(1) in vrest:
+        # Jahrgang numerisch vergleichen: schreibt die Schule "7c" statt "07c",
+        # wuerde ein reiner Textvergleich stillschweigend nichts mehr finden.
+        if vjg and int(vjg.group(1)) == int(jg.group(1)) and bst.group(1) in vrest:
             return True
     return False
 
@@ -175,6 +177,24 @@ def check_pdf_header(pdf_bytes, target_date):
             print(f"Warnung: pdf_stand konnte nicht geparst werden: {e}")
     return date_ok, pdf_stand
 
+def klassen_im_pdf(pdf_bytes):
+    """Alle klassenartigen Kuerzel im PDF mit Haeufigkeit.
+
+    Dient der Diagnose: damit laesst sich im Lauf-Log unterscheiden, ob es
+    fuer die Klasse wirklich keine Vertretung gibt oder ob die Klasse nur
+    nicht erkannt wurde (z.B. geaenderte Schreibweise).
+    """
+    zaehler = {}
+    with fitz.open(stream=pdf_bytes, filetype="pdf") as doc:
+        for page in doc:
+            for block in page.get_text("blocks"):
+                for ln in block[4].split("\n"):
+                    ln = ln.strip()
+                    if ln and is_next_class(ln):
+                        kern = ln.strip("()")
+                        zaehler[kern] = zaehler.get(kern, 0) + 1
+    return zaehler
+
 def parse_class_data(pdf_bytes, target_class):
     data = []
     with fitz.open(stream=pdf_bytes, filetype="pdf") as doc:
@@ -190,6 +210,19 @@ def parse_class_data(pdf_bytes, target_class):
                         i = next_i
                     else:
                         i += 1
+
+    gefunden = klassen_im_pdf(pdf_bytes)
+    if gefunden:
+        print("Klassen im PDF: " + ", ".join(f"{k}({n})" for k, n in sorted(gefunden.items())))
+    else:
+        print("Klassen im PDF: KEINE erkannt – Layout womoeglich geaendert.")
+    if not data:
+        passend = [k for k in gefunden if class_matches(k, target_class)]
+        if passend:
+            print(f"Hinweis: {target_class} steht im PDF ({', '.join(passend)}), "
+                  "aber es wurde kein Eintrag gelesen – bitte pruefen.")
+        else:
+            print(f"Keine Vertretung fuer {target_class} in diesem PDF.")
     print("Gesamt: " + str(len(data)) + " Eintraege")
     return data
 
