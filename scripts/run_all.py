@@ -5,27 +5,56 @@ import subprocess
 import sys
 import requests
 from pathlib import Path
-from datetime import datetime, date, timezone, timedelta
+from datetime import datetime, date, time, timezone, timedelta
 from zoneinfo import ZoneInfo
 
 _TZ_BERLIN = ZoneInfo("Europe/Berlin")
 from notify import send_ntfy
-from constants import DAYS_DE, NOTIFY_HOUR_CUTOFF
+from constants import DAYS_DE, NOTIFY_HOUR_CUTOFF, STUNDEN_ZEITEN
 
 BASE = Path(__file__).resolve().parent
 PYTHON = sys.executable
 DATA = BASE.parent / "data"
 
-def get_today():
-    """Aktueller Schultag fuer die Anzeige: heute, am Wochenende der Montag.
+def load_json_datei(pfad):
+    try:
+        with open(pfad, encoding="utf-8") as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return {}
 
-    Bewusst ohne Uhrzeit-Logik. Frueher sprang diese Funktion ab 9 Uhr auf den
-    Folgetag, weil sie zugleich das Ziel der Benachrichtigung bestimmte. Damit
-    zeigte das Dashboard waehrend des Unterrichts nicht mehr den laufenden Tag
-    und konnte die aktuelle Stunde nicht markieren. Fuer die Benachrichtigung
-    gibt es jetzt notify_ziel().
+def letzte_stunde(d: date):
+    """Hoechste Stundennummer, die an diesem Wochentag regulaer stattfindet."""
+    if d.weekday() > 4:
+        return None
+    plan = load_json_datei(DATA / "untis_7c.json")
+    tag = DAYS_DE[d.weekday()]
+    stunden = [int(k) for k, tage in plan.items()
+               if k.isdigit() and tage.get(tag)]
+    return max(stunden) if stunden else None
+
+def schulende(d: date):
+    """Uhrzeit, zu der an diesem Tag die letzte Stunde endet. None wenn unbekannt."""
+    s = letzte_stunde(d)
+    if s is None or s not in STUNDEN_ZEITEN:
+        return None
+    return time.fromisoformat(STUNDEN_ZEITEN[s][1])
+
+def get_today():
+    """Der Schultag, der jetzt interessiert.
+
+    Waehrend des Unterrichts der laufende Tag, damit die aktuelle Stunde
+    markiert werden kann. Nach der letzten Stunde und am Wochenende der
+    naechste Schultag, dann will man den neuen Stand sehen.
+
+    Ist der Stundenplan nicht lesbar, wird nicht umgeschaltet: lieber den
+    laufenden Tag zeigen als auf einer Vermutung den falschen.
     """
-    candidate = datetime.now(_TZ_BERLIN).date()
+    now = datetime.now(_TZ_BERLIN)
+    candidate = now.date()
+    ende = schulende(candidate)
+    if ende is not None and now.time() >= ende:
+        candidate += timedelta(days=1)
     while candidate.weekday() > 4:
         candidate += timedelta(days=1)
     return candidate.isoformat()
@@ -39,14 +68,14 @@ def get_tomorrow(today_str):
 def notify_ziel(today_str, tomorrow_str):
     """Tag, auf den sich die Push-Benachrichtigung bezieht.
 
-    Vor 9 Uhr der laufende Tag (man will vor der Schule wissen, was ausfaellt),
-    danach der naechste Schultag. Unveraendertes Verhalten, nur von der
-    Anzeigelogik getrennt.
+    Liegt der angezeigte Tag ohnehin in der Zukunft (Wochenende oder nach
+    Unterrichtsende), geht es um diesen. Waehrend eines laufenden Schultags
+    wie bisher: vor 9 Uhr der heutige Tag, danach der naechste.
     """
     now = datetime.now(_TZ_BERLIN)
-    if now.date().weekday() > 4 or now.hour >= NOTIFY_HOUR_CUTOFF:
-        return tomorrow_str
-    return today_str
+    if today_str != now.date().isoformat():
+        return today_str
+    return tomorrow_str if now.hour >= NOTIFY_HOUR_CUTOFF else today_str
 
 def run(script, *args) -> int:
     """Gibt den Exit-Code zurück: 0=OK, 1=kein Plan verfügbar, 2=echter Fehler."""

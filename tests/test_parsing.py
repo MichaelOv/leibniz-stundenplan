@@ -345,8 +345,11 @@ class TestAnzeigeUndBenachrichtigung:
 
     @pytest.mark.parametrize("iso, stunde, erwartet_heute", [
         ("2026-09-04", 7,  "2026-09-04"),   # Freitag frueh -> heute
-        ("2026-09-04", 12, "2026-09-04"),   # Freitag mittags -> weiterhin heute
-        ("2026-09-04", 20, "2026-09-04"),   # Freitag abends -> weiterhin heute
+        ("2026-09-04", 12, "2026-09-04"),   # mitten im Unterricht -> heute
+        ("2026-09-04", 13, "2026-09-04"),   # 13 Uhr, letzte Stunde laeuft noch
+        ("2026-09-04", 14, "2026-09-07"),   # nach Unterrichtsende -> Montag
+        ("2026-09-04", 20, "2026-09-07"),   # abends -> Montag
+        ("2026-09-02", 14, "2026-09-03"),   # Mittwoch nach Schluss -> Donnerstag
         ("2026-09-05", 10, "2026-09-07"),   # Samstag -> Montag
         ("2026-09-06", 10, "2026-09-07"),   # Sonntag -> Montag
     ])
@@ -355,10 +358,14 @@ class TestAnzeigeUndBenachrichtigung:
         assert ra.get_today() == erwartet_heute
 
     @pytest.mark.parametrize("iso, stunde, erwartet_ziel", [
-        ("2026-09-02", 7,  "heute"),    # vor 9 Uhr -> heute
-        ("2026-09-02", 9,  "morgen"),   # ab 9 Uhr -> morgen
-        ("2026-09-02", 15, "morgen"),
-        ("2026-09-05", 7,  "morgen"),   # Wochenende -> naechster Schultag
+        ("2026-09-02", 7,  "heute"),    # vor 9 Uhr, Tag laeuft -> heute
+        ("2026-09-02", 9,  "morgen"),   # ab 9 Uhr, Tag laeuft -> morgen
+        ("2026-09-02", 12, "morgen"),
+        # Nach Unterrichtsende ist "heute" schon der Folgetag, darueber wird
+        # benachrichtigt (nicht uebermorgen).
+        ("2026-09-02", 15, "heute"),
+        ("2026-09-04", 20, "heute"),    # Freitagabend -> Montag
+        ("2026-09-05", 7,  "heute"),    # Samstag -> Montag
     ])
     def test_benachrichtigungsziel(self, monkeypatch, iso, stunde, erwartet_ziel):
         ra = self._run_all(monkeypatch, iso, stunde)
