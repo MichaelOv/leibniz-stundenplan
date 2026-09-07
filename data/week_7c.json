@@ -201,8 +201,8 @@
           "fach_kurz": "PK",
           "lehrer": "BON",
           "raum": "433",
-          "status": "normal",
-          "vertreter": "",
+          "status": "vertretung",
+          "vertreter": "LUD",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -220,9 +220,9 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 0,
+      "vtg_count": 1,
       "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-04T14:08:00+02:00"
+      "pdf_stand": "2026-09-07T08:12:00+02:00"
     },
     {
       "date": "2026-09-09",
@@ -518,5 +518,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-07T06:10:22.430731+00:00"
+  "generated_at": "2026-09-07T06:15:19.888595+00:00"
 }

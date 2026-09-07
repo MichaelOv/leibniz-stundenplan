@@ -117,8 +117,8 @@
       "fach_kurz": "PK",
       "lehrer": "BON",
       "raum": "433",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "LUD",
       "hinweis": "",
       "lehrer_name": "",
       "vertreter_name": ""
@@ -136,9 +136,9 @@
       "vertreter_name": ""
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-09-07T06:10:22.394732+00:00",
-  "pdf_stand": "2026-09-04T14:08:00+02:00",
+  "vtg_count": 1,
+  "generated_at": "2026-09-07T06:15:19.847334+00:00",
+  "pdf_stand": "2026-09-07T08:12:00+02:00",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
 }
