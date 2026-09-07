@@ -1,5 +1,5 @@
 {
-  "valid_from": "2026-08-31",
+  "valid_from": "2026-09-07",
   "schuljahr": "2026/27",
   "1": {
     "Montag": [
@@ -143,8 +143,8 @@
     "Dienstag": [
       {
         "fach": ".ER",
-        "lehrer": "PER",
-        "raum": "433"
+        "lehrer": "PAR",
+        "raum": "A2.04Mu"
       },
       {
         "fach": "IR",
@@ -202,8 +202,8 @@
     "Donnerstag": [
       {
         "fach": ".ER",
-        "lehrer": "PER",
-        "raum": "609"
+        "lehrer": "PAR",
+        "raum": "A2.11"
       },
       {
         "fach": "IR",
