@@ -207,6 +207,11 @@ def build_plan(target_date=None, vtg_file="latest_7c.json"):
             key = (h, lhr)
             if key not in matched_sub_keys and ("HOUR", h) not in matched_sub_keys and h:
                 if not fach:
+                    # Hinweise wie "E statt Do. 10.9. 1. Std." nennen das Fach
+                    # direkt. Ohne diesen Schritt landete eine vorgezogene
+                    # Stunde als Platzhalter "Gruppe" im Plan.
+                    fach = resolve_vtg_fach("", text, FACH)
+                if not fach:
                     untis_lektionen = untis.get(h, {}).get(day_name, [])
                     les = next((les for les in untis_lektionen if les["lehrer"] == lhr), None)
                     if les:
@@ -226,13 +231,16 @@ def build_plan(target_date=None, vtg_file="latest_7c.json"):
                 # (text enthält z.B. "entfällt")
                 if fach.upper().startswith("NK") and not vtg and "entfall" not in text.lower() and "entfällt" not in text.lower():
                     continue
-                fname = fach_name(fach, FACH) if fach else "Gruppe"
+                fname = fach_name(fach, FACH) if fach else "Zusatzstunde"
                 status = "frei" if ist_ausfall(text, vtg) else ("vertretung" if vtg else "info")
+                # Lehrkraft vertritt sich selbst (z.B. vorgezogene Stunde):
+                # kein echter Wechsel, also keinen Vertreter anzeigen.
+                vtg_anzeige = "" if (ist_ausfall("", vtg) or vtg == lhr) else vtg
                 extra = {
                     "stunde": stunde_nr_u, "fach": fname, "fach_kurz": fach,
                     "lehrer": lhr, "raum": raum if raum else "\u2014",
                     "status": status,
-                    "vertreter": "" if vtg.lower() in ("frei","entfall") else vtg,
+                    "vertreter": vtg_anzeige,
                     "hinweis": text or ("Entfall" if status == "frei" else "")
                 }
                 plan.append(extra)

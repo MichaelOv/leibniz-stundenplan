@@ -377,3 +377,62 @@ class TestAnzeigeUndBenachrichtigung:
     def test_morgen_ueberspringt_wochenende(self, monkeypatch):
         ra = self._run_all(monkeypatch, "2026-09-04", 12)
         assert ra.get_tomorrow("2026-09-04") == "2026-09-07"
+
+
+class TestVorgezogeneStunde:
+    """Vorgezogene Stunden standen als Platzhalter "Gruppe" im Plan.
+
+    Realfall Mittwoch 09.09.2026: 'E statt Do. 10.9. 1. Std.', Lehrer und
+    Vertreter beide MOR. Das Fach steht nur im Hinweis, im regulaeren Plan
+    gibt es an dem Tag keine 1. Stunde.
+    """
+
+    def test_fach_kommt_aus_dem_hinweis(self):
+        assert resolve_vtg_fach("", "E statt Do. 10.9.1. Std.", {"E": "Englisch"}) == "E"
+
+    def _baue(self, tmp_path, monkeypatch, subs):
+        """Baut einen Tagesplan in einem eigenen Datenverzeichnis."""
+        import json, build_today
+        daten = tmp_path / "data"
+        daten.mkdir()
+        (daten / "untis_7c.json").write_text(json.dumps({
+            "valid_from": "2026-08-31", "schuljahr": "2026/27",
+            "2": {"Mittwoch": [{"fach": "E", "lehrer": "MOR", "raum": "433"}]},
+        }), encoding="utf-8")
+        (daten / "fach_mapping.json").write_text(json.dumps({"E": "Englisch"}), encoding="utf-8")
+        (daten / "lehrer_fach.json").write_text("{}", encoding="utf-8")
+        (daten / "lehrer_namen.json").write_text("{}", encoding="utf-8")
+        (daten / "vtg.json").write_text(json.dumps(
+            {"date": "2026-09-09", "class": "07c", "substitutions": subs}), encoding="utf-8")
+        monkeypatch.setattr(build_today, "BASE", tmp_path)
+        return build_today.build_plan("2026-09-09", vtg_file="vtg.json")
+
+    def test_vorgezogene_stunde_bekommt_ihr_fach(self, tmp_path, monkeypatch):
+        plan = self._baue(tmp_path, monkeypatch, [
+            {"klasse": "07c", "stunde": "1", "lehrer": "MOR", "vertreter": "MOR",
+             "raum": "433", "fach": "", "text": "E statt Do. 10.9.1. Std."},
+        ])
+        eintrag = [p for p in plan["plan"] if p["stunde"] == 1][0]
+        assert eintrag["fach"] == "Englisch"      # frueher "Gruppe"
+        assert eintrag["fach_kurz"] == "E"
+        assert eintrag["vertreter"] == ""         # MOR vertritt nicht sich selbst
+
+    def test_ohne_erkennbares_fach_neutraler_platzhalter(self, tmp_path, monkeypatch):
+        plan = self._baue(tmp_path, monkeypatch, [
+            {"klasse": "07c", "stunde": "1", "lehrer": "XYZ", "vertreter": "",
+             "raum": "", "fach": "", "text": "Raumaenderung"},
+        ])
+        eintrag = [p for p in plan["plan"] if p["stunde"] == 1][0]
+        # "Gruppe" klang nach einem Schulfach, das es nicht gibt
+        assert eintrag["fach"] == "Zusatzstunde"
+
+    @pytest.mark.parametrize("lehrer, vertreter, erwartet", [
+        ("MOR", "MOR", ""),      # Selbstvertretung: kein Wechsel
+        ("MOR", "SUB", "SUB"),   # echte Vertretung bleibt
+        ("MOR", "frei", ""),     # Ausfall ist kein Vertreter
+        ("MOR", "", ""),
+    ])
+    def test_selbstvertretung_wird_unterdrueckt(self, lehrer, vertreter, erwartet):
+        # gleiche Bedingung wie in build_today
+        ergebnis = "" if (ist_ausfall("", vertreter) or vertreter == lehrer) else vertreter
+        assert ergebnis == erwartet
