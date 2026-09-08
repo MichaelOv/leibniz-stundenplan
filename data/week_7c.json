@@ -315,9 +315,9 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei; verlegt auf Mi. 9.9. 1. Std.",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -327,9 +327,9 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -411,8 +411,8 @@
           "fach_kurz": "KR",
           "lehrer": "VOS",
           "raum": "102",
-          "status": "normal",
-          "vertreter": "",
+          "status": "vertretung",
+          "vertreter": "GRU",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -442,9 +442,9 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 0,
-      "has_vertretungsplan": false,
-      "pdf_stand": ""
+      "vtg_count": 3,
+      "has_vertretungsplan": true,
+      "pdf_stand": "2026-09-07T15:10:00+02:00"
     },
     {
       "date": "2026-09-11",
@@ -456,9 +456,9 @@
           "fach_kurz": "PK",
           "lehrer": "BON",
           "raum": "433",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -468,9 +468,11 @@
           "fach_kurz": "D",
           "lehrer": "GRU",
           "raum": "433",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
+          "status": "vertretung",
+          "vertreter": "MOR",
+          "hinweis": "E statt Mo. 14.9. 6. Std.",
+          "fach_neu": "Englisch",
+          "fach_neu_kurz": "E",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -491,10 +493,10 @@
           "fach": "Chemie",
           "fach_kurz": "CH",
           "lehrer": "WIN",
-          "raum": "CH106",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
+          "raum": "A2.12",
+          "status": "vertretung",
+          "vertreter": "DOT",
+          "hinweis": "KU",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -523,12 +525,12 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 0,
-      "has_vertretungsplan": false,
-      "pdf_stand": ""
+      "vtg_count": 3,
+      "has_vertretungsplan": true,
+      "pdf_stand": "2026-09-07T15:11:00+02:00"
     }
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-08T06:40:18.929349+00:00"
+  "generated_at": "2026-09-08T06:50:35.180368+00:00"
 }
