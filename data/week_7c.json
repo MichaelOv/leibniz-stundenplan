@@ -303,7 +303,7 @@
       ],
       "vtg_count": 1,
       "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-07T15:09:00+02:00"
+      "pdf_stand": "2026-09-08T15:14:00+02:00"
     },
     {
       "date": "2026-09-10",
@@ -386,10 +386,10 @@
           "fach": "Evangelische Rel.",
           "fach_kurz": "ER",
           "lehrer": "PAR",
-          "raum": "A2.11",
+          "raum": "A1.11",
           "status": "normal",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "ER Raumänderung wg. Klassenbedarfs",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -444,7 +444,7 @@
       ],
       "vtg_count": 3,
       "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-07T15:10:00+02:00"
+      "pdf_stand": "2026-09-08T15:16:00+02:00"
     },
     {
       "date": "2026-09-11",
@@ -527,10 +527,10 @@
       ],
       "vtg_count": 3,
       "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-07T15:11:00+02:00"
+      "pdf_stand": "2026-09-08T15:17:00+02:00"
     }
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-08T13:00:28.430590+00:00"
+  "generated_at": "2026-09-08T14:00:42.145181+00:00"
 }
