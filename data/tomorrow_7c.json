@@ -5,12 +5,12 @@
   "plan": [
     {
       "stunde": 1,
-      "fach": "Gruppe",
-      "fach_kurz": "",
+      "fach": "Englisch",
+      "fach_kurz": "E",
       "lehrer": "MOR",
       "raum": "433",
       "status": "vertretung",
-      "vertreter": "MOR",
+      "vertreter": "",
       "hinweis": "E statt Do. 10.9.1. Std.",
       "lehrer_name": "",
       "vertreter_name": ""
@@ -77,7 +77,7 @@
     }
   ],
   "vtg_count": 1,
-  "generated_at": "2026-09-08T06:15:20.651056+00:00",
+  "generated_at": "2026-09-08T06:20:20.203857+00:00",
   "pdf_stand": "2026-09-07T15:09:00+02:00",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
