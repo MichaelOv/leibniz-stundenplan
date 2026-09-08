@@ -65,6 +65,18 @@ def get_tomorrow(today_str):
         d += timedelta(days=1)
     return d.isoformat()
 
+def restliche_wochentage(today_str, tomorrow_str):
+    """Schultage der laufenden Woche ab heute, ohne heute und morgen.
+
+    Fuer diese Tage wird zusaetzlich ein Vertretungsplan geholt, damit die
+    Wochenansicht vollstaendig ist, sobald die Schule veroeffentlicht.
+    Vergangene Tage der Woche werden ausgelassen, die sind erledigt.
+    """
+    d = date.fromisoformat(today_str)
+    montag = d - timedelta(days=d.weekday())
+    tage = [(montag + timedelta(days=i)).isoformat() for i in range(5)]
+    return [t for t in tage if t >= today_str and t not in (today_str, tomorrow_str)]
+
 def notify_ziel(today_str, tomorrow_str):
     """Tag, auf den sich die Push-Benachrichtigung bezieht.
 
@@ -196,6 +208,18 @@ if __name__ == "__main__":
     if rc2 == 2:
         print("KRITISCHER FEHLER in Schritt 2 – Pipeline abgebrochen.")
         sys.exit(2)
+
+    extra_tage = restliche_wochentage(today, tomorrow)
+    if extra_tage:
+        print("=== Schritt 2b: Weitere Tage der Woche (" + ", ".join(extra_tage) + ") ===")
+        for tag in extra_tage:
+            # Ergaenzend fuer die Wochenansicht. Ein Fehler hier bricht die
+            # Pipeline nicht ab, heute und morgen sind bereits gesichert.
+            rc = run("fetch_and_build.py", tag, f"latest_7c_extra_{tag}.json")
+            if rc == 1:
+                print("  " + tag + ": noch kein Plan veroeffentlicht.")
+            elif rc == 2:
+                print("  " + tag + ": Abruf fehlgeschlagen, wird uebersprungen.")
 
     print("=== Schritt 3: Untis-Stundenplan laden ===")
     if untis_html_changed():

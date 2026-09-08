@@ -436,3 +436,62 @@ class TestVorgezogeneStunde:
         # gleiche Bedingung wie in build_today
         ergebnis = "" if (ist_ausfall("", vertreter) or vertreter == lehrer) else vertreter
         assert ergebnis == erwartet
+
+
+class TestAlleWochentageHolen:
+    """Die Wochenansicht soll alle veroeffentlichten Plaene zeigen, nicht nur
+    heute und morgen."""
+
+    def _run_all(self, monkeypatch):
+        import importlib, run_all
+        importlib.reload(run_all)
+        return run_all
+
+    @pytest.mark.parametrize("heute, erwartet", [
+        # Montag: Di ist "morgen", zusaetzlich Mi, Do, Fr
+        ("2026-09-07", ["2026-09-09", "2026-09-10", "2026-09-11"]),
+        ("2026-09-08", ["2026-09-10", "2026-09-11"]),
+        ("2026-09-09", ["2026-09-11"]),
+        ("2026-09-10", []),          # Do: nur noch Fr, und der ist "morgen"
+        ("2026-09-11", []),          # Fr: "morgen" ist schon naechste Woche
+    ])
+    def test_restliche_wochentage(self, monkeypatch, heute, erwartet):
+        ra = self._run_all(monkeypatch)
+        assert ra.restliche_wochentage(heute, ra.get_tomorrow(heute)) == erwartet
+
+    def test_vergangene_tage_werden_nicht_geholt(self, monkeypatch):
+        ra = self._run_all(monkeypatch)
+        # Mittwoch: Montag und Dienstag sind vorbei, kommen nicht mehr vor
+        tage = ra.restliche_wochentage("2026-09-09", "2026-09-10")
+        assert all(t >= "2026-09-09" for t in tage)
+
+    def test_build_week_findet_alle_dateien(self, tmp_path, monkeypatch):
+        import json, build_week
+        daten = tmp_path
+        (daten / "latest_7c.json").write_text(
+            json.dumps({"date": "2026-09-08", "substitutions": []}), encoding="utf-8")
+        (daten / "latest_7c_tomorrow.json").write_text(
+            json.dumps({"date": "2026-09-09", "substitutions": []}), encoding="utf-8")
+        (daten / "latest_7c_extra_2026-09-10.json").write_text(
+            json.dumps({"date": "2026-09-10", "substitutions": []}), encoding="utf-8")
+        (daten / "latest_7c_extra_2026-09-11.json").write_text(
+            json.dumps({"date": "2026-09-11", "substitutions": []}), encoding="utf-8")
+        monkeypatch.setattr(build_week, "DATA", daten)
+        zuordnung = build_week.vtg_file_by_date()
+        assert zuordnung == {
+            "2026-09-08": "latest_7c.json",
+            "2026-09-09": "latest_7c_tomorrow.json",
+            "2026-09-10": "latest_7c_extra_2026-09-10.json",
+            "2026-09-11": "latest_7c_extra_2026-09-11.json",
+        }
+
+    def test_hauptdatei_gewinnt_bei_gleichem_datum(self, tmp_path, monkeypatch):
+        import json, build_week
+        # Sollte ein Extra dasselbe Datum tragen, gilt die frisch geschriebene
+        # Hauptdatei.
+        (tmp_path / "latest_7c.json").write_text(
+            json.dumps({"date": "2026-09-08", "substitutions": []}), encoding="utf-8")
+        (tmp_path / "latest_7c_extra_2026-09-08.json").write_text(
+            json.dumps({"date": "2026-09-08", "substitutions": []}), encoding="utf-8")
+        monkeypatch.setattr(build_week, "DATA", tmp_path)
+        assert build_week.vtg_file_by_date()["2026-09-08"] == "latest_7c.json"

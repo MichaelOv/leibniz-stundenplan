@@ -18,24 +18,28 @@ from constants import DAYS_DE
 BASE = Path(__file__).resolve().parents[1]
 DATA = BASE / "data"
 
-# Vertretungsdateien, die run_all.py bereitstellt. Zuordnung erfolgt ueber das
-# date-Feld in der Datei, nicht ueber die Reihenfolge.
-VTG_FILES = ["latest_7c.json", "latest_7c_tomorrow.json"]
-
-
 def week_start(d: date) -> date:
     """Montag der Woche, die d enthaelt."""
     return d - timedelta(days=d.weekday())
 
 
 def vtg_file_by_date() -> dict:
-    """Mappt Datum -> Vertretungsdateiname fuer die vorhandenen Dateien."""
+    """Mappt Datum -> Vertretungsdateiname fuer alle vorhandenen Dateien.
+
+    run_all.py legt latest_7c.json (heute), latest_7c_tomorrow.json (morgen)
+    und latest_7c_extra_<datum>.json fuer die uebrigen Schultage der Woche an.
+    Zugeordnet wird ueber das date-Feld in der Datei, nicht ueber den Namen.
+    """
     mapping = {}
-    for name in VTG_FILES:
-        data = load_json(DATA / name)
+    # Extras zuerst, damit die beiden Hauptdateien bei gleichem Datum gewinnen:
+    # sie werden bei jedem Lauf frisch geschrieben.
+    dateien = sorted(DATA.glob("latest_7c*.json"),
+                     key=lambda p: ("extra" not in p.name, p.name))
+    for pfad in dateien:
+        data = load_json(pfad)
         d = data.get("date")
         if d:
-            mapping[d] = name
+            mapping[d] = pfad.name
     return mapping
 
 
