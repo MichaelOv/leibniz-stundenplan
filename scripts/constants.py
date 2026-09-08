@@ -4,6 +4,13 @@ from datetime import date
 DAYS_DE = {0: "Montag", 1: "Dienstag", 2: "Mittwoch", 3: "Donnerstag", 4: "Freitag"}
 NOTIFY_HOUR_CUTOFF = 9
 
+# Ab dieser Stunde werden auch die spaeteren Schultage der Woche abgerufen.
+# Beobachtung aus den PDF-Staenden: morgens (06:07, 07:28, 08:17) aktualisiert
+# die Schule nur den laufenden Tag, die kommenden Tage erscheinen nachmittags
+# (13:33, 15:09, 16:52). Der Cron laeuft morgens alle 5 Minuten; diese Tage
+# dort mitzuziehen waere Last ohne Gegenwert.
+WEEK_FETCH_FROM_HOUR = 9
+
 # Beginn und Ende jeder Stunde. Wird gebraucht, um nach der letzten Stunde des
 # Tages auf den naechsten Schultag umzuschalten.
 # Achtung: dieselbe Tabelle steht als ZEITEN auch in index.html fuer die

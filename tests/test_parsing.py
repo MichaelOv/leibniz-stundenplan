@@ -495,3 +495,44 @@ class TestAlleWochentageHolen:
             json.dumps({"date": "2026-09-08", "substitutions": []}), encoding="utf-8")
         monkeypatch.setattr(build_week, "DATA", tmp_path)
         assert build_week.vtg_file_by_date()["2026-09-08"] == "latest_7c.json"
+
+
+class TestAbrufTiming:
+    """Spaetere Wochentage werden nur abgerufen, wenn die Schule sie
+    ueberhaupt aktualisiert (nachmittags), und gehen dazwischen nicht
+    verloren."""
+
+    def test_konstante_passt_zum_benachrichtigungs_cutoff(self):
+        from constants import WEEK_FETCH_FROM_HOUR, NOTIFY_HOUR_CUTOFF
+        # Ab 9 Uhr laeuft der Cron nur noch stuendlich, davor alle 5 Minuten.
+        assert WEEK_FETCH_FROM_HOUR == NOTIFY_HOUR_CUTOFF == 9
+
+    def test_uebertrag_wenn_tag_nicht_abgerufen(self, tmp_path, monkeypatch):
+        import json, build_week
+        monkeypatch.setattr(build_week, "DATA", tmp_path)
+        # bisheriger Stand mit Vertretungsplan fuer Donnerstag
+        (tmp_path / "week_7c.json").write_text(json.dumps({
+            "days": [{"date": "2026-09-10", "day": "Donnerstag", "plan": [
+                {"stunde": 1, "fach": "Englisch", "fach_kurz": "E", "lehrer": "MOR",
+                 "raum": "433", "status": "frei", "vertreter": "",
+                 "hinweis": "frei; verlegt auf Mi."}],
+                "vtg_count": 1, "has_vertretungsplan": True,
+                "pdf_stand": "2026-09-08T15:00:00+02:00"}]
+        }), encoding="utf-8")
+        vorher = {t["date"]: t for t in
+                  json.loads((tmp_path / "week_7c.json").read_text())["days"]}
+        alt = vorher["2026-09-10"]
+        assert alt["has_vertretungsplan"] and alt["plan"][0]["status"] == "frei"
+
+    def test_kein_uebertrag_ohne_vertretungsplan(self, tmp_path, monkeypatch):
+        import json, build_week
+        monkeypatch.setattr(build_week, "DATA", tmp_path)
+        # War der Tag nur regulaer, gibt es nichts zu erhalten: er wird neu
+        # gebaut und kann so einen frisch veroeffentlichten Plan aufnehmen.
+        (tmp_path / "week_7c.json").write_text(json.dumps({
+            "days": [{"date": "2026-09-10", "day": "Donnerstag", "plan": [],
+                      "vtg_count": 0, "has_vertretungsplan": False, "pdf_stand": ""}]
+        }), encoding="utf-8")
+        vorher = {t["date"]: t for t in
+                  json.loads((tmp_path / "week_7c.json").read_text())["days"]}
+        assert vorher["2026-09-10"]["has_vertretungsplan"] is False

@@ -3,10 +3,14 @@
 vorhandenen Vertretungsdaten nach data/week_7c.json.
 
 Der regulaere Wochenplan liegt vollstaendig in untis_7c.json vor. Vertretungen
-gibt es quellenbedingt nur fuer die Tage, fuer die die Schule ein PDF
-veroeffentlicht hat (praktisch heute und morgen). Tage ohne Vertretungsdaten
-werden mit has_vertretungsplan=False gekennzeichnet, damit im Frontend kein
-falscher Eindruck von Vollstaendigkeit entsteht.
+gibt es nur fuer die Tage, fuer die die Schule bereits ein PDF veroeffentlicht
+hat. Tage ohne Vertretungsdaten werden mit has_vertretungsplan=False
+gekennzeichnet, damit im Frontend kein falscher Eindruck von Vollstaendigkeit
+entsteht.
+
+Wurde ein Tag in einem frueheren Lauf schon mit Vertretungsplan gebaut, bleibt
+dieser Stand erhalten, wenn er in diesem Lauf nicht abgerufen wurde (morgens
+werden nur der laufende Tag und der Folgetag geholt).
 """
 import json, sys
 from pathlib import Path
@@ -43,13 +47,18 @@ def vtg_file_by_date() -> dict:
     return mapping
 
 
-def build_week(target_date: str | None = None) -> dict:
+def build_week(target_date: str | None = None, vorher_datei: str = "week_7c.json") -> dict:
     if target_date:
         base_day = date.fromisoformat(target_date)
     else:
         base_day = datetime.now(timezone.utc).date()
     monday = week_start(base_day)
     by_date = vtg_file_by_date()
+
+    # Bisherigen Stand einlesen. Morgens werden die spaeteren Wochentage nicht
+    # abgerufen (siehe WEEK_FETCH_FROM_HOUR); ohne diesen Uebertrag wuerden
+    # ihre bereits bekannten Vertretungen bis 9 Uhr aus der Ansicht fallen.
+    vorher = {t.get("date"): t for t in load_json(DATA / vorher_datei).get("days", [])}
 
     days = []
     untis_stale = False
@@ -58,6 +67,11 @@ def build_week(target_date: str | None = None) -> dict:
         d = monday + timedelta(days=offset)
         iso = d.isoformat()
         vtg = by_date.get(iso)
+        if vtg is None:
+            alt = vorher.get(iso)
+            if alt and alt.get("has_vertretungsplan"):
+                days.append(alt)
+                continue
         # Ohne passende Vertretungsdatei einen leeren Platzhalter verwenden,
         # damit build_plan den regulaeren Plan liefert.
         plan_data = build_plan(iso, vtg_file=vtg or "__keine__.json")
@@ -91,7 +105,7 @@ if __name__ == "__main__":
         print("FEHLER: untis_7c.json fehlt – bitte parse_untis.py ausführen.")
         sys.exit(1)
 
-    week = build_week(target)
+    week = build_week(target, vorher_datei=out_file)
     if not week["days"]:
         print("FEHLER: Keine Tage gebaut.")
         sys.exit(1)

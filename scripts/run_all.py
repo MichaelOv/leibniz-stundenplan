@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 
 _TZ_BERLIN = ZoneInfo("Europe/Berlin")
 from notify import send_ntfy
-from constants import DAYS_DE, NOTIFY_HOUR_CUTOFF, STUNDEN_ZEITEN
+from constants import DAYS_DE, NOTIFY_HOUR_CUTOFF, STUNDEN_ZEITEN, WEEK_FETCH_FROM_HOUR
 
 BASE = Path(__file__).resolve().parent
 PYTHON = sys.executable
@@ -210,6 +210,10 @@ if __name__ == "__main__":
         sys.exit(2)
 
     extra_tage = restliche_wochentage(today, tomorrow)
+    if extra_tage and datetime.now(_TZ_BERLIN).hour < WEEK_FETCH_FROM_HOUR:
+        print("=== Schritt 2b: uebersprungen (vor " + str(WEEK_FETCH_FROM_HOUR)
+              + " Uhr aktualisiert die Schule nur den laufenden Tag) ===")
+        extra_tage = []
     if extra_tage:
         print("=== Schritt 2b: Weitere Tage der Woche (" + ", ".join(extra_tage) + ") ===")
         for tag in extra_tage:
