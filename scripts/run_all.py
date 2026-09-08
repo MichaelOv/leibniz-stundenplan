@@ -156,25 +156,31 @@ def build_and_notify(target, out_file, label, vtg_file="latest_7c.json", notify=
     alle_stunden = plan_data.get("plan", [])
     aenderungen = [p for p in alle_stunden if p["status"] in ("frei", "vertretung", "info")]
 
-    if aenderungen:
-        msg_zeilen = []
-        for p in alle_stunden:
-            mark = f" [{p['status'].upper()}]" if p["status"] != "normal" else ""
-            vtg_str = f" -> {p['vertreter']}" if p["vertreter"] else ""
-            hinweis = f" | {p['hinweis']}" if p["hinweis"] else ""
-            line = f"Std {p['stunde']} {p['fach']} ({p['lehrer']}) {p['raum']}{mark}{vtg_str}{hinweis}"
-            if p["status"] == "frei":
-                msg_zeilen.append("❌ " + line)
-            elif p["status"] == "vertretung":
-                msg_zeilen.append("🔄 " + line)
-            elif p["status"] == "info":
-                msg_zeilen.append("📋 " + line)
-            else:
-                msg_zeilen.append("   " + line)
+    msg_zeilen = []
+    for p in alle_stunden:
+        mark = f" [{p['status'].upper()}]" if p["status"] != "normal" else ""
+        vtg_str = f" -> {p['vertreter']}" if p["vertreter"] else ""
+        hinweis = f" | {p['hinweis']}" if p["hinweis"] else ""
+        line = f"Std {p['stunde']} {p['fach']} ({p['lehrer']}) {p['raum']}{mark}{vtg_str}{hinweis}"
+        if p["status"] == "frei":
+            msg_zeilen.append("❌ " + line)
+        elif p["status"] == "vertretung":
+            msg_zeilen.append("🔄 " + line)
+        elif p["status"] == "info":
+            msg_zeilen.append("📋 " + line)
+        else:
+            msg_zeilen.append("   " + line)
 
+    d = date.fromisoformat(target)
+    day_label = DAYS_DE[d.weekday()] + " " + str(d.day) + "." + str(d.month) + "."
+    # Wurde zu diesem Tag schon einmal etwas gemeldet, existiert seine
+    # Hash-Datei. Faellt die Aenderung spaeter weg, ist die Ruecknahme selbst
+    # eine Nachricht wert: sonst richtet man sich nach einem Ausfall, den es
+    # nicht mehr gibt.
+    schon_gemeldet = (DATA / f"last_ntfy_hash_{target}.txt").exists()
+
+    if aenderungen:
         if notify:
-            d = date.fromisoformat(target)
-            day_label = DAYS_DE[d.weekday()] + " " + str(d.day) + "." + str(d.month) + "."
             ok = send_ntfy(
                 title="Änderung 7c " + day_label,
                 msg="\n".join(msg_zeilen),
@@ -183,6 +189,16 @@ def build_and_notify(target, out_file, label, vtg_file="latest_7c.json", notify=
             )
             if ok:
                 print("Benachrichtigung gesendet!")
+    elif notify and schon_gemeldet:
+        ok = send_ntfy(
+            title="Wieder regulär 7c " + day_label,
+            msg="Die gemeldete Änderung wurde zurückgenommen.\n\n"
+                + "\n".join(msg_zeilen),
+            priority=3,
+            hash_suffix=target
+        )
+        if ok:
+            print("Ruecknahme gemeldet!")
     else:
         print("Keine Änderungen – keine Benachrichtigung.")
 

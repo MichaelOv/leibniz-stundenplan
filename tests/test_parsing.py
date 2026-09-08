@@ -536,3 +536,59 @@ class TestAbrufTiming:
         vorher = {t["date"]: t for t in
                   json.loads((tmp_path / "week_7c.json").read_text())["days"]}
         assert vorher["2026-09-10"]["has_vertretungsplan"] is False
+
+
+class TestRuecknahmeMeldung:
+    """Wird ein gemeldeter Ausfall zurueckgenommen, muss das ebenfalls
+    ankommen. Sonst richtet man sich nach einem Ausfall, den es nicht
+    mehr gibt."""
+
+    def _vorbereiten(self, tmp_path, monkeypatch, plan):
+        import json, importlib, run_all
+        importlib.reload(run_all)
+        monkeypatch.setattr(run_all, "DATA", tmp_path)
+        (tmp_path / "tag.json").write_text(json.dumps({
+            "date": "2026-09-10", "day": "Donnerstag", "plan": plan}), encoding="utf-8")
+
+        class FakeResult:
+            returncode = 0
+            stdout = ""
+        monkeypatch.setattr(run_all.subprocess, "run", lambda *a, **k: FakeResult())
+
+        gesendet = []
+        monkeypatch.setattr(run_all, "send_ntfy",
+                            lambda title, msg, priority=3, hash_suffix="": (
+                                gesendet.append((title, msg)), True)[1])
+        return run_all, gesendet
+
+    AUSFALL = [{"stunde": 1, "fach": "Englisch", "lehrer": "MOR", "raum": "433",
+                "status": "frei", "vertreter": "", "hinweis": "verlegt"}]
+    NORMAL  = [{"stunde": 1, "fach": "Englisch", "lehrer": "MOR", "raum": "433",
+                "status": "normal", "vertreter": "", "hinweis": ""}]
+
+    def test_aenderung_wird_gemeldet(self, tmp_path, monkeypatch):
+        ra, gesendet = self._vorbereiten(tmp_path, monkeypatch, self.AUSFALL)
+        ra.build_and_notify("2026-09-10", "tag.json", "Morgen")
+        assert len(gesendet) == 1
+        assert gesendet[0][0].startswith("Änderung")
+
+    def test_ruecknahme_wird_gemeldet(self, tmp_path, monkeypatch):
+        ra, gesendet = self._vorbereiten(tmp_path, monkeypatch, self.NORMAL)
+        # Zu dem Tag wurde vorher etwas gemeldet: Hash-Datei existiert
+        (tmp_path / "last_ntfy_hash_2026-09-10.txt").write_text("alterhash")
+        ra.build_and_notify("2026-09-10", "tag.json", "Morgen")
+        assert len(gesendet) == 1
+        assert gesendet[0][0].startswith("Wieder regulär")
+        assert "zurückgenommen" in gesendet[0][1]
+
+    def test_ohne_vorherige_meldung_kein_laerm(self, tmp_path, monkeypatch):
+        ra, gesendet = self._vorbereiten(tmp_path, monkeypatch, self.NORMAL)
+        # Kein Hash zu diesem Tag -> es gab nie eine Meldung -> nichts senden
+        ra.build_and_notify("2026-09-10", "tag.json", "Morgen")
+        assert gesendet == []
+
+    def test_notify_aus_bleibt_still(self, tmp_path, monkeypatch):
+        ra, gesendet = self._vorbereiten(tmp_path, monkeypatch, self.NORMAL)
+        (tmp_path / "last_ntfy_hash_2026-09-10.txt").write_text("alterhash")
+        ra.build_and_notify("2026-09-10", "tag.json", "Morgen", notify=False)
+        assert gesendet == []
