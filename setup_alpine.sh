@@ -13,6 +13,6 @@ echo "=== GitHub SSH Key bereit: $(cat ~/.ssh/id_ed25519.pub) ==="
 python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 
 echo "✅ Setup komplett!"
