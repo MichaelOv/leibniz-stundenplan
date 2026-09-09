@@ -48,7 +48,7 @@ Ist für einen Tag kein PDF abrufbar (Ferien, Wochenende, noch nicht hochgeladen
 Erreichbar über GitHub Pages, lokal über `server.py` auf Port 8080.
 
 - **Drei Reiter:** der laufende Schultag, der Folgetag und die **Woche** (Standardansicht). Die Wochenansicht zeigt ab 720px ein Raster, auf dem Handy Tageskarten, beides aus demselben Markup.
-- **Jetzt und Schluss:** Die laufende Stunde wird hervorgehoben, dazu Restzeit sowie Beginn und Ende des Tages. Weicht das vom regulären Rahmen ab, steht es dabei ("Schluss 12:50, eine Stunde früher").
+- **Jetzt, Pause und Schluss:** Die laufende Stunde wird hervorgehoben, dazu Restzeit sowie Beginn und Ende des Tages. Weicht das vom regulären Rahmen ab, steht es dabei ("Schluss 12:50, eine Stunde früher"). In der Pause steht dort "Pause bis 10:15, danach 3. Std Sport", und die kommende Stunde ist schwächer markiert als eine laufende.
 - **Fachfarben:** exakt die Farben aus dem Untis-Export der Schule. Im dunklen Design abgedunkelt, damit die Vollton-Farben nicht blenden.
 - **Kurswahl:** Der Untis-Plan listet alle Parallelkurse der Klasse (Latein/Französisch, die Religionen). Über den Knopf *Kurse* lässt sich auswählen, welche belegt sind. Die Auswahl wird im Browser gespeichert und gilt nur auf dem jeweiligen Gerät, die Push-Nachrichten bleiben ungefiltert.
 - **PWA:** Die Seite ist aufs Handy installierbar und offline nutzbar. Plandaten werden dabei immer zuerst aus dem Netz geladen, der Cache dient nur als Rückfallebene, damit nie ein veralteter Plan angezeigt wird.

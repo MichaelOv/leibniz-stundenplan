@@ -71,6 +71,10 @@
     tr.row-frei td:first-child{color:var(--color-text)}
     tr.row-now{background:var(--color-primary-highlight)}
     tr.row-now td:first-child{box-shadow:inset 3px 0 0 var(--color-primary)}
+    /* Kommende Stunde (Pause oder vor Schulbeginn): erkennbar, aber klar
+       schwaecher als die laufende, damit beide unterscheidbar bleiben. */
+    tr.row-next td:first-child{box-shadow:inset 3px 0 0 var(--color-border)}
+    tr.row-next td{background:var(--color-surface-2)}
     .tag{display:inline-flex;padding:.25rem .55rem;border-radius:999px;font-size:var(--text-xs);font-weight:700}
     .tag.normal{background:rgba(67,122,34,.1);color:var(--color-success)}
     .tag.vertretung{background:rgba(150,66,25,.12);color:var(--color-warning)}
@@ -127,6 +131,7 @@
     .wk-lesson.is-vertretung{border-left-color:var(--color-warning)}
     .wk-lesson.is-info{background:transparent;border-left-color:var(--color-text-muted);color:var(--color-text-muted)}
     .wk-lesson.is-now{outline:2px solid var(--color-primary);outline-offset:1px}
+    .wk-lesson.is-next{outline:2px dashed var(--color-text-muted);outline-offset:1px}
 
     /* Dark Mode: gleiche Untis-Farbtoene, aber abgedunkelt, damit die grellen
        Vollton-Flaechen nicht blenden. Schrift wechselt dabei auf Weiss:
@@ -361,7 +366,15 @@
       if (m >= toMin(s) && m < toMin(e)) return {aktuell: p, restMin: toMin(e) - m};
     }
     const naechste = kandidaten.find(p => m < toMin(ZEITEN[p.stunde][0]));
-    return naechste ? {naechste, bisMin: toMin(ZEITEN[naechste.stunde][0]) - m} : {};
+    if (!naechste) return {};
+    // Pause heisst: heute lief schon eine Stunde und die naechste steht an.
+    // Davor ist es "vor Schulbeginn", danach "Unterricht beendet".
+    const schonVorbei = kandidaten.some(p => m >= toMin(ZEITEN[p.stunde][1]));
+    return {
+      naechste,
+      bisMin: toMin(ZEITEN[naechste.stunde][0]) - m,
+      inPause: schonVorbei
+    };
   }
 
   function stundenWort(n) { return n === 1 ? 'eine Stunde' : n + ' Stunden'; }
@@ -379,6 +392,12 @@
         teile.push('<span><b>Jetzt:</b> ' + j.aktuell.stunde + '. Std ' + esc(j.aktuell.fach)
           + (j.aktuell.raum ? ', Raum ' + esc(j.aktuell.raum) : '')
           + ' <span class="sep">(noch ' + j.restMin + ' min)</span></span>');
+      } else if (j.naechste && j.inPause) {
+        teile.push('<span><b>Pause</b> bis ' + ZEITEN[j.naechste.stunde][0].replace(/^0/,'')
+          + ' <span class="sep">(noch ' + j.bisMin + ' min)</span></span>');
+        teile.push('<span><b>Danach:</b> ' + j.naechste.stunde + '. Std '
+          + esc(j.naechste.fach)
+          + (j.naechste.raum ? ', Raum ' + esc(j.naechste.raum) : '') + '</span>');
       } else if (j.naechste) {
         const bis = j.bisMin >= 60
           ? Math.floor(j.bisMin/60) + ' h ' + (j.bisMin%60) + ' min'
@@ -631,6 +650,7 @@
     renderNowBox(d.plan, d.date);
     const j = d.date === localToday() ? jetztInfo(d.plan) : {};
     const aktuelleStd = j.aktuell ? j.aktuell.stunde : null;
+    const naechsteStd = j.naechste ? j.naechste.stunde : null;
 
     tbody.innerHTML = d.plan.map(p => {
       const labels = {normal:'Regulär', vertretung:'Vertretung', frei:'Fällt aus', info:'Info'};
@@ -648,7 +668,8 @@
       }
       const zeit = ZEITEN[p.stunde]
         ? '<div class="zeit">' + zeitLabel(p.stunde) + '</div>' : '';
-      const nowCls = p.stunde === aktuelleStd ? ' row-now' : '';
+      const nowCls = p.stunde === aktuelleStd ? ' row-now'
+                   : (p.stunde === naechsteStd ? ' row-next' : '');
       return '<tr class="row-' + p.status + nowCls + '">'
         + '<td><strong>' + p.stunde + '</strong>' + zeit + '</td>'
         + '<td>' + dot + fachCell + '</td>'
@@ -719,10 +740,12 @@
       t.plan.forEach(p => { (byStd[p.stunde] = byStd[p.stunde] || []).push(p); });
       const jetzt = t.date === heute ? jetztInfo(t.plan) : {};
       const aktuelleStd = jetzt.aktuell ? jetzt.aktuell.stunde : null;
+      const naechsteStd = jetzt.naechste ? jetzt.naechste.stunde : null;
 
       Object.keys(byStd).map(Number).sort((a,b) => a-b).forEach(s => {
         const lessons = byStd[s].map(p => {
-          const cls = 'wk-lesson is-' + p.status + (s === aktuelleStd ? ' is-now' : '');
+          const cls = 'wk-lesson is-' + p.status
+                    + (s === aktuelleStd ? ' is-now' : (s === naechsteStd ? ' is-next' : ''));
           const fach = p.fach_neu ? p.fach_neu : p.fach;
           // Bei Vertretung die tatsaechlich unterrichtende Person zeigen,
           // nicht die urspruengliche. Der Pfeil markiert den Wechsel.
