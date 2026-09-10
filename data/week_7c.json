@@ -444,7 +444,7 @@
       ],
       "vtg_count": 3,
       "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-09T10:37:00+02:00"
+      "pdf_stand": "2026-09-10T07:42:00+02:00"
     },
     {
       "date": "2026-09-11",
@@ -532,5 +532,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-10T05:45:21.267995+00:00"
+  "generated_at": "2026-09-10T05:50:20.015323+00:00"
 }
