@@ -1,9 +1,9 @@
 {
-  "week_start": "2026-09-07",
+  "week_start": "2026-09-14",
   "class": "07c",
   "days": [
     {
-      "date": "2026-09-07",
+      "date": "2026-09-14",
       "day": "Montag",
       "plan": [
         {
@@ -59,10 +59,12 @@
           "fach": "Erdkunde",
           "fach_kurz": "EK",
           "lehrer": "MAN",
-          "raum": "433",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
+          "raum": "PH204",
+          "status": "vertretung",
+          "vertreter": "WIN",
+          "hinweis": "CH statt Di. 15.9. 6. Std.",
+          "fach_neu": "Chemie",
+          "fach_neu_kurz": "CH",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -72,19 +74,19 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei; verlegt auf Fr. 11.9. 2. Std.",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 0,
-      "has_vertretungsplan": false,
-      "pdf_stand": ""
+      "vtg_count": 2,
+      "has_vertretungsplan": true,
+      "pdf_stand": "2026-09-11T10:09:00+02:00"
     },
     {
-      "date": "2026-09-08",
+      "date": "2026-09-15",
       "day": "Dienstag",
       "plan": [
         {
@@ -201,9 +203,9 @@
           "fach_kurz": "PK",
           "lehrer": "BON",
           "raum": "433",
-          "status": "vertretung",
-          "vertreter": "LUD",
-          "hinweis": "",
+          "status": "frei",
+          "vertreter": "",
+          "hinweis": "frei",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -213,33 +215,21 @@
           "fach_kurz": "CH",
           "lehrer": "WIN",
           "raum": "CH104",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei; verlegt auf Mo. 14.9. 5. Std.",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 1,
+      "vtg_count": 2,
       "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-07T08:17:00+02:00"
+      "pdf_stand": "2026-09-11T10:15:00+02:00"
     },
     {
-      "date": "2026-09-09",
+      "date": "2026-09-16",
       "day": "Mittwoch",
       "plan": [
-        {
-          "stunde": 1,
-          "fach": "Englisch",
-          "fach_kurz": "E",
-          "lehrer": "MOR",
-          "raum": "433",
-          "status": "vertretung",
-          "vertreter": "",
-          "hinweis": "E statt Do. 10.9.1. Std.",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        },
         {
           "stunde": 2,
           "fach": "Englisch",
@@ -301,12 +291,12 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 1,
-      "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-09T10:21:00+02:00"
+      "vtg_count": 0,
+      "has_vertretungsplan": false,
+      "pdf_stand": ""
     },
     {
-      "date": "2026-09-10",
+      "date": "2026-09-17",
       "day": "Donnerstag",
       "plan": [
         {
@@ -315,9 +305,9 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei; verlegt auf Mi. 9.9. 1. Std.",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -327,9 +317,9 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -386,10 +376,10 @@
           "fach": "Evangelische Rel.",
           "fach_kurz": "ER",
           "lehrer": "PAR",
-          "raum": "A1.11",
+          "raum": "A2.11",
           "status": "normal",
           "vertreter": "",
-          "hinweis": "ER Raumänderung wg. Klassenbedarfs",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -411,8 +401,8 @@
           "fach_kurz": "KR",
           "lehrer": "VOS",
           "raum": "102",
-          "status": "vertretung",
-          "vertreter": "GRU",
+          "status": "normal",
+          "vertreter": "",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -442,12 +432,12 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 3,
-      "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-10T07:42:00+02:00"
+      "vtg_count": 0,
+      "has_vertretungsplan": false,
+      "pdf_stand": ""
     },
     {
-      "date": "2026-09-11",
+      "date": "2026-09-18",
       "day": "Freitag",
       "plan": [
         {
@@ -456,9 +446,9 @@
           "fach_kurz": "PK",
           "lehrer": "BON",
           "raum": "433",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -468,11 +458,9 @@
           "fach_kurz": "D",
           "lehrer": "GRU",
           "raum": "433",
-          "status": "vertretung",
-          "vertreter": "MOR",
-          "hinweis": "E statt Mo. 14.9. 6. Std.",
-          "fach_neu": "Englisch",
-          "fach_neu_kurz": "E",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -493,10 +481,10 @@
           "fach": "Chemie",
           "fach_kurz": "CH",
           "lehrer": "WIN",
-          "raum": "433",
-          "status": "vertretung",
-          "vertreter": "NYE",
-          "hinweis": "KU",
+          "raum": "CH106",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -525,12 +513,12 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 3,
-      "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-11T10:06:00+02:00"
+      "vtg_count": 0,
+      "has_vertretungsplan": false,
+      "pdf_stand": ""
     }
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-11T11:00:20.710103+00:00"
+  "generated_at": "2026-09-11T12:00:33.682949+00:00"
 }
