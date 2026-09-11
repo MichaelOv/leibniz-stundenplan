@@ -46,10 +46,10 @@
       "fach": "Chemie",
       "fach_kurz": "CH",
       "lehrer": "WIN",
-      "raum": "A2.12",
+      "raum": "433",
       "status": "vertretung",
-      "vertreter": "DOT",
-      "hinweis": "KU",
+      "vertreter": "LUD",
+      "hinweis": "",
       "lehrer_name": "",
       "vertreter_name": ""
     },
@@ -79,8 +79,8 @@
     }
   ],
   "vtg_count": 3,
-  "generated_at": "2026-09-11T05:55:23.791006+00:00",
-  "pdf_stand": "2026-09-09T10:27:00+02:00",
+  "generated_at": "2026-09-11T06:00:24.696969+00:00",
+  "pdf_stand": "2026-09-11T07:55:00+02:00",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
 }
