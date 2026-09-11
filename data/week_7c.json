@@ -495,8 +495,8 @@
           "lehrer": "WIN",
           "raum": "433",
           "status": "vertretung",
-          "vertreter": "LUD",
-          "hinweis": "",
+          "vertreter": "NYE",
+          "hinweis": "KU",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -527,10 +527,10 @@
       ],
       "vtg_count": 3,
       "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-11T07:55:00+02:00"
+      "pdf_stand": "2026-09-11T08:07:00+02:00"
     }
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-11T06:05:26.628530+00:00"
+  "generated_at": "2026-09-11T06:10:39.960185+00:00"
 }
