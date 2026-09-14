@@ -84,7 +84,8 @@ def build_week(target_date: str | None = None, vorher_datei: str = "week_7c.json
             "day": DAYS_DE[d.weekday()],
             "plan": plan_data["plan"],
             "vtg_count": plan_data["vtg_count"],
-            "has_vertretungsplan": vtg is not None,
+            "has_vertretungsplan": vtg is not None and not plan_data.get("schulfrei"),
+            "schulfrei": plan_data.get("schulfrei", ""),
             "pdf_stand": plan_data["pdf_stand"],
         })
 

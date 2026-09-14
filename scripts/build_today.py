@@ -35,6 +35,14 @@ def load_untis(target_date: str):
 def load_lehrer_fach():
     return load_json(BASE / "data" / "lehrer_fach.json")
 
+def load_schulfrei():
+    """Unterrichtsfreie Tage (Studientage, bewegliche Ferientage, Ausfluege).
+
+    Solche Tage stehen oft in keinem Vertretungsplan. Ohne diese Liste wuerde
+    das Dashboard einen vollen Schultag anzeigen.
+    """
+    return load_json(BASE / "data" / "schulfrei.json")
+
 def load_lehrer_namen():
     return load_json(BASE / "data" / "lehrer_namen.json")
 
@@ -110,6 +118,17 @@ def build_plan(target_date=None, vtg_file="latest_7c.json"):
     day_name = DAYS_DE[weekday]
     if not (BASE / "data" / "untis_7c.json").exists():
         return None
+
+    grund = load_schulfrei().get(target_date)
+    if grund:
+        return {
+            "date": target_date, "day": day_name, "class": "07c",
+            "plan": [], "vtg_count": 0,
+            "schulfrei": grund,
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "pdf_stand": "",
+            "untis_schuljahr": "", "untis_stale": False,
+        }
     untis, untis_schuljahr = load_untis(target_date)
     vtg_data = load_json(BASE / "data" / vtg_file)
     subs = vtg_data.get("substitutions", [])
@@ -298,6 +317,7 @@ def build_plan(target_date=None, vtg_file="latest_7c.json"):
         "vtg_count": len([p for p in plan if p["status"] in ("frei","vertretung")]),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "pdf_stand": pdf_stand,
+        "schulfrei": "",
         "untis_schuljahr": untis_schuljahr or "",
         "untis_stale": bool(untis_schuljahr and untis_schuljahr != erwartet),
     }

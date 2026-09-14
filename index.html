@@ -87,6 +87,12 @@
     .fach-strike{text-decoration:line-through;opacity:.45}
     .fach-dot{display:inline-block;width:.6rem;height:.6rem;border-radius:3px;margin-right:.45rem;vertical-align:baseline;background:var(--fach-color);border:1px solid rgba(0,0,0,.25)}
     .empty{padding:var(--space-8);text-align:center;color:var(--color-text-muted)}
+    .frei-box{padding:var(--space-6);text-align:center;border:1px dashed var(--color-border);
+      border-radius:var(--radius-md);background:var(--color-surface-2)}
+    .frei-box strong{display:block;font-family:var(--font-display);font-size:var(--text-lg);
+      margin-bottom:var(--space-1)}
+    .frei-box span{color:var(--color-text-muted);font-size:var(--text-sm)}
+    .wk-frei{font-size:var(--text-xs);color:var(--color-text-muted);font-style:italic;padding:.3rem 0}
     .error-box{background:rgba(139,26,26,.08);border:1px solid rgba(139,26,26,.2);border-radius:var(--radius-md);padding:var(--space-4);color:var(--color-frei);font-size:var(--text-sm);margin-top:var(--space-4)}
     .warn-box{background:rgba(150,66,25,.1);border:1px solid rgba(150,66,25,.28);border-radius:var(--radius-md);padding:var(--space-4);color:var(--color-warning);font-size:var(--text-sm);margin-top:var(--space-4)}
     .kurse-panel{margin-top:var(--space-4);padding:var(--space-4)}
@@ -641,6 +647,14 @@
     setPill(d.vtg_count);
 
     const tbody = document.getElementById('planBody');
+    if (d.schulfrei) {
+      document.getElementById('nowBox').innerHTML =
+        '<span class="frei-box" style="flex:1"><strong>Schulfrei</strong>'
+        + '<span>' + esc(d.schulfrei) + '</span></span>';
+      document.getElementById('nowBox').style.display = 'flex';
+      tbody.innerHTML = '<tr><td colspan="5" class="empty">Kein Unterricht an diesem Tag.</td></tr>';
+      return;
+    }
     if (!d.plan || d.plan.length === 0) {
       document.getElementById('nowBox').style.display = 'none';
       tbody.innerHTML = '<tr><td colspan="5" class="empty">Keine Einträge für diesen Tag.</td></tr>';
@@ -730,12 +744,19 @@
     const heute = localToday();
     days.forEach((t, di) => {
       const col = di + 2;
-      const nurReg = t.has_vertretungsplan ? ''
-        : '<span class="nur-reg">nur regulärer Plan</span>';
+      const nurReg = t.schulfrei
+        ? '<span class="nur-reg">schulfrei</span>'
+        : (t.has_vertretungsplan ? '' : '<span class="nur-reg">nur regulärer Plan</span>');
       html += '<h3 class="wk-dayhead" style="grid-row:1;grid-column:' + col + '">'
             + esc(t.day) + '<span class="datum">' + kurzDatum(t.date) + '</span>'
             + nurReg + '</h3>';
 
+      if (t.schulfrei) {
+        html += '<div class="wk-cell" style="grid-row:2;grid-column:' + col + '">'
+              + '<div class="cell-lessons"><div class="wk-frei">'
+              + esc(t.schulfrei) + '</div></div></div>';
+        return;
+      }
       const byStd = {};
       t.plan.forEach(p => { (byStd[p.stunde] = byStd[p.stunde] || []).push(p); });
       const jetzt = t.date === heute ? jetztInfo(t.plan) : {};

@@ -40,6 +40,13 @@ Untis stellt Doppelstunden als zusammengefasste Tabellenzelle dar. `parse_untis.
 **Verschobene und vorgezogene Stunden**
 Steht im Vertretungsplan "frei; verlegt auf X. Std.", wird die Zielstunde mit Fach und Lehrkraft der verschobenen Stunde aktualisiert. Umgekehrt nennen Hinweise wie "E statt Do. 10.9. 1. Std." das Fach einer vorgezogenen Stunde, auch wenn an dem Tag regulär gar kein Unterricht wäre.
 
+**Unterrichtsfreie Tage (`data/schulfrei.json`)**
+Studientage, bewegliche Ferientage oder Ausflüge des Kollegiums stehen oft in keinem Vertretungsplan. Ohne Eintrag würde das Dashboard einen vollen Schultag anzeigen. Die Datei ordnet einem Datum den Grund zu, der Tag wird dann als schulfrei dargestellt:
+
+```json
+{ "2026-09-17": "Lehrkräfteausflug" }
+```
+
 **Kein Vertretungsplan verfügbar**
 Ist für einen Tag kein PDF abrufbar (Ferien, Wochenende, noch nicht hochgeladen), antwortet der Server mit 404. Das ist ein erwarteter Fall und kein Fehler: Es wird der reguläre Untis-Plan angezeigt, der Lauf bleibt grün.
 

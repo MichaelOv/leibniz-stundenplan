@@ -592,3 +592,59 @@ class TestRuecknahmeMeldung:
         (tmp_path / "last_ntfy_hash_2026-09-10.txt").write_text("alterhash")
         ra.build_and_notify("2026-09-10", "tag.json", "Morgen", notify=False)
         assert gesendet == []
+
+
+class TestSchulfrei:
+    """Unterrichtsfreie Tage stehen oft in keinem Vertretungsplan. Ohne
+    Sonderbehandlung zeigt das Dashboard einen vollen Schultag an."""
+
+    def _mit_schulfrei(self, tmp_path, monkeypatch, eintraege):
+        import json, build_today
+        daten = tmp_path / "data"
+        daten.mkdir()
+        (daten / "untis_7c.json").write_text(json.dumps({
+            "valid_from": "2026-09-07", "schuljahr": "2026/27",
+            "1": {"Donnerstag": [{"fach": "E", "lehrer": "MOR", "raum": "433"}]},
+            "2": {"Donnerstag": [{"fach": "E", "lehrer": "MOR", "raum": "433"}]},
+        }), encoding="utf-8")
+        (daten / "fach_mapping.json").write_text(json.dumps({"E": "Englisch"}), encoding="utf-8")
+        for f in ("lehrer_fach.json", "lehrer_namen.json"):
+            (daten / f).write_text("{}", encoding="utf-8")
+        (daten / "schulfrei.json").write_text(json.dumps(eintraege), encoding="utf-8")
+        (daten / "vtg.json").write_text(json.dumps(
+            {"date": "2026-09-17", "class": "07c", "substitutions": []}), encoding="utf-8")
+        monkeypatch.setattr(build_today, "BASE", tmp_path)
+        return build_today.build_plan("2026-09-17", vtg_file="vtg.json")
+
+    def test_schulfreier_tag_hat_keine_stunden(self, tmp_path, monkeypatch):
+        plan = self._mit_schulfrei(tmp_path, monkeypatch,
+                                   {"2026-09-17": "Lehrkräfteausflug"})
+        assert plan["schulfrei"] == "Lehrkräfteausflug"
+        assert plan["plan"] == []
+        assert plan["vtg_count"] == 0
+
+    def test_normaler_tag_unveraendert(self, tmp_path, monkeypatch):
+        plan = self._mit_schulfrei(tmp_path, monkeypatch, {})
+        assert plan["schulfrei"] == ""
+        assert len(plan["plan"]) == 2      # die beiden Englischstunden
+
+    def test_anderer_tag_nicht_betroffen(self, tmp_path, monkeypatch):
+        # Eintrag fuer einen anderen Tag darf den Donnerstag nicht leeren
+        plan = self._mit_schulfrei(tmp_path, monkeypatch,
+                                   {"2026-09-18": "Studientag"})
+        assert plan["schulfrei"] == ""
+        assert len(plan["plan"]) == 2
+
+    def test_keine_umschaltung_an_schulfreien_tagen(self, tmp_path, monkeypatch):
+        import json, importlib, run_all
+        importlib.reload(run_all)
+        monkeypatch.setattr(run_all, "DATA", tmp_path)
+        (tmp_path / "schulfrei.json").write_text(
+            json.dumps({"2026-09-17": "Lehrkräfteausflug"}), encoding="utf-8")
+        (tmp_path / "untis_7c.json").write_text(json.dumps(
+            {"6": {"Donnerstag": [{"fach": "D", "lehrer": "GRU", "raum": "433"}]}}),
+            encoding="utf-8")
+        from datetime import date
+        # Ohne Unterricht gibt es kein Unterrichtsende, also kein Weiterspringen
+        assert run_all.letzte_stunde(date(2026, 9, 17)) is None
+        assert run_all.schulende(date(2026, 9, 17)) is None

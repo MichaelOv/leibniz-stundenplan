@@ -59,12 +59,10 @@
           "fach": "Erdkunde",
           "fach_kurz": "EK",
           "lehrer": "MAN",
-          "raum": "PH204",
-          "status": "vertretung",
-          "vertreter": "WIN",
-          "hinweis": "CH statt Di. 15.9. 6. Std.",
-          "fach_neu": "Chemie",
-          "fach_neu_kurz": "CH",
+          "raum": "433",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -74,16 +72,17 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei; verlegt auf Fr. 11.9. 2. Std.",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 2,
+      "vtg_count": 0,
       "has_vertretungsplan": true,
-      "pdf_stand": "2026-09-14T07:34:00+02:00"
+      "schulfrei": "",
+      "pdf_stand": ""
     },
     {
       "date": "2026-09-15",
@@ -293,147 +292,16 @@
       ],
       "vtg_count": 0,
       "has_vertretungsplan": false,
+      "schulfrei": "",
       "pdf_stand": ""
     },
     {
       "date": "2026-09-17",
       "day": "Donnerstag",
-      "plan": [
-        {
-          "stunde": 1,
-          "fach": "Englisch",
-          "fach_kurz": "E",
-          "lehrer": "MOR",
-          "raum": "433",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        },
-        {
-          "stunde": 2,
-          "fach": "Englisch",
-          "fach_kurz": "E",
-          "lehrer": "MOR",
-          "raum": "433",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        },
-        {
-          "stunde": 3,
-          "fach": "Französisch",
-          "fach_kurz": "F7",
-          "lehrer": "BIL",
-          "raum": "433",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        },
-        {
-          "stunde": 3,
-          "fach": "Latein",
-          "fach_kurz": "L7",
-          "lehrer": "ZIM",
-          "raum": "102",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        },
-        {
-          "stunde": 4,
-          "fach": "Französisch",
-          "fach_kurz": "F7",
-          "lehrer": "BIL",
-          "raum": "433",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        },
-        {
-          "stunde": 4,
-          "fach": "Latein",
-          "fach_kurz": "L7",
-          "lehrer": "ZIM",
-          "raum": "102",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        },
-        {
-          "stunde": 5,
-          "fach": "Evangelische Rel.",
-          "fach_kurz": "ER",
-          "lehrer": "PAR",
-          "raum": "A2.11",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        },
-        {
-          "stunde": 5,
-          "fach": "Islamische Rel.",
-          "fach_kurz": "IR",
-          "lehrer": "AVS",
-          "raum": "434",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        },
-        {
-          "stunde": 5,
-          "fach": "Katholische Rel.",
-          "fach_kurz": "KR",
-          "lehrer": "VOS",
-          "raum": "102",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        },
-        {
-          "stunde": 5,
-          "fach": "Praktische Philosophie",
-          "fach_kurz": "PP",
-          "lehrer": "LUD",
-          "raum": "433",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        },
-        {
-          "stunde": 6,
-          "fach": "Deutsch",
-          "fach_kurz": "D",
-          "lehrer": "GRU",
-          "raum": "433",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        }
-      ],
+      "plan": [],
       "vtg_count": 0,
       "has_vertretungsplan": false,
+      "schulfrei": "Lehrkräfteausflug",
       "pdf_stand": ""
     },
     {
@@ -515,10 +383,11 @@
       ],
       "vtg_count": 0,
       "has_vertretungsplan": false,
+      "schulfrei": "",
       "pdf_stand": ""
     }
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-14T08:00:33.864720+00:00"
+  "generated_at": "2026-09-14T08:17:11.171981+00:00"
 }

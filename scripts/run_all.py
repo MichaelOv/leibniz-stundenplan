@@ -27,6 +27,8 @@ def letzte_stunde(d: date):
     """Hoechste Stundennummer, die an diesem Wochentag regulaer stattfindet."""
     if d.weekday() > 4:
         return None
+    if load_json_datei(DATA / "schulfrei.json").get(d.isoformat()):
+        return None   # unterrichtsfrei: kein Unterrichtsende, kein Umschalten
     plan = load_json_datei(DATA / "untis_7c.json")
     tag = DAYS_DE[d.weekday()]
     stunden = [int(k) for k, tage in plan.items()
