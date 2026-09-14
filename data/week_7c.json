@@ -59,10 +59,12 @@
           "fach": "Erdkunde",
           "fach_kurz": "EK",
           "lehrer": "MAN",
-          "raum": "433",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
+          "raum": "PH204",
+          "status": "vertretung",
+          "vertreter": "WIN",
+          "hinweis": "CH statt Di. 15.9. 6. Std.",
+          "fach_neu": "Chemie",
+          "fach_neu_kurz": "CH",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -72,17 +74,17 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei; verlegt auf Fr. 11.9. 2. Std.",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 0,
+      "vtg_count": 2,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": ""
+      "pdf_stand": "2026-09-14T07:34:00+02:00"
     },
     {
       "date": "2026-09-15",
@@ -223,6 +225,7 @@
       ],
       "vtg_count": 2,
       "has_vertretungsplan": true,
+      "schulfrei": "",
       "pdf_stand": "2026-09-14T07:54:00+02:00"
     },
     {
@@ -389,5 +392,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-14T08:17:11.171981+00:00"
+  "generated_at": "2026-09-14T09:00:35.812207+00:00"
 }
