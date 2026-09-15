@@ -1,73 +1,12 @@
 {
-  "date": "2026-09-16",
-  "day": "Mittwoch",
+  "date": "2026-09-17",
+  "day": "Donnerstag",
   "class": "07c",
-  "plan": [
-    {
-      "stunde": 2,
-      "fach": "Englisch",
-      "fach_kurz": "E",
-      "lehrer": "MOR",
-      "raum": "433",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": "",
-      "lehrer_name": "",
-      "vertreter_name": ""
-    },
-    {
-      "stunde": 3,
-      "fach": "Sport",
-      "fach_kurz": "SP",
-      "lehrer": "MAT",
-      "raum": "SH2",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": "",
-      "lehrer_name": "",
-      "vertreter_name": ""
-    },
-    {
-      "stunde": 4,
-      "fach": "Mathe",
-      "fach_kurz": "M",
-      "lehrer": "MAT",
-      "raum": "433",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": "",
-      "lehrer_name": "",
-      "vertreter_name": ""
-    },
-    {
-      "stunde": 5,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.03Ku",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": "",
-      "lehrer_name": "",
-      "vertreter_name": ""
-    },
-    {
-      "stunde": 6,
-      "fach": "Kunst",
-      "fach_kurz": "KU",
-      "lehrer": "NYE",
-      "raum": "A2.03Ku",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": "",
-      "lehrer_name": "",
-      "vertreter_name": ""
-    }
-  ],
+  "plan": [],
   "vtg_count": 0,
-  "generated_at": "2026-09-15T11:00:36.075862+00:00",
-  "pdf_stand": "2026-09-15T06:18:00+02:00",
-  "schulfrei": "",
-  "untis_schuljahr": "2026/27",
+  "schulfrei": "Lehrkräfteausflug",
+  "generated_at": "2026-09-15T12:00:31.544128+00:00",
+  "pdf_stand": "",
+  "untis_schuljahr": "",
   "untis_stale": false
 }
