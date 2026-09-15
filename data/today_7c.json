@@ -117,9 +117,9 @@
       "fach_kurz": "PK",
       "lehrer": "BON",
       "raum": "433",
-      "status": "frei",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei",
+      "hinweis": "",
       "lehrer_name": "",
       "vertreter_name": ""
     },
@@ -129,16 +129,16 @@
       "fach_kurz": "CH",
       "lehrer": "WIN",
       "raum": "CH104",
-      "status": "frei",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei; verlegt auf Mo. 14.9. 5. Std.",
+      "hinweis": "",
       "lehrer_name": "",
       "vertreter_name": ""
     }
   ],
-  "vtg_count": 2,
-  "generated_at": "2026-09-15T05:35:23.354421+00:00",
-  "pdf_stand": "2026-09-15T06:16:00+02:00",
+  "vtg_count": 0,
+  "generated_at": "2026-09-15T05:40:33.931057+00:00",
+  "pdf_stand": "",
   "schulfrei": "",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
