@@ -1,12 +1,85 @@
 {
-  "date": "2026-09-17",
-  "day": "Donnerstag",
+  "date": "2026-09-18",
+  "day": "Freitag",
   "class": "07c",
-  "plan": [],
-  "vtg_count": 0,
-  "schulfrei": "Lehrkräfteausflug",
-  "generated_at": "2026-09-17T20:00:24.839708+00:00",
-  "pdf_stand": "",
-  "untis_schuljahr": "",
+  "plan": [
+    {
+      "stunde": 1,
+      "fach": "Politik",
+      "fach_kurz": "PK",
+      "lehrer": "BON",
+      "raum": "433",
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "frei",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
+      "stunde": 2,
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "433",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
+      "stunde": 3,
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
+      "raum": "433",
+      "status": "vertretung",
+      "vertreter": "NYE",
+      "hinweis": "KU",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
+      "stunde": 4,
+      "fach": "Chemie",
+      "fach_kurz": "CH",
+      "lehrer": "WIN",
+      "raum": "CH106",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
+      "stunde": 5,
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH1",
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "frei",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
+      "stunde": 6,
+      "fach": "Sport",
+      "fach_kurz": "SP",
+      "lehrer": "MAT",
+      "raum": "SH1",
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "frei",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    }
+  ],
+  "vtg_count": 4,
+  "generated_at": "2026-09-18T04:30:25.759054+00:00",
+  "pdf_stand": "2026-09-18T06:20:00+02:00",
+  "schulfrei": "",
+  "untis_schuljahr": "2026/27",
   "untis_stale": false
 }
