@@ -1,9 +1,9 @@
 {
-  "week_start": "2026-09-14",
+  "week_start": "2026-09-21",
   "class": "07c",
   "days": [
     {
-      "date": "2026-09-14",
+      "date": "2026-09-21",
       "day": "Montag",
       "plan": [
         {
@@ -36,9 +36,11 @@
           "fach_kurz": "D",
           "lehrer": "GRU",
           "raum": "433",
-          "status": "normal",
-          "vertreter": "",
+          "status": "vertretung",
+          "vertreter": "MOR",
           "hinweis": "",
+          "fach_neu": "Englisch",
+          "fach_neu_kurz": "E",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -59,12 +61,10 @@
           "fach": "Erdkunde",
           "fach_kurz": "EK",
           "lehrer": "MAN",
-          "raum": "PH204",
-          "status": "vertretung",
-          "vertreter": "WIN",
-          "hinweis": "CH statt Di. 15.9. 6. Std.",
-          "fach_neu": "Chemie",
-          "fach_neu_kurz": "CH",
+          "raum": "433",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -74,20 +74,20 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei; verlegt auf Fr. 11.9. 2. Std.",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 2,
+      "vtg_count": 1,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-09-14T07:34:00+02:00"
+      "pdf_stand": "2026-09-18T07:23:00+02:00"
     },
     {
-      "date": "2026-09-15",
+      "date": "2026-09-22",
       "day": "Dienstag",
       "plan": [
         {
@@ -192,8 +192,8 @@
           "fach_kurz": "PP",
           "lehrer": "LUD",
           "raum": "609",
-          "status": "normal",
-          "vertreter": "",
+          "status": "vertretung",
+          "vertreter": "WAR",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -218,18 +218,18 @@
           "raum": "CH104",
           "status": "frei",
           "vertreter": "",
-          "hinweis": "frei; verlegt auf Mo. 14.9. 5. Std.",
+          "hinweis": "frei",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 2,
+      "vtg_count": 3,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-09-15T07:35:00+02:00"
+      "pdf_stand": "2026-09-18T13:52:00+02:00"
     },
     {
-      "date": "2026-09-16",
+      "date": "2026-09-23",
       "day": "Mittwoch",
       "plan": [
         {
@@ -294,21 +294,154 @@
         }
       ],
       "vtg_count": 0,
-      "has_vertretungsplan": true,
-      "schulfrei": "",
-      "pdf_stand": "2026-09-16T07:31:00+02:00"
-    },
-    {
-      "date": "2026-09-17",
-      "day": "Donnerstag",
-      "plan": [],
-      "vtg_count": 0,
       "has_vertretungsplan": false,
-      "schulfrei": "Lehrkräfteausflug",
+      "schulfrei": "",
       "pdf_stand": ""
     },
     {
-      "date": "2026-09-18",
+      "date": "2026-09-24",
+      "day": "Donnerstag",
+      "plan": [
+        {
+          "stunde": 1,
+          "fach": "Englisch",
+          "fach_kurz": "E",
+          "lehrer": "MOR",
+          "raum": "433",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
+          "lehrer_name": "",
+          "vertreter_name": ""
+        },
+        {
+          "stunde": 2,
+          "fach": "Englisch",
+          "fach_kurz": "E",
+          "lehrer": "MOR",
+          "raum": "433",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
+          "lehrer_name": "",
+          "vertreter_name": ""
+        },
+        {
+          "stunde": 3,
+          "fach": "Französisch",
+          "fach_kurz": "F7",
+          "lehrer": "BIL",
+          "raum": "433",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
+          "lehrer_name": "",
+          "vertreter_name": ""
+        },
+        {
+          "stunde": 3,
+          "fach": "Latein",
+          "fach_kurz": "L7",
+          "lehrer": "ZIM",
+          "raum": "102",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
+          "lehrer_name": "",
+          "vertreter_name": ""
+        },
+        {
+          "stunde": 4,
+          "fach": "Französisch",
+          "fach_kurz": "F7",
+          "lehrer": "BIL",
+          "raum": "433",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
+          "lehrer_name": "",
+          "vertreter_name": ""
+        },
+        {
+          "stunde": 4,
+          "fach": "Latein",
+          "fach_kurz": "L7",
+          "lehrer": "ZIM",
+          "raum": "102",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
+          "lehrer_name": "",
+          "vertreter_name": ""
+        },
+        {
+          "stunde": 5,
+          "fach": "Evangelische Rel.",
+          "fach_kurz": "ER",
+          "lehrer": "PAR",
+          "raum": "A2.11",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
+          "lehrer_name": "",
+          "vertreter_name": ""
+        },
+        {
+          "stunde": 5,
+          "fach": "Islamische Rel.",
+          "fach_kurz": "IR",
+          "lehrer": "AVS",
+          "raum": "434",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
+          "lehrer_name": "",
+          "vertreter_name": ""
+        },
+        {
+          "stunde": 5,
+          "fach": "Katholische Rel.",
+          "fach_kurz": "KR",
+          "lehrer": "VOS",
+          "raum": "102",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
+          "lehrer_name": "",
+          "vertreter_name": ""
+        },
+        {
+          "stunde": 5,
+          "fach": "Praktische Philosophie",
+          "fach_kurz": "PP",
+          "lehrer": "LUD",
+          "raum": "433",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
+          "lehrer_name": "",
+          "vertreter_name": ""
+        },
+        {
+          "stunde": 6,
+          "fach": "Deutsch",
+          "fach_kurz": "D",
+          "lehrer": "GRU",
+          "raum": "433",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
+          "lehrer_name": "",
+          "vertreter_name": ""
+        }
+      ],
+      "vtg_count": 0,
+      "has_vertretungsplan": false,
+      "schulfrei": "",
+      "pdf_stand": ""
+    },
+    {
+      "date": "2026-09-25",
       "day": "Freitag",
       "plan": [
         {
@@ -317,9 +450,9 @@
           "fach_kurz": "PK",
           "lehrer": "BON",
           "raum": "433",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -341,9 +474,9 @@
           "fach_kurz": "M",
           "lehrer": "MAT",
           "raum": "433",
-          "status": "vertretung",
-          "vertreter": "NYE",
-          "hinweis": "KU",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -365,9 +498,9 @@
           "fach_kurz": "SP",
           "lehrer": "MAT",
           "raum": "SH1",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -377,20 +510,20 @@
           "fach_kurz": "SP",
           "lehrer": "MAT",
           "raum": "SH1",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 4,
-      "has_vertretungsplan": true,
+      "vtg_count": 0,
+      "has_vertretungsplan": false,
       "schulfrei": "",
-      "pdf_stand": "2026-09-18T07:32:00+02:00"
+      "pdf_stand": ""
     }
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-18T11:00:26.763616+00:00"
+  "generated_at": "2026-09-18T12:00:37.263421+00:00"
 }
