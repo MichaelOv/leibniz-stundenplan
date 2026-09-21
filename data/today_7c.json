@@ -59,9 +59,11 @@
       "fach_kurz": "EK",
       "lehrer": "MAN",
       "raum": "433",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": "",
+      "status": "vertretung",
+      "vertreter": "GRU",
+      "hinweis": "statt Fr. 25.9. 2. Std.",
+      "fach_neu": "Deutsch",
+      "fach_neu_kurz": "D",
       "lehrer_name": "",
       "vertreter_name": ""
     },
@@ -78,9 +80,9 @@
       "vertreter_name": ""
     }
   ],
-  "vtg_count": 1,
-  "generated_at": "2026-09-21T04:30:25.441024+00:00",
-  "pdf_stand": "2026-09-18T07:23:00+02:00",
+  "vtg_count": 2,
+  "generated_at": "2026-09-21T04:35:19.573503+00:00",
+  "pdf_stand": "2026-09-21T06:31:00+02:00",
   "schulfrei": "",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
