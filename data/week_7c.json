@@ -86,7 +86,7 @@
       "vtg_count": 2,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-09-21T06:59:00+02:00"
+      "pdf_stand": "2026-09-21T07:29:00+02:00"
     },
     {
       "date": "2026-09-22",
@@ -110,9 +110,9 @@
           "fach_kurz": "L7",
           "lehrer": "ZIM",
           "raum": "102",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -134,9 +134,9 @@
           "fach_kurz": "L7",
           "lehrer": "ZIM",
           "raum": "102",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -225,10 +225,10 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 4,
+      "vtg_count": 6,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-09-21T06:32:00+02:00"
+      "pdf_stand": "2026-09-21T07:31:00+02:00"
     },
     {
       "date": "2026-09-23",
@@ -527,5 +527,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-21T05:30:22.640543+00:00"
+  "generated_at": "2026-09-21T05:35:24.087262+00:00"
 }
