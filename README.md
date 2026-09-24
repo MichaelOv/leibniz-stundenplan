@@ -181,7 +181,9 @@ Anzeige und Benachrichtigung sind bewusst getrennt: Das Dashboard zeigt den lauf
 ## Dashboard-Zeitstempel
 
 - **Stand X Uhr** (oben): Zeitpunkt, zu dem die Schule den Vertretungsplan veröffentlicht hat, direkt aus dem PDF-Text gelesen.
-- **Zuletzt geprüft: X Uhr** (unten): Zeitpunkt des letzten Laufs.
+- **Zuletzt geprüft: X Uhr** (unten): Zeitpunkt des letzten Laufs. Stammt er nicht von heute, steht das Datum dabei.
+
+Bleibt die Pipeline aus, zeigt das Dashboard eine **Veraltet-Warnung**. Geprüft wird nicht gegen ein festes Alter, sondern gegen den letzten erwarteten Lauf: Mo bis Fr zwischen 7 und 22 Uhr. Nachts und am Wochenende laufen planmäßig keine Aktualisierungen, dort warnt es deshalb nicht.
 
 ## Konfiguration
 

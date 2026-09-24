@@ -236,6 +236,7 @@
   </div>
 
   <div id="errorBox" style="display:none" class="error-box" role="alert"></div>
+  <div id="altBox" style="display:none" class="warn-box" role="status"></div>
   <div id="staleBox" style="display:none" class="warn-box" role="status"></div>
 
   <div class="card plan-card">
@@ -584,12 +585,48 @@
       const d = await r.json();
       if (currentDay === 'week') renderWeek(d); else render(d);
       renderStale(d);
+      renderAlter(d);
     } catch(e) {
       errorBox.textContent = 'Fehler beim Laden: ' + e.message + ' (läuft server.py?)';
       errorBox.style.display = 'block';
       document.getElementById('statusPill').textContent = 'Fehler';
       document.getElementById('planBody').innerHTML =
         '<tr><td colspan="5" class="empty">Keine Daten verfügbar.</td></tr>';
+    }
+  }
+
+  // Die Pipeline laeuft Mo bis Fr. Der Cron startet morgens um 6:30, bis 7 Uhr
+  // ist der erste Lauf sicher durch; danach stuendlich bis 22 Uhr. Nachts und
+  // am Wochenende gibt es planmaessig keine Laeufe, deshalb wird nicht gegen
+  // ein festes Alter geprueft, sondern gegen den letzten erwarteten Lauf.
+  const AKTIV_VON = 7, AKTIV_BIS = 22, TOLERANZ_MIN = 120;
+
+  function letzterErwarteterLauf(jetzt) {
+    const werktag = t => t.getDay() >= 1 && t.getDay() <= 5;
+    const d = new Date(jetzt);
+    if (werktag(d) && d.getHours() >= AKTIV_VON && d.getHours() < AKTIV_BIS) return d;
+    const t = new Date(d);
+    if (werktag(d) && d.getHours() >= AKTIV_BIS) { t.setHours(AKTIV_BIS, 0, 0, 0); return t; }
+    t.setDate(t.getDate() - 1);
+    while (!werktag(t)) t.setDate(t.getDate() - 1);
+    t.setHours(AKTIV_BIS, 0, 0, 0);
+    return t;
+  }
+
+  function renderAlter(d) {
+    const box = document.getElementById('altBox');
+    if (!d.generated_at) { box.style.display = 'none'; return; }
+    const stand = new Date(d.generated_at);
+    const erwartet = letzterErwarteterLauf(new Date());
+    const verspaetungMin = (erwartet - stand) / 60000;
+    if (verspaetungMin > TOLERANZ_MIN) {
+      box.textContent = 'Achtung: Diese Daten stammen vom '
+        + stand.toLocaleDateString('de-DE', {weekday:'long', day:'2-digit', month:'2-digit'})
+        + ' um ' + stand.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'})
+        + ' Uhr. Seitdem wurde nicht mehr aktualisiert, der Plan kann veraltet sein.';
+      box.style.display = 'block';
+    } else {
+      box.style.display = 'none';
     }
   }
 
@@ -612,7 +649,15 @@
     document.getElementById('statGenerated').textContent = 'Stand ' + genStr + ' Uhr';
 
     const runGen = d.generated_at ? new Date(d.generated_at) : null;
-    const runStr = runGen ? runGen.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'}) : '—';
+    let runStr = '—';
+    if (runGen) {
+      // Datum nur nennen, wenn der Stand nicht von heute ist. Genau dessen
+      // Fehlen hat einen dreitaegigen Ausfall unsichtbar gemacht.
+      const vonHeute = runGen.toDateString() === new Date().toDateString();
+      runStr = (vonHeute ? '' : runGen.toLocaleDateString('de-DE',
+                  {weekday:'short', day:'2-digit', month:'2-digit'}) + ', ')
+             + runGen.toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit'});
+    }
     document.getElementById('footerGenerated').textContent = 'Zuletzt geprüft: ' + runStr + ' Uhr';
   }
 
