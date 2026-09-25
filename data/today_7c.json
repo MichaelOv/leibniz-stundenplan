@@ -9,9 +9,9 @@
       "fach_kurz": "PK",
       "lehrer": "BON",
       "raum": "433",
-      "status": "frei",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei",
+      "hinweis": "",
       "lehrer_name": "",
       "vertreter_name": ""
     },
@@ -21,9 +21,9 @@
       "fach_kurz": "D",
       "lehrer": "GRU",
       "raum": "433",
-      "status": "frei",
+      "status": "normal",
       "vertreter": "",
-      "hinweis": "frei; verlegt auf Mo. 21.9. 5. Std.",
+      "hinweis": "",
       "lehrer_name": "",
       "vertreter_name": ""
     },
@@ -76,9 +76,9 @@
       "vertreter_name": ""
     }
   ],
-  "vtg_count": 2,
-  "generated_at": "2026-09-25T08:00:20.745361+00:00",
-  "pdf_stand": "2026-09-25T07:26:00+02:00",
+  "vtg_count": 0,
+  "generated_at": "2026-09-25T09:00:22.918920+00:00",
+  "pdf_stand": "",
   "schulfrei": "",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
