@@ -82,7 +82,7 @@
       "vtg_count": 0,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-09-24T12:39:00+02:00"
+      "pdf_stand": "2026-09-28T06:04:00+02:00"
     },
     {
       "date": "2026-09-29",
@@ -190,8 +190,8 @@
           "fach_kurz": "PP",
           "lehrer": "LUD",
           "raum": "609",
-          "status": "normal",
-          "vertreter": "",
+          "status": "vertretung",
+          "vertreter": "SIN",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -221,10 +221,10 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 1,
+      "vtg_count": 2,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-09-25T13:20:00+02:00"
+      "pdf_stand": "2026-09-27T17:13:00+02:00"
     },
     {
       "date": "2026-09-30",
@@ -523,5 +523,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-25T20:00:28.407647+00:00"
+  "generated_at": "2026-09-28T04:30:22.482382+00:00"
 }
