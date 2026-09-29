@@ -190,8 +190,8 @@
           "fach_kurz": "PP",
           "lehrer": "LUD",
           "raum": "609",
-          "status": "normal",
-          "vertreter": "",
+          "status": "vertretung",
+          "vertreter": "WIN",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -202,8 +202,8 @@
           "fach_kurz": "PK",
           "lehrer": "BON",
           "raum": "433",
-          "status": "normal",
-          "vertreter": "",
+          "status": "vertretung",
+          "vertreter": "VOS",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -221,10 +221,10 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 0,
+      "vtg_count": 2,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": ""
+      "pdf_stand": "2026-09-29T07:38:00+02:00"
     },
     {
       "date": "2026-09-30",
@@ -523,5 +523,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-29T05:40:19.582926+00:00"
+  "generated_at": "2026-09-29T05:45:22.237285+00:00"
 }
