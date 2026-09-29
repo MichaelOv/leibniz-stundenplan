@@ -191,7 +191,7 @@
           "lehrer": "LUD",
           "raum": "609",
           "status": "vertretung",
-          "vertreter": "SIN",
+          "vertreter": "WIN",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -224,7 +224,7 @@
       "vtg_count": 2,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-09-28T16:47:00+02:00"
+      "pdf_stand": "2026-09-29T07:05:00+02:00"
     },
     {
       "date": "2026-09-30",
@@ -523,5 +523,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-09-29T05:00:26.125894+00:00"
+  "generated_at": "2026-09-29T05:05:58.625945+00:00"
 }
