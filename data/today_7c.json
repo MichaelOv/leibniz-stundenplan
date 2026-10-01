@@ -9,8 +9,8 @@
       "fach_kurz": "E",
       "lehrer": "MOR",
       "raum": "433",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "STO",
       "hinweis": "",
       "lehrer_name": "",
       "vertreter_name": ""
@@ -21,9 +21,11 @@
       "fach_kurz": "E",
       "lehrer": "MOR",
       "raum": "433",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": "",
+      "status": "vertretung",
+      "vertreter": "MAN",
+      "hinweis": "EK statt Mo. 5.10. 5. Std.",
+      "fach_neu": "Erdkunde",
+      "fach_neu_kurz": "EK",
       "lehrer_name": "",
       "vertreter_name": ""
     },
@@ -136,9 +138,9 @@
       "vertreter_name": ""
     }
   ],
-  "vtg_count": 1,
-  "generated_at": "2026-10-01T05:10:18.882605+00:00",
-  "pdf_stand": "2026-09-30T17:08:00+02:00",
+  "vtg_count": 3,
+  "generated_at": "2026-10-01T05:15:21.162570+00:00",
+  "pdf_stand": "2026-10-01T07:09:00+02:00",
   "schulfrei": "",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
