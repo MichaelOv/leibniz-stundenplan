@@ -1,9 +1,9 @@
 {
-  "week_start": "2026-09-28",
+  "week_start": "2026-10-05",
   "class": "07c",
   "days": [
     {
-      "date": "2026-09-28",
+      "date": "2026-10-05",
       "day": "Montag",
       "plan": [
         {
@@ -36,8 +36,8 @@
           "fach_kurz": "D",
           "lehrer": "GRU",
           "raum": "433",
-          "status": "vertretung",
-          "vertreter": "HEL",
+          "status": "normal",
+          "vertreter": "",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -48,8 +48,8 @@
           "fach_kurz": "D",
           "lehrer": "GRU",
           "raum": "433",
-          "status": "vertretung",
-          "vertreter": "BUC",
+          "status": "normal",
+          "vertreter": "",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -79,13 +79,13 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 2,
+      "vtg_count": 0,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-09-28T07:24:00+02:00"
+      "pdf_stand": "2026-10-01T06:50:00+02:00"
     },
     {
-      "date": "2026-09-29",
+      "date": "2026-10-06",
       "day": "Dienstag",
       "plan": [
         {
@@ -153,10 +153,10 @@
           "fach": "Evangelische Rel.",
           "fach_kurz": "ER",
           "lehrer": "PAR",
-          "raum": "A2.04Mu",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
+          "raum": "433",
+          "status": "vertretung",
+          "vertreter": "PER",
+          "hinweis": "gemeinsamer Unterricht",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -190,8 +190,8 @@
           "fach_kurz": "PP",
           "lehrer": "LUD",
           "raum": "609",
-          "status": "vertretung",
-          "vertreter": "WIN",
+          "status": "normal",
+          "vertreter": "",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -202,8 +202,8 @@
           "fach_kurz": "PK",
           "lehrer": "BON",
           "raum": "433",
-          "status": "vertretung",
-          "vertreter": "VOS",
+          "status": "normal",
+          "vertreter": "",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -221,13 +221,13 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 2,
+      "vtg_count": 1,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-09-29T07:38:00+02:00"
+      "pdf_stand": "2026-10-02T07:43:00+02:00"
     },
     {
-      "date": "2026-09-30",
+      "date": "2026-10-07",
       "day": "Mittwoch",
       "plan": [
         {
@@ -272,9 +272,9 @@
           "fach_kurz": "KU",
           "lehrer": "NYE",
           "raum": "A2.03Ku",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -284,20 +284,20 @@
           "fach_kurz": "KU",
           "lehrer": "NYE",
           "raum": "A2.03Ku",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 2,
-      "has_vertretungsplan": true,
+      "vtg_count": 0,
+      "has_vertretungsplan": false,
       "schulfrei": "",
-      "pdf_stand": "2026-09-30T07:33:00+02:00"
+      "pdf_stand": ""
     },
     {
-      "date": "2026-10-01",
+      "date": "2026-10-08",
       "day": "Donnerstag",
       "plan": [
         {
@@ -306,8 +306,8 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "vertretung",
-          "vertreter": "STO",
+          "status": "normal",
+          "vertreter": "",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -318,11 +318,9 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "vertretung",
-          "vertreter": "MAN",
-          "hinweis": "EK statt Mo. 5.10. 5. Std.",
-          "fach_neu": "Erdkunde",
-          "fach_neu_kurz": "EK",
+          "status": "normal",
+          "vertreter": "",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -416,8 +414,8 @@
           "fach_kurz": "PP",
           "lehrer": "LUD",
           "raum": "433",
-          "status": "vertretung",
-          "vertreter": "MAN",
+          "status": "normal",
+          "vertreter": "",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -435,13 +433,13 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 3,
-      "has_vertretungsplan": true,
+      "vtg_count": 0,
+      "has_vertretungsplan": false,
       "schulfrei": "",
-      "pdf_stand": "2026-10-01T10:09:00+02:00"
+      "pdf_stand": ""
     },
     {
-      "date": "2026-10-02",
+      "date": "2026-10-09",
       "day": "Freitag",
       "plan": [
         {
@@ -450,9 +448,9 @@
           "fach_kurz": "PK",
           "lehrer": "BON",
           "raum": "433",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -517,13 +515,13 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 1,
-      "has_vertretungsplan": true,
+      "vtg_count": 0,
+      "has_vertretungsplan": false,
       "schulfrei": "",
-      "pdf_stand": "2026-10-02T07:25:00+02:00"
+      "pdf_stand": ""
     }
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-10-02T11:00:20.717535+00:00"
+  "generated_at": "2026-10-02T12:00:37.334276+00:00"
 }
