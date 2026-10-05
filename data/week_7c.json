@@ -238,9 +238,9 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -250,9 +250,9 @@
           "fach_kurz": "SP",
           "lehrer": "MAT",
           "raum": "SH2",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -262,9 +262,9 @@
           "fach_kurz": "M",
           "lehrer": "MAT",
           "raum": "433",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -293,10 +293,10 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 0,
-      "has_vertretungsplan": false,
+      "vtg_count": 3,
+      "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": ""
+      "pdf_stand": "2026-10-05T07:46:00+02:00"
     },
     {
       "date": "2026-10-08",
@@ -525,5 +525,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-10-05T06:55:19.710445+00:00"
+  "generated_at": "2026-10-05T07:00:29.019993+00:00"
 }
