@@ -56,13 +56,15 @@
         },
         {
           "stunde": 5,
-          "fach": "Erdkunde",
-          "fach_kurz": "EK",
-          "lehrer": "MAN",
+          "fach": "Englisch",
+          "fach_kurz": "E",
+          "lehrer": "MOR",
           "raum": "433",
-          "status": "normal",
+          "status": "vertretung",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "verlegt von 6. Std.",
+          "fach_neu": "Englisch",
+          "fach_neu_kurz": "E",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -72,17 +74,17 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei; verlegt auf Mo. 5.10. 5. Std.",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 0,
+      "vtg_count": 2,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-10-01T06:50:00+02:00"
+      "pdf_stand": "2026-10-04T17:48:00+02:00"
     },
     {
       "date": "2026-10-06",
@@ -224,7 +226,7 @@
       "vtg_count": 1,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-10-02T07:43:00+02:00"
+      "pdf_stand": "2026-10-04T17:49:00+02:00"
     },
     {
       "date": "2026-10-07",
@@ -523,5 +525,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-10-02T20:00:31.622084+00:00"
+  "generated_at": "2026-10-05T04:30:19.579318+00:00"
 }
