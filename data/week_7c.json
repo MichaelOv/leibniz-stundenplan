@@ -84,7 +84,7 @@
       "vtg_count": 2,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-10-05T07:28:00+02:00"
+      "pdf_stand": "2026-10-05T07:43:00+02:00"
     },
     {
       "date": "2026-10-06",
@@ -204,8 +204,8 @@
           "fach_kurz": "PK",
           "lehrer": "BON",
           "raum": "433",
-          "status": "normal",
-          "vertreter": "",
+          "status": "vertretung",
+          "vertreter": "AVS",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -223,10 +223,10 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 1,
+      "vtg_count": 2,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-10-05T07:29:00+02:00"
+      "pdf_stand": "2026-10-05T07:44:00+02:00"
     },
     {
       "date": "2026-10-07",
@@ -525,5 +525,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-10-05T05:45:21.632425+00:00"
+  "generated_at": "2026-10-05T05:50:17.767128+00:00"
 }
