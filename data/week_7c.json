@@ -82,7 +82,7 @@
       "vtg_count": 0,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-10-07T16:16:00+02:00"
+      "pdf_stand": "2026-10-09T14:53:00+02:00"
     },
     {
       "date": "2026-10-13",
@@ -224,7 +224,7 @@
       "vtg_count": 1,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-10-08T10:19:00+02:00"
+      "pdf_stand": "2026-10-09T14:54:00+02:00"
     },
     {
       "date": "2026-10-14",
@@ -294,7 +294,7 @@
       "vtg_count": 1,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-10-08T10:24:00+02:00"
+      "pdf_stand": "2026-10-09T15:01:00+02:00"
     },
     {
       "date": "2026-10-15",
@@ -436,7 +436,7 @@
       "vtg_count": 2,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-10-07T16:21:00+02:00"
+      "pdf_stand": "2026-10-09T14:57:00+02:00"
     },
     {
       "date": "2026-10-16",
@@ -518,10 +518,10 @@
       "vtg_count": 1,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-10-07T16:23:00+02:00"
+      "pdf_stand": "2026-10-09T14:59:00+02:00"
     }
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-10-09T13:00:36.332532+00:00"
+  "generated_at": "2026-10-09T14:00:36.341621+00:00"
 }
