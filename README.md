@@ -41,11 +41,17 @@ Untis stellt Doppelstunden als zusammengefasste Tabellenzelle dar. `parse_untis.
 Steht im Vertretungsplan "frei; verlegt auf X. Std.", wird die Zielstunde mit Fach und Lehrkraft der verschobenen Stunde aktualisiert. Umgekehrt nennen Hinweise wie "E statt Do. 10.9. 1. Std." das Fach einer vorgezogenen Stunde, auch wenn an dem Tag regulär gar kein Unterricht wäre.
 
 **Unterrichtsfreie Tage (`data/schulfrei.json`)**
-Studientage, bewegliche Ferientage oder Ausflüge des Kollegiums stehen oft in keinem Vertretungsplan. Ohne Eintrag würde das Dashboard einen vollen Schultag anzeigen. Die Datei ordnet einem Datum den Grund zu, der Tag wird dann als schulfrei dargestellt:
+Ferien, Feiertage, Studientage oder Ausflüge des Kollegiums stehen in keinem Vertretungsplan. Ohne Eintrag würde das Dashboard einen vollen Schultag anzeigen. Der Schlüssel ist ein einzelner Tag oder ein Zeitraum (`von..bis`, beide Grenzen zählen mit):
 
 ```json
-{ "2026-09-17": "Lehrkräfteausflug" }
+{
+  "2026-09-17": "Lehrkräfteausflug",
+  "2026-10-17..2026-10-31": "Herbstferien",
+  "2027-05-06": "Christi Himmelfahrt"
+}
 ```
+
+Hinterlegt sind die NRW-Ferien des Schuljahrs 2026/27 sowie die Feiertage, die auf einen Schultag fallen. **Die drei beweglichen Ferientage legt jede Schule selbst fest, die musst du ergänzen**, sobald sie bekannt sind.
 
 **Kein Vertretungsplan verfügbar**
 Ist für einen Tag kein PDF abrufbar (Ferien, Wochenende, noch nicht hochgeladen), antwortet der Server mit 404. Das ist ein erwarteter Fall und kein Fehler: Es wird der reguläre Untis-Plan angezeigt, der Lauf bleibt grün.
@@ -116,13 +122,17 @@ crontab -e
 ```
 # Leibniz Stundenplan - GitHub Workflow triggern (CEST)
 # Morgens alle 5 Minuten 6:30-8:55
-30,35,40,45,50,55 6 * * 1-5 HOME=/root /usr/bin/gh workflow run update.yml --repo <github-username>/leibniz-stundenplan
-*/5 7-8 * * 1-5 HOME=/root /usr/bin/gh workflow run update.yml --repo <github-username>/leibniz-stundenplan
+30,35,40,45,50,55 6 * * 1-5 /pfad/zum/repo/scripts/trigger.sh
+*/5 7-8 * * 1-5 /pfad/zum/repo/scripts/trigger.sh
 # Stündlich 9:00-22:00
-0 9-22 * * 1-5 HOME=/root /usr/bin/gh workflow run update.yml --repo <github-username>/leibniz-stundenplan
+0 9-22 * * 1-5 /pfad/zum/repo/scripts/trigger.sh
 ```
 
-`<github-username>` ersetzen. Die Zeiten sind lokale Serverzeit. `HOME=/root` stellt sicher, dass `gh` die Anmeldedaten findet.
+Die Zeiten sind lokale Serverzeit. `scripts/trigger.sh` ruft zuerst `scripts/ist_schultag.py` auf und löst den Workflow nur aus, wenn es etwas zu holen gibt. Sind **heute und morgen** unterrichtsfrei, passiert nichts: In den Ferien gäbe es sonst rund dreißig Läufe pro Werktag, die sich nur bei iServ anmelden und nichts finden. Der letzte Ferientag läuft bewusst mit, damit der Plan für den ersten Schultag rechtzeitig da ist.
+
+Weil der Guard `data/schulfrei.json` aus dem lokalen Arbeitsverzeichnis liest, muss das Repo auf dem Trigger-Host aktuell sein, wenn du Ferientermine änderst.
+
+Das Dashboard blendet die Veraltet-Warnung an unterrichtsfreien Tagen aus, sonst stünde sie während der ganzen Ferien da.
 
 ---
 

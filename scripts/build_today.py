@@ -36,12 +36,30 @@ def load_lehrer_fach():
     return load_json(BASE / "data" / "lehrer_fach.json")
 
 def load_schulfrei():
-    """Unterrichtsfreie Tage (Studientage, bewegliche Ferientage, Ausfluege).
+    """Unterrichtsfreie Tage (Ferien, Feiertage, Studientage, Ausfluege).
 
-    Solche Tage stehen oft in keinem Vertretungsplan. Ohne diese Liste wuerde
+    Solche Tage stehen in keinem Vertretungsplan. Ohne diese Liste wuerde
     das Dashboard einen vollen Schultag anzeigen.
     """
     return load_json(BASE / "data" / "schulfrei.json")
+
+def schulfrei_grund(target_date: str, eintraege: dict | None = None) -> str:
+    """Grund, warum target_date unterrichtsfrei ist, sonst "".
+
+    Schluessel ist entweder ein einzelner Tag ("2027-05-06") oder ein
+    Zeitraum ("2026-10-17..2026-10-31", Grenzen eingeschlossen). Ohne
+    Zeitraeume braeuchten allein die Sommerferien gut dreissig Einzelzeilen.
+    """
+    if eintraege is None:
+        eintraege = load_schulfrei()
+    for key, grund in eintraege.items():
+        if ".." in key:
+            von, _, bis = key.partition("..")
+            if von <= target_date <= bis:
+                return grund
+        elif key == target_date:
+            return grund
+    return ""
 
 def load_lehrer_namen():
     return load_json(BASE / "data" / "lehrer_namen.json")
@@ -119,7 +137,7 @@ def build_plan(target_date=None, vtg_file="latest_7c.json"):
     if not (BASE / "data" / "untis_7c.json").exists():
         return None
 
-    grund = load_schulfrei().get(target_date)
+    grund = schulfrei_grund(target_date)
     if grund:
         return {
             "date": target_date, "day": day_name, "class": "07c",

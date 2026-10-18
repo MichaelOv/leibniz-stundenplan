@@ -648,3 +648,71 @@ class TestSchulfrei:
         # Ohne Unterricht gibt es kein Unterrichtsende, also kein Weiterspringen
         assert run_all.letzte_stunde(date(2026, 9, 17)) is None
         assert run_all.schulende(date(2026, 9, 17)) is None
+
+
+from build_today import schulfrei_grund
+
+
+class TestSchulfreiZeitraum:
+    """Ferien als Einzeltage zu pflegen hiesse, allein fuer die Sommerferien
+    gut dreissig Zeilen zu schreiben. Deshalb erlauben die Schluessel einen
+    Zeitraum, dessen Grenzen beide mitzaehlen."""
+
+    FERIEN = {
+        "2026-09-17": "Lehrkräfteausflug",
+        "2026-10-17..2026-10-31": "Herbstferien",
+        "2026-12-23..2027-01-06": "Weihnachtsferien",
+    }
+
+    def test_einzeltag_weiterhin_moeglich(self):
+        assert schulfrei_grund("2026-09-17", self.FERIEN) == "Lehrkräfteausflug"
+
+    def test_tag_im_zeitraum(self):
+        assert schulfrei_grund("2026-10-21", self.FERIEN) == "Herbstferien"
+
+    def test_grenzen_zaehlen_mit(self):
+        assert schulfrei_grund("2026-10-17", self.FERIEN) == "Herbstferien"
+        assert schulfrei_grund("2026-10-31", self.FERIEN) == "Herbstferien"
+
+    def test_tag_davor_und_danach_frei(self):
+        assert schulfrei_grund("2026-10-16", self.FERIEN) == ""
+        assert schulfrei_grund("2026-11-02", self.FERIEN) == ""
+
+    def test_zeitraum_ueber_jahreswechsel(self):
+        # Stringvergleich auf ISO-Daten muss auch ueber den Jahreswechsel tragen
+        assert schulfrei_grund("2026-12-31", self.FERIEN) == "Weihnachtsferien"
+        assert schulfrei_grund("2027-01-04", self.FERIEN) == "Weihnachtsferien"
+        assert schulfrei_grund("2027-01-07", self.FERIEN) == ""
+
+    def test_leere_liste(self):
+        assert schulfrei_grund("2026-10-21", {}) == ""
+
+
+class TestIstSchultagGuard:
+    """Der Cron soll in den Ferien keine Workflows ausloesen. Der letzte
+    Ferientag muss aber laufen, sonst fehlt am ersten Schultag der Plan."""
+
+    def _guard(self, monkeypatch, today, tomorrow, eintraege):
+        import ist_schultag
+        monkeypatch.setattr(ist_schultag, "get_today", lambda: today)
+        monkeypatch.setattr(ist_schultag, "get_tomorrow", lambda t: tomorrow)
+        monkeypatch.setattr(ist_schultag, "schulfrei_grund",
+                            lambda d: eintraege.get(d, ""))
+        return ist_schultag.main()
+
+    def test_mitten_in_den_ferien_kein_lauf(self, monkeypatch):
+        ferien = {"2026-10-21": "Herbstferien", "2026-10-22": "Herbstferien"}
+        assert self._guard(monkeypatch, "2026-10-21", "2026-10-22", ferien) == 1
+
+    def test_letzter_ferientag_laeuft(self, monkeypatch):
+        # Morgen ist Schule, der Plan dafuer muss rechtzeitig geholt werden
+        ferien = {"2026-10-30": "Herbstferien"}
+        assert self._guard(monkeypatch, "2026-10-30", "2026-11-02", ferien) == 0
+
+    def test_schultag_laeuft(self, monkeypatch):
+        assert self._guard(monkeypatch, "2026-11-02", "2026-11-03", {}) == 0
+
+    def test_einzelner_freier_tag_laeuft(self, monkeypatch):
+        # Ein Brueckentag mitten in der Woche darf die Pipeline nicht stoppen
+        frei = {"2027-05-06": "Christi Himmelfahrt"}
+        assert self._guard(monkeypatch, "2027-05-06", "2027-05-07", frei) == 0

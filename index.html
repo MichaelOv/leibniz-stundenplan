@@ -613,9 +613,17 @@
     return t;
   }
 
+  // An unterrichtsfreien Tagen loest der Cron bewusst keinen Lauf aus, es gibt
+  // dann nichts zu holen. Ohne diese Ausnahme wuerde die Warnung ab dem ersten
+  // Ferientag anschlagen und waehrend der ganzen Ferien stehen bleiben.
+  function nurSchulfrei(d) {
+    if (Array.isArray(d.days)) return d.days.length > 0 && d.days.every(t => t.schulfrei);
+    return !!d.schulfrei;
+  }
+
   function renderAlter(d) {
     const box = document.getElementById('altBox');
-    if (!d.generated_at) { box.style.display = 'none'; return; }
+    if (!d.generated_at || nurSchulfrei(d)) { box.style.display = 'none'; return; }
     const stand = new Date(d.generated_at);
     const erwartet = letzterErwarteterLauf(new Date());
     const verspaetungMin = (erwartet - stand) / 60000;
