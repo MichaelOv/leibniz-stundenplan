@@ -1,12 +1,85 @@
 {
-  "date": "2026-10-20",
-  "day": "Dienstag",
+  "date": "2026-11-02",
+  "day": "Montag",
   "class": "07c",
-  "plan": [],
-  "vtg_count": 0,
-  "schulfrei": "Herbstferien",
-  "generated_at": "2026-10-18T17:41:13.392743+00:00",
-  "pdf_stand": "",
-  "untis_schuljahr": "",
+  "plan": [
+    {
+      "stunde": 1,
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
+      "raum": "433",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
+      "stunde": 2,
+      "fach": "Mathe",
+      "fach_kurz": "M",
+      "lehrer": "MAT",
+      "raum": "433",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
+      "stunde": 3,
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "433",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
+      "stunde": 4,
+      "fach": "Deutsch",
+      "fach_kurz": "D",
+      "lehrer": "GRU",
+      "raum": "433",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": "",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
+      "stunde": 5,
+      "fach": "Erdkunde",
+      "fach_kurz": "EK",
+      "lehrer": "MAN",
+      "raum": "433",
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "frei; verlegt auf Fr. 16.10. 1. Std.",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    },
+    {
+      "stunde": 6,
+      "fach": "Englisch",
+      "fach_kurz": "E",
+      "lehrer": "MOR",
+      "raum": "433",
+      "status": "frei",
+      "vertreter": "",
+      "hinweis": "frei",
+      "lehrer_name": "",
+      "vertreter_name": ""
+    }
+  ],
+  "vtg_count": 2,
+  "generated_at": "2026-10-29T13:00:29.697226+00:00",
+  "pdf_stand": "2026-10-16T07:24:00+02:00",
+  "schulfrei": "",
+  "untis_schuljahr": "2026/27",
   "untis_stale": false
 }
