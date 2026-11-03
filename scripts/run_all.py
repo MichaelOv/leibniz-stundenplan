@@ -11,6 +11,7 @@ from zoneinfo import ZoneInfo
 _TZ_BERLIN = ZoneInfo("Europe/Berlin")
 from notify import send_ntfy
 from constants import DAYS_DE, NOTIFY_HOUR_CUTOFF, STUNDEN_ZEITEN, WEEK_FETCH_FROM_HOUR
+from build_today import schulfrei_grund
 
 BASE = Path(__file__).resolve().parent
 PYTHON = sys.executable
@@ -27,7 +28,7 @@ def letzte_stunde(d: date):
     """Hoechste Stundennummer, die an diesem Wochentag regulaer stattfindet."""
     if d.weekday() > 4:
         return None
-    if load_json_datei(DATA / "schulfrei.json").get(d.isoformat()):
+    if schulfrei_grund(d.isoformat(), load_json_datei(DATA / "schulfrei.json")):
         return None   # unterrichtsfrei: kein Unterrichtsende, kein Umschalten
     plan = load_json_datei(DATA / "untis_7c.json")
     tag = DAYS_DE[d.weekday()]

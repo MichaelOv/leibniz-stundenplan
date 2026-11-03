@@ -716,3 +716,36 @@ class TestIstSchultagGuard:
         # Ein Brueckentag mitten in der Woche darf die Pipeline nicht stoppen
         frei = {"2027-05-06": "Christi Himmelfahrt"}
         assert self._guard(monkeypatch, "2027-05-06", "2027-05-07", frei) == 0
+
+
+class TestUmschaltungInFerienZeitraum:
+    """Regression: run_all las schulfrei.json mit einem direkten .get() und
+    kannte die Zeitraumsyntax nicht. Dadurch galt ein Ferientag als normaler
+    Schultag, get_today() sprang mittags weiter und der Cron-Guard loeste
+    schon am vorletzten Ferientag wieder aus."""
+
+    def _vorbereiten(self, tmp_path, monkeypatch, eintraege):
+        import json, importlib, run_all
+        importlib.reload(run_all)
+        monkeypatch.setattr(run_all, "DATA", tmp_path)
+        (tmp_path / "schulfrei.json").write_text(json.dumps(eintraege), encoding="utf-8")
+        (tmp_path / "untis_7c.json").write_text(json.dumps(
+            {"6": {"Donnerstag": [{"fach": "D", "lehrer": "GRU", "raum": "433"}]}}),
+            encoding="utf-8")
+        return run_all
+
+    def test_ferientag_aus_zeitraum_hat_kein_unterrichtsende(self, tmp_path, monkeypatch):
+        from datetime import date
+        run_all = self._vorbereiten(tmp_path, monkeypatch,
+                                    {"2026-10-17..2026-10-31": "Herbstferien"})
+        # Donnerstag 29.10. liegt im Zeitraum, nicht als Einzeltag
+        assert run_all.letzte_stunde(date(2026, 10, 29)) is None
+        assert run_all.schulende(date(2026, 10, 29)) is None
+
+    def test_schultag_nach_den_ferien_unveraendert(self, tmp_path, monkeypatch):
+        from datetime import date
+        run_all = self._vorbereiten(tmp_path, monkeypatch,
+                                    {"2026-10-17..2026-10-31": "Herbstferien"})
+        # Donnerstag 05.11. liegt hinter dem Zeitraum
+        assert run_all.letzte_stunde(date(2026, 11, 5)) == 6
+        assert run_all.schulende(date(2026, 11, 5)) is not None
