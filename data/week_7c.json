@@ -342,8 +342,8 @@
           "fach_kurz": "L7",
           "lehrer": "ZIM",
           "raum": "102",
-          "status": "normal",
-          "vertreter": "",
+          "status": "vertretung",
+          "vertreter": "WES",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -377,10 +377,10 @@
           "fach": "Evangelische Rel.",
           "fach_kurz": "ER",
           "lehrer": "PAR",
-          "raum": "A2.11",
-          "status": "normal",
-          "vertreter": "",
-          "hinweis": "",
+          "raum": "A1.11",
+          "status": "vertretung",
+          "vertreter": "PER",
+          "hinweis": "ER Raumänderung wg. Klassenbedarfs",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -402,8 +402,8 @@
           "fach_kurz": "KR",
           "lehrer": "VOS",
           "raum": "102",
-          "status": "normal",
-          "vertreter": "",
+          "status": "vertretung",
+          "vertreter": "GRU",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -433,10 +433,10 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 0,
-      "has_vertretungsplan": false,
+      "vtg_count": 3,
+      "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": ""
+      "pdf_stand": "2026-11-02T22:44:00+01:00"
     },
     {
       "date": "2026-11-06",
@@ -523,5 +523,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-11-03T07:55:22.315501+00:00"
+  "generated_at": "2026-11-03T08:00:31.581284+00:00"
 }
