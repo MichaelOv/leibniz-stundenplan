@@ -51,7 +51,7 @@ Ferien, Feiertage, Studientage oder Ausflüge des Kollegiums stehen in keinem Ve
 }
 ```
 
-Hinterlegt sind die NRW-Ferien des Schuljahrs 2026/27 sowie die Feiertage, die auf einen Schultag fallen. **Die drei beweglichen Ferientage legt jede Schule selbst fest, die musst du ergänzen**, sobald sie bekannt sind.
+Hinterlegt sind die NRW-Ferien des Schuljahrs 2026/27 sowie die unterrichtsfreien Tage laut [Schulkalender](https://leibniz-gymnasium.net/kalender-35.html): pädagogischer Tag, Rosenmontag und die Brückentage nach Christi Himmelfahrt und Fronleichnam. Kommt unterjährig ein Tag dazu, hier eintragen und auf den Trigger-Host ziehen.
 
 **Kein Vertretungsplan verfügbar**
 Ist für einen Tag kein PDF abrufbar (Ferien, Wochenende, noch nicht hochgeladen), antwortet der Server mit 404. Das ist ein erwarteter Fall und kein Fehler: Es wird der reguläre Untis-Plan angezeigt, der Lauf bleibt grün.

@@ -1,11 +1,12 @@
 {
   "2026-09-17": "Lehrkräfteausflug",
   "2026-10-17..2026-10-31": "Herbstferien",
+  "2026-11-09": "Pädagogischer Tag",
   "2026-12-23..2027-01-06": "Weihnachtsferien",
+  "2027-02-08": "Rosenmontag",
   "2027-03-22..2027-04-03": "Osterferien",
-  "2027-05-06": "Christi Himmelfahrt",
-  "2027-05-17": "Pfingstmontag",
-  "2027-05-18": "Ferientag nach Pfingsten",
-  "2027-05-27": "Fronleichnam",
+  "2027-05-06..2027-05-07": "Christi Himmelfahrt",
+  "2027-05-17..2027-05-18": "Pfingsten",
+  "2027-05-27..2027-05-28": "Fronleichnam",
   "2027-07-19..2027-08-31": "Sommerferien"
 }
