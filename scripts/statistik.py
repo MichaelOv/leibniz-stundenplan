@@ -26,8 +26,22 @@ from build_today import schulfrei_grund
 from constants import DAYS_DE, SCHOOL_YEAR_START_MONTH, expected_schuljahr, zeitraum_fuer
 
 BASE = Path(__file__).resolve().parents[1]
-DATEIEN = ["data/today_7c.json", "data/tomorrow_7c.json", "data/week_7c.json"]
 AUSFALL, VERTRETUNG = "frei", "vertretung"
+
+# Die Klasse steckt im Dateinamen und wechselt mit dem Schuljahr
+# (data/today_6c.json, spaeter data/today_7c.json). Fest verdrahtet waeren
+# die frueheren Schuljahre unsichtbar, obwohl sie im Repo liegen.
+MUSTER = ("data/today_*.json", "data/tomorrow_*.json", "data/week_*.json")
+
+
+def plan_dateien() -> list[str]:
+    """Alle Plandateien, die es in der Historie je gegeben hat."""
+    # Ohne --diff-filter: die 7c-Dateien sind durch Umbenennung entstanden
+    # und tauchen deshalb nie als Neuanlage auf.
+    r = subprocess.run(["git", "log", "--all", "--pretty=format:", "--name-only",
+                        "--"] + list(MUSTER),
+                       cwd=BASE, capture_output=True, text=True, check=True)
+    return sorted({z.strip() for z in r.stdout.splitlines() if z.strip()})
 
 
 def schuljahr_beginn(heute: date) -> date:
@@ -61,20 +75,31 @@ def _blobs(anfragen: list[str]) -> list[bytes | None]:
     return inhalte
 
 
-def historie(seit: str) -> dict[str, list]:
-    """Datum -> Plan, je aus dem spaetesten Commit, der den Tag enthaelt."""
-    log = subprocess.run(
-        ["git", "log", "--reverse", "--format=%H %ct", f"--since={seit}"],
-        cwd=BASE, capture_output=True, text=True, check=True)
+def historie(seit: str = "", mit_klasse: bool = False) -> dict:
+    """Datum -> Plan, je aus dem spaetesten Commit, der den Tag enthaelt.
+
+    Ohne seit wird die gesamte Historie gelesen. Das ist noetig, um auch
+    frueheren Schuljahren nachzugehen, deren Daten unter dem Dateinamen der
+    damaligen Klasse liegen.
+
+    Mit mit_klasse steht je Tag (plan, klasse) statt nur plan. Die Klasse
+    gehoert an den Tag, nicht an den Zeitraum: die Umstellung von 6c auf 7c
+    geschah mitten in den Sommerferien.
+    """
+    befehl = ["git", "log", "--reverse", "--format=%H %ct"]
+    if seit:
+        befehl.append(f"--since={seit}")
+    log = subprocess.run(befehl, cwd=BASE, capture_output=True, text=True, check=True)
     commits = [z.split() for z in log.stdout.strip().splitlines()]
     if not commits:
         return {}
 
-    inhalte = _blobs([f"{c}:{f}" for c, _ in commits for f in DATEIEN])
+    dateien = plan_dateien()
+    inhalte = _blobs([f"{c}:{f}" for c, _ in commits for f in dateien])
     stand, i = {}, 0
     for _, ts in commits:
         ts = int(ts)
-        for _ in DATEIEN:
+        for _ in dateien:
             b = inhalte[i] if i < len(inhalte) else None
             i += 1
             if not b:
@@ -88,8 +113,13 @@ def historie(seit: str) -> dict[str, list]:
                 datum = t.get("date")
                 if datum and isinstance(t.get("plan"), list):
                     if datum not in stand or ts >= stand[datum][0]:
-                        stand[datum] = (ts, t["plan"])
-    return {datum: plan for datum, (_, plan) in stand.items()}
+                        # In week_*.json steht die Klasse nur im Dokument,
+                        # nicht je Tag.
+                        klasse = t.get("class") or d.get("class", "")
+                        stand[datum] = (ts, t["plan"], klasse)
+    if mit_klasse:
+        return {datum: (plan, kl) for datum, (_, plan, kl) in stand.items()}
+    return {datum: plan for datum, (_, plan, _kl) in stand.items()}
 
 
 def auswerten(stand: dict, seit: str, bis: str) -> dict:
@@ -191,11 +221,14 @@ def main(argv=None) -> int:
     ap.add_argument("--fach", default="", help="nur dieses Fach auswerten")
     ap.add_argument("--halbjahr", choices=("1", "2"),
                     help="nur das erste oder zweite Schulhalbjahr")
+    ap.add_argument("--schuljahr", metavar="JJJJ/JJ",
+                    help="ein ganzes Schuljahr, z.B. 2025/26")
     a = ap.parse_args(argv)
 
-    if a.halbjahr:
-        sj = expected_schuljahr(heute)
-        von, bis = zeitraum_fuer(sj, "hj" + a.halbjahr)
+    if a.schuljahr or a.halbjahr:
+        sj = a.schuljahr or expected_schuljahr(heute)
+        teil = "hj" + a.halbjahr if a.halbjahr else "jahr"
+        von, bis = zeitraum_fuer(sj, teil)
         a.seit, a.bis = von.isoformat(), min(bis, heute).isoformat()
 
     if a.seit > a.bis:

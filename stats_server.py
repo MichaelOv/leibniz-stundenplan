@@ -22,9 +22,6 @@ from constants import DAYS_DE, expected_schuljahr, halbjahr_grenze, zeitraum_fue
 
 app = Flask(__name__, static_folder=None)   # kein static_folder: sonst waere .env lesbar
 
-# Beginn der Aufzeichnung: frueher reicht die Git-Historie nicht zurueck.
-AB = "2026-07-01"
-
 _cache: dict = {}
 
 
@@ -44,12 +41,25 @@ def gesamthistorie() -> dict:
     key = _head()
     if key not in _cache:
         _cache.clear()
-        _cache[key] = historie(AB)
+        _cache[key] = historie(mit_klasse=True)
     return _cache[key]
 
 
 def daten(seit: str, bis: str) -> dict:
-    return auswerten(gesamthistorie(), seit, bis)
+    return auswerten({d: plan for d, (plan, _) in gesamthistorie().items()}, seit, bis)
+
+
+def klassen_im(seit: str, bis: str) -> str:
+    """Welche Klasse(n) im Zeitraum tatsaechlich Unterricht hatten.
+
+    Die Klasse steckt in den Daten jedes Tages. Ohne das traegt die Seite
+    fuer ein frueheres Schuljahr die heutige Klasse im Titel und behauptet
+    damit etwas Falsches. Unterrichtsfreie Tage zaehlen nicht: die
+    Umstellung von 6c auf 7c geschah mitten in den Sommerferien.
+    """
+    gefunden = {kl.lstrip("0") for d, (plan, kl) in gesamthistorie().items()
+                if kl and plan and seit <= d <= bis and not schulfrei_grund(d)}
+    return ", ".join(sorted(gefunden))
 
 
 def schuljahre() -> list[str]:
@@ -60,7 +70,7 @@ def schuljahre() -> list[str]:
     unter dem dann eine leere Seite liegt.
     """
     vorhanden = {expected_schuljahr(date.fromisoformat(d))
-                 for d, plan in gesamthistorie().items()
+                 for d, (plan, _) in gesamthistorie().items()
                  if plan and not schulfrei_grund(d)}
     vorhanden.add(expected_schuljahr(date.today()))
     return sorted(vorhanden, reverse=True)
@@ -133,7 +143,7 @@ SEITE = """<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ausfallstatistik 7c</title>
+<title>Ausfallstatistik</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='1' y='9' width='3' height='6' fill='%232a78d6'/%3E%3Crect x='6' y='5' width='3' height='10' fill='%23eb6834'/%3E%3Crect x='11' y='2' width='3' height='13' fill='%232a78d6'/%3E%3C/svg%3E">
 <style>
   :root {
@@ -227,7 +237,7 @@ SEITE = """<!DOCTYPE html>
 </head>
 <body>
 <div class="wrap">
-  <h1>Ausfallstatistik 7c</h1>
+  <h1>Ausfallstatistik__KLASSE__</h1>
   <p class="unter">__ZEITRAUM__</p>
 
   <nav class="filter" aria-label="Zeitraum">__FILTER__</nav>
@@ -321,12 +331,20 @@ def seite():
 
     # Ein Halbjahr, das noch nicht angefangen hat, waere sonst nur eine leere Seite
     hinweis = ""
+    erster = min(gesamthistorie(), default="")  # frueheste Aufzeichnung
+    if erster and seit < erster <= bis:
+        # Sonst sieht ein angebrochen aufgezeichnetes Schuljahr aus wie ein
+        # vollstaendiges mit auffallend wenigen Schultagen.
+        hinweis = ('<p class="warnbox">Aufzeichnung beginnt erst am '
+                   + date.fromisoformat(erster).strftime("%d.%m.%Y")
+                   + ". Frühere Tage dieses Zeitraums fehlen.</p>")
     if seit > bis:
         hinweis = (f'<p class="warnbox">Dieser Zeitraum hat noch nicht begonnen. '
                    f'Das 2. Halbjahr {sj} startet am '
                    f'{(halbjahr_grenze(sj) + timedelta(days=1)).strftime("%d.%m.%Y")}.</p>')
     elif e["schultage"] == 0:
         hinweis = '<p class="warnbox">Für diesen Zeitraum liegen keine Daten vor.</p>'
+
 
     fach_zeilen = sorted(f.items(), key=lambda x: (-x[1]["ausfall"], x[0]))
     max_fach = max([w["ausfall"] + w["vertretung"] for _, w in fach_zeilen] or [1])
@@ -344,7 +362,10 @@ def seite():
     # gekappte Ende vor dem Anfang. Dann die geplanten Grenzen zeigen.
     a_von, a_bis = (zeitraum_fuer(sj, teil) if seit > bis
                     else (date.fromisoformat(seit), date.fromisoformat(bis)))
+    kl = klassen_im(seit, bis) if seit <= bis else ""
+    klasse = (" " + kl) if kl else ""
     html = (SEITE
+            .replace("__KLASSE__", klasse)
             .replace("__ZEITRAUM__", f"{titel}: {a_von.strftime('%d.%m.%Y')} "
                                      f"bis {a_bis.strftime('%d.%m.%Y')}")
             .replace("__FILTER__", links)

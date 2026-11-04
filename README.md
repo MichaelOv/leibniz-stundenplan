@@ -155,7 +155,10 @@ python scripts/statistik.py                    # seit Schuljahresbeginn
 python scripts/statistik.py --seit 2026-09-02  # ab Datum
 python scripts/statistik.py --fach Mathe       # nur ein Fach
 python scripts/statistik.py --halbjahr 1       # nur das erste Schulhalbjahr
+python scripts/statistik.py --schuljahr 2025/26
 ```
+
+Ausgewertet werden alle Schuljahre, die im Repo liegen, auch die mit der früheren Klasse: Die Plandateien tragen die Klasse im Namen (`today_6c.json`, später `today_7c.json`) und werden aus der Historie ermittelt statt fest verdrahtet. Die Aufzeichnung beginnt am 05.05.2026, frühere Tage gibt es nicht. Betrifft das den gewählten Zeitraum, sagt die Seite es.
 
 Ausgegeben wird je Fach die Zahl der Stunden, Ausfälle, Vertretungen und die Ausfallquote, darunter die einzelnen Vorkommnisse mit Datum, Stunde und Hinweis. Das Skript braucht das Git-Repo und läuft deshalb nur lokal, nicht in der Pipeline.
 

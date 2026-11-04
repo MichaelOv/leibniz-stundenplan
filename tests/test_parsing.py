@@ -857,3 +857,46 @@ class TestSchuljahrZeitraeume:
 
     def test_unbekannter_teil_ist_das_ganze_jahr(self):
         assert zeitraum_fuer("2026/27", "quatsch") == zeitraum_fuer("2026/27", "jahr")
+
+
+from statistik import plan_dateien
+
+
+class TestPlanDateien:
+    """Die Klasse steckt im Dateinamen und wechselt mit dem Schuljahr. Fest
+    verdrahtet waeren frühere Schuljahre unsichtbar, obwohl sie im Repo
+    liegen. Die 7c-Dateien sind zudem durch Umbenennung entstanden, tauchen
+    also nie als Neuanlage auf."""
+
+    def test_findet_mehrere_klassen(self):
+        dateien = plan_dateien()
+        assert "data/today_6c.json" in dateien
+        assert "data/today_7c.json" in dateien
+
+    def test_nur_plandateien(self):
+        for d in plan_dateien():
+            assert d.startswith("data/")
+            assert any(t in d for t in ("today_", "tomorrow_", "week_"))
+
+    def test_keine_hilfsdateien(self):
+        dateien = plan_dateien()
+        assert "data/untis_7c.json" not in dateien
+        assert "data/schulfrei.json" not in dateien
+
+
+class TestHistorieMitKlasse:
+    """Die Klasse gehoert an den Tag, nicht an den Zeitraum: die Umstellung
+    von 6c auf 7c geschah mitten in den Sommerferien. In week_*.json steht
+    sie ausserdem nur im Dokument, nicht je Tag."""
+
+    def test_klasse_je_tag(self):
+        from statistik import historie
+        h = historie(mit_klasse=True)
+        # Mai 2026 war 6c, November 2026 ist 7c
+        assert h["2026-05-13"][1] == "06c"
+        assert h["2026-11-03"][1] == "07c"
+
+    def test_ohne_flag_nur_plan(self):
+        from statistik import historie
+        h = historie("2026-11-01")
+        assert isinstance(h["2026-11-03"], list)
