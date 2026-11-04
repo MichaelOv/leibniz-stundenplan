@@ -6,6 +6,7 @@ das Repository. Registriert im Service-Portal, siehe README.
 """
 import json
 import subprocess
+import tempfile
 import sys
 from datetime import date, timedelta
 from urllib.parse import quote as url_quote
@@ -21,6 +22,8 @@ from statistik import auswerten, historie
 from constants import DAYS_DE, expected_schuljahr, halbjahr_grenze, zeitraum_fuer
 
 app = Flask(__name__, static_folder=None)   # kein static_folder: sonst waere .env lesbar
+
+PORT = 8081
 
 _cache: dict = {}
 
@@ -41,12 +44,12 @@ def gesamthistorie() -> dict:
     key = _head()
     if key not in _cache:
         _cache.clear()
-        _cache[key] = historie(mit_klasse=True)
+        _cache[key] = historie(meta=True)
     return _cache[key]
 
 
 def daten(seit: str, bis: str) -> dict:
-    return auswerten({d: plan for d, (plan, _) in gesamthistorie().items()}, seit, bis)
+    return auswerten({d: e["plan"] for d, e in gesamthistorie().items()}, seit, bis)
 
 
 def klassen_im(seit: str, bis: str) -> str:
@@ -57,9 +60,22 @@ def klassen_im(seit: str, bis: str) -> str:
     damit etwas Falsches. Unterrichtsfreie Tage zaehlen nicht: die
     Umstellung von 6c auf 7c geschah mitten in den Sommerferien.
     """
-    gefunden = {kl.lstrip("0") for d, (plan, kl) in gesamthistorie().items()
-                if kl and plan and seit <= d <= bis and not schulfrei_grund(d)}
+    gefunden = {e["klasse"].lstrip("0") for d, e in gesamthistorie().items()
+                if e["klasse"] and e["plan"] and seit <= d <= bis
+                and not schulfrei_grund(d)}
     return ", ".join(sorted(gefunden))
+
+
+def abdeckung(seit: str, bis: str) -> tuple[int, int]:
+    """(Tage mit Vertretungsplan, erfasste Schultage) im Zeitraum.
+
+    An Tagen ohne Vertretungsplan steht nur der regulaere Stundenplan. Sie
+    zaehlen als ausfallfrei, obwohl das niemand geprueft hat. Die Quoten
+    sind deshalb eine Untergrenze, und das gehoert sichtbar auf die Seite.
+    """
+    tage = [e for d, e in gesamthistorie().items()
+            if e["plan"] and seit <= d <= bis and not schulfrei_grund(d)]
+    return sum(1 for e in tage if e["vertretungsplan"]), len(tage)
 
 
 def schuljahre() -> list[str]:
@@ -70,8 +86,8 @@ def schuljahre() -> list[str]:
     unter dem dann eine leere Seite liegt.
     """
     vorhanden = {expected_schuljahr(date.fromisoformat(d))
-                 for d, (plan, _) in gesamthistorie().items()
-                 if plan and not schulfrei_grund(d)}
+                 for d, e in gesamthistorie().items()
+                 if e["plan"] and not schulfrei_grund(d)}
     vorhanden.add(expected_schuljahr(date.today()))
     return sorted(vorhanden, reverse=True)
 
@@ -220,6 +236,26 @@ SEITE = """<!DOCTYPE html>
   .leer { color:var(--muted); }
   .fuss { color:var(--muted); font-size:.78rem; margin-top:24px; }
   .tabellenrahmen { overflow-x:auto; }
+  .grundlage { color:var(--ink2); font-size:.82rem; margin:-10px 0 20px;
+               padding-left:10px; border-left:3px solid var(--grid); }
+  .aktionen { display:flex; gap:10px; margin:0 0 20px; }
+  .knopf { display:inline-flex; align-items:center; gap:7px; padding:8px 16px;
+           border:1px solid var(--rand); border-radius:8px; background:var(--surface);
+           color:var(--ink); text-decoration:none; font-size:.875rem; }
+  .knopf:hover { border-color:var(--ausfall); }
+  .knopf:focus-visible { outline:2px solid var(--ausfall); outline-offset:2px; }
+  @media print {
+    /* Ohne print-color-adjust druckt der Browser die Balken weiss weg,
+       und damit verschwindet die eigentliche Aussage. */
+    * { print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+    body { background:#fff; padding:0; font-size:11px; }
+    .filter, .aktionen { display:none; }
+    section, .kachel { break-inside:avoid; border-color:#ccc; }
+    section { margin-bottom:12px; padding:12px; }
+    tr { break-inside:avoid; }
+    thead { display:table-header-group; }
+    h1 { font-size:18px; }
+  }
   @media (max-width:560px) {
     /* Nebeneinander bleibt fuer den Balken zu wenig Platz: Name, Balken und
        Zahl stehen dann untereinander statt in einer gequetschten Zeile. */
@@ -241,6 +277,7 @@ SEITE = """<!DOCTYPE html>
   <p class="unter">__ZEITRAUM__</p>
 
   <nav class="filter" aria-label="Zeitraum">__FILTER__</nav>
+  <div class="aktionen"><a class="knopf" href="__PDFLINK__"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8M4.5 7L8 10.5 11.5 7M2.5 13.5h11"/></svg> Als PDF herunterladen</a></div>
   __HINWEIS__
 
   <div class="kacheln">
@@ -250,6 +287,8 @@ SEITE = """<!DOCTYPE html>
     <div class="kachel"><div class="zahl">__VERTRETUNG__</div><div class="label">Vertreten</div></div>
     <div class="kachel"><div class="zahl">__QUOTE__ %</div><div class="label">Ausfallquote</div></div>
   </div>
+
+  <p class="grundlage">__GRUNDLAGE__</p>
 
   <div class="legende">
     <span><i class="punkt" style="background:var(--ausfall)"></i> Ausfall</span>
@@ -362,10 +401,25 @@ def seite():
     # gekappte Ende vor dem Anfang. Dann die geplanten Grenzen zeigen.
     a_von, a_bis = (zeitraum_fuer(sj, teil) if seit > bis
                     else (date.fromisoformat(seit), date.fromisoformat(bis)))
+    mit_plan, erfasst = abdeckung(seit, bis)
+    if erfasst == 0:
+        grundlage = "Noch keine erfassten Schultage in diesem Zeitraum."
+    elif mit_plan == erfasst:
+        grundlage = (f"Datengrundlage: alle {erfasst} erfassten Schultage haben "
+                     "einen Vertretungsplan.")
+    else:
+        fehlt = erfasst - mit_plan
+        grundlage = (f"Datengrundlage: {mit_plan} von {erfasst} erfassten Schultagen "
+                     f"haben einen Vertretungsplan. An den übrigen "
+                     f"{fehlt} {'Tag' if fehlt == 1 else 'Tagen'} lag nur der reguläre "
+                     "Plan vor, dort können Ausfälle fehlen. Die Quoten sind also eine "
+                     "Untergrenze.")
     kl = klassen_im(seit, bis) if seit <= bis else ""
     klasse = (" " + kl) if kl else ""
     html = (SEITE
             .replace("__KLASSE__", klasse)
+            .replace("__GRUNDLAGE__", grundlage)
+            .replace("__PDFLINK__", f"statistik.pdf?sj={url_quote(sj, safe='')}&t={teil}")
             .replace("__ZEITRAUM__", f"{titel}: {a_von.strftime('%d.%m.%Y')} "
                                      f"bis {a_bis.strftime('%d.%m.%Y')}")
             .replace("__FILTER__", links)
@@ -383,6 +437,38 @@ def seite():
             .replace("__TABELLE__", tabelle(e["liste"]))
             .replace("__STAND__", date.today().strftime("%d.%m.%Y")))
     return Response(html, mimetype="text/html; charset=utf-8")
+
+
+@app.route("/statistik.pdf")
+def pdf():
+    """Druckt die Seite per Chromium in ein PDF.
+
+    Chromium rendert dieselbe Seite, die auch im Browser steht, deshalb
+    gelten die @media-print-Regeln und es gibt kein zweites Layout, das
+    auseinanderlaufen koennte.
+    """
+    sj, teil = _wahl()
+    seit, bis, titel = zeitraum(sj, teil)
+
+    # Die Parameter kommen aus _wahl() und sind dort auf bekannte Werte
+    # begrenzt, es landet also nichts Ungeprueftes in der URL.
+    ziel = f"http://127.0.0.1:{PORT}/?sj={url_quote(sj, safe='')}&t={teil}"
+    with tempfile.TemporaryDirectory() as tmp:
+        datei = Path(tmp) / "statistik.pdf"
+        r = subprocess.run(
+            ["/usr/bin/chromium", "--headless=new", "--no-sandbox", "--disable-gpu",
+             "--no-pdf-header-footer", f"--print-to-pdf={datei}", ziel],
+            capture_output=True, timeout=120)
+        if not datei.exists():
+            return Response("PDF konnte nicht erzeugt werden:\n"
+                            + r.stderr.decode("utf-8", "replace")[-500:],
+                            status=500, mimetype="text/plain; charset=utf-8")
+        inhalt = datei.read_bytes()
+
+    kl = (klassen_im(seit, bis) or "7c").replace(", ", "-")
+    name = f"ausfallstatistik-{kl}-{sj.replace('/', '-')}-{teil}.pdf"
+    return Response(inhalt, mimetype="application/pdf", headers={
+        "Content-Disposition": f'attachment; filename="{name}"'})
 
 
 @app.route("/daten.json")
@@ -405,4 +491,6 @@ def daten_json():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8081)
+    # threaded, weil die PDF-Route den eigenen Server aufruft: single-threaded
+    # wuerde sich der Request selbst blockieren.
+    app.run(host="0.0.0.0", port=PORT, threaded=True)

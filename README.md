@@ -179,6 +179,10 @@ Das lokale Dashboard selbst läuft ebenso als Dienst (`leibniz-dashboard`, Port 
 
 Die Auswertung der Git-Historie dauert einige Sekunden und wird zwischengespeichert, solange sich der HEAD-Commit nicht ändert.
 
+**Datengrundlage:** Über den Kennzahlen steht, an wie vielen der erfassten Schultage überhaupt ein Vertretungsplan vorlag. Tage ohne Plan zeigen nur den regulären Stundenplan und zählen als ausfallfrei, obwohl das niemand geprüft hat. Die Quoten sind deshalb eine Untergrenze.
+
+**PDF-Export:** Der Knopf *Als PDF herunterladen* lässt Chromium dieselbe Seite drucken, die auch im Browser steht, es gibt also kein zweites Layout. Filterleiste und Knopf werden per `@media print` ausgeblendet, `print-color-adjust: exact` erhält die Balkenfarben. Erreichbar auch direkt unter `/statistik.pdf?sj=2026/27&t=hj1`.
+
 ## Welche Pläne wann geladen werden
 
 Nicht jeder Lauf lädt alles. Die PDF-Stände zeigen, dass die Schule morgens ausschließlich den laufenden Tag aktualisiert (beobachtet 06:07, 07:28, 08:17) und die Folgetage nachmittags veröffentlicht (13:33, 15:09, 16:52).

@@ -75,16 +75,17 @@ def _blobs(anfragen: list[str]) -> list[bytes | None]:
     return inhalte
 
 
-def historie(seit: str = "", mit_klasse: bool = False) -> dict:
+def historie(seit: str = "", meta: bool = False) -> dict:
     """Datum -> Plan, je aus dem spaetesten Commit, der den Tag enthaelt.
 
     Ohne seit wird die gesamte Historie gelesen. Das ist noetig, um auch
     frueheren Schuljahren nachzugehen, deren Daten unter dem Dateinamen der
     damaligen Klasse liegen.
 
-    Mit mit_klasse steht je Tag (plan, klasse) statt nur plan. Die Klasse
-    gehoert an den Tag, nicht an den Zeitraum: die Umstellung von 6c auf 7c
-    geschah mitten in den Sommerferien.
+    Mit meta steht je Tag ein Dict mit plan, klasse und vertretungsplan
+    statt nur dem Plan. Die Klasse gehoert an den Tag, nicht an den
+    Zeitraum: die Umstellung von 6c auf 7c geschah mitten in den
+    Sommerferien.
     """
     befehl = ["git", "log", "--reverse", "--format=%H %ct"]
     if seit:
@@ -96,7 +97,7 @@ def historie(seit: str = "", mit_klasse: bool = False) -> dict:
 
     dateien = plan_dateien()
     inhalte = _blobs([f"{c}:{f}" for c, _ in commits for f in dateien])
-    stand, i = {}, 0
+    stand, vtg, i = {}, {}, 0
     for _, ts in commits:
         ts = int(ts)
         for _ in dateien:
@@ -111,14 +112,22 @@ def historie(seit: str = "", mit_klasse: bool = False) -> dict:
             tage = d.get("days") if isinstance(d.get("days"), list) else [d]
             for t in tage:
                 datum = t.get("date")
-                if datum and isinstance(t.get("plan"), list):
-                    if datum not in stand or ts >= stand[datum][0]:
-                        # In week_*.json steht die Klasse nur im Dokument,
-                        # nicht je Tag.
-                        klasse = t.get("class") or d.get("class", "")
-                        stand[datum] = (ts, t["plan"], klasse)
-    if mit_klasse:
-        return {datum: (plan, kl) for datum, (_, plan, kl) in stand.items()}
+                if not datum or not isinstance(t.get("plan"), list):
+                    continue
+                # Lag an dem Tag je ein Vertretungsplan vor? Einmal gesehen
+                # zaehlt: ein spaeterer Stand aus week_*.json weiss es nicht
+                # immer, der Tag hatte den Plan trotzdem.
+                hatte = bool(t.get("pdf_stand")) or t.get("has_vertretungsplan") is True
+                vtg[datum] = vtg.get(datum, False) or hatte
+                if datum not in stand or ts >= stand[datum][0]:
+                    # In week_*.json steht die Klasse nur im Dokument,
+                    # nicht je Tag.
+                    klasse = t.get("class") or d.get("class", "")
+                    stand[datum] = (ts, t["plan"], klasse)
+    if meta:
+        return {datum: {"plan": plan, "klasse": kl,
+                        "vertretungsplan": vtg.get(datum, False)}
+                for datum, (_, plan, kl) in stand.items()}
     return {datum: plan for datum, (_, plan, _kl) in stand.items()}
 
 

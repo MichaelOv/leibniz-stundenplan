@@ -884,19 +884,58 @@ class TestPlanDateien:
         assert "data/schulfrei.json" not in dateien
 
 
-class TestHistorieMitKlasse:
+class TestHistorieMeta:
     """Die Klasse gehoert an den Tag, nicht an den Zeitraum: die Umstellung
     von 6c auf 7c geschah mitten in den Sommerferien. In week_*.json steht
     sie ausserdem nur im Dokument, nicht je Tag."""
 
     def test_klasse_je_tag(self):
         from statistik import historie
-        h = historie(mit_klasse=True)
+        h = historie(meta=True)
         # Mai 2026 war 6c, November 2026 ist 7c
-        assert h["2026-05-13"][1] == "06c"
-        assert h["2026-11-03"][1] == "07c"
+        assert h["2026-05-13"]["klasse"] == "06c"
+        assert h["2026-11-03"]["klasse"] == "07c"
+
+    def test_vertretungsplan_je_tag(self):
+        from statistik import historie
+        h = historie(meta=True)
+        # 23.09. fiel in den Stillstand des Trigger-Containers, kein Plan
+        assert h["2026-11-03"]["vertretungsplan"] is True
+        assert h["2026-09-23"]["vertretungsplan"] is False
 
     def test_ohne_flag_nur_plan(self):
         from statistik import historie
         h = historie("2026-11-01")
         assert isinstance(h["2026-11-03"], list)
+
+
+
+class TestAbdeckung:
+    """An Tagen ohne Vertretungsplan steht nur der regulaere Plan. Sie zaehlen
+    als ausfallfrei, obwohl das niemand geprueft hat, die Quoten sind also eine
+    Untergrenze. Deshalb wird die Abdeckung auf der Seite ausgewiesen."""
+
+    STAND = {
+        "2026-11-02": {"plan": [{"stunde": 1}], "klasse": "07c", "vertretungsplan": True},
+        "2026-11-03": {"plan": [{"stunde": 1}], "klasse": "07c", "vertretungsplan": True},
+        "2026-11-04": {"plan": [{"stunde": 1}], "klasse": "07c", "vertretungsplan": False},
+        "2026-11-05": {"plan": [], "klasse": "07c", "vertretungsplan": False},
+    }
+
+    def _abdeckung(self, monkeypatch, seit, bis):
+        import stats_server
+        monkeypatch.setattr(stats_server, "gesamthistorie", lambda: self.STAND)
+        return stats_server.abdeckung(seit, bis)
+
+    def test_zaehlt_tage_mit_plan(self, monkeypatch):
+        assert self._abdeckung(monkeypatch, "2026-11-02", "2026-11-04") == (2, 3)
+
+    def test_tage_ohne_eintraege_zaehlen_nicht(self, monkeypatch):
+        # 05.11. hat einen leeren Plan, ist also kein erfasster Schultag
+        assert self._abdeckung(monkeypatch, "2026-11-02", "2026-11-05") == (2, 3)
+
+    def test_zeitraum_grenzt_ab(self, monkeypatch):
+        assert self._abdeckung(monkeypatch, "2026-11-03", "2026-11-03") == (1, 1)
+
+    def test_leerer_zeitraum(self, monkeypatch):
+        assert self._abdeckung(monkeypatch, "2026-12-01", "2026-12-31") == (0, 0)
