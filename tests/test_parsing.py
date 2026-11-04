@@ -749,3 +749,72 @@ class TestUmschaltungInFerienZeitraum:
         # Donnerstag 05.11. liegt hinter dem Zeitraum
         assert run_all.letzte_stunde(date(2026, 11, 5)) == 6
         assert run_all.schulende(date(2026, 11, 5)) is not None
+
+
+from statistik import auswerten, schuljahr_beginn
+
+
+class TestStatistik:
+    """Die Auswertung zaehlt je Fach Stunden, Ausfaelle und Vertretungen.
+    Getestet wird die reine Funktion, nicht der Git-Zugriff."""
+
+    STAND = {
+        "2026-09-07": [
+            {"stunde": 1, "fach": "Mathe", "lehrer": "MAT", "status": "normal"},
+            {"stunde": 2, "fach": "Mathe", "lehrer": "MAT", "status": "frei"},
+            {"stunde": 3, "fach": "Deutsch", "lehrer": "GRU", "status": "vertretung",
+             "vertreter": "MOR"},
+        ],
+        "2026-09-08": [
+            {"stunde": 1, "fach": "Mathe", "lehrer": "MAT", "status": "normal"},
+            {"stunde": 2, "fach": "Deutsch", "lehrer": "GRU", "status": "info"},
+        ],
+        "2026-10-20": [   # ausserhalb des Zeitraums
+            {"stunde": 1, "fach": "Mathe", "lehrer": "MAT", "status": "frei"},
+        ],
+    }
+
+    def _e(self):
+        return auswerten(self.STAND, "2026-09-07", "2026-09-30")
+
+    def test_zaehlt_stunden_je_fach(self):
+        f = self._e()["faecher"]
+        assert f["Mathe"]["gesamt"] == 3
+        assert f["Deutsch"]["gesamt"] == 2
+
+    def test_zaehlt_ausfall_und_vertretung(self):
+        f = self._e()["faecher"]
+        assert f["Mathe"]["ausfall"] == 1
+        assert f["Mathe"]["vertretung"] == 0
+        assert f["Deutsch"]["ausfall"] == 0
+        assert f["Deutsch"]["vertretung"] == 1
+
+    def test_zeitraum_grenzt_ab(self):
+        # Der 20.10. liegt hinter dem Ende und darf nicht mitzaehlen
+        assert self._e()["faecher"]["Mathe"]["gesamt"] == 3
+
+    def test_info_ist_kein_ausfall(self):
+        # Hinweiszeilen sind keine ausgefallene Stunde
+        assert self._e()["faecher"]["Deutsch"]["ausfall"] == 0
+
+    def test_schultage_gezaehlt(self):
+        assert self._e()["schultage"] == 2
+
+    def test_liste_enthaelt_beide_arten(self):
+        arten = sorted(art for _, _, art in self._e()["liste"])
+        assert arten == ["frei", "vertretung"]
+
+    def test_leerer_zeitraum(self):
+        e = auswerten(self.STAND, "2026-12-01", "2026-12-31")
+        assert e["faecher"] == {} and e["schultage"] == 0
+
+
+class TestSchuljahrBeginn:
+    def test_nach_august(self):
+        assert schuljahr_beginn(date(2026, 11, 4)) == date(2026, 8, 1)
+
+    def test_vor_august(self):
+        assert schuljahr_beginn(date(2027, 3, 1)) == date(2026, 8, 1)
+
+    def test_im_august(self):
+        assert schuljahr_beginn(date(2026, 8, 1)) == date(2026, 8, 1)

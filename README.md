@@ -146,6 +146,18 @@ gh workflow run update.yml --repo <github-username>/leibniz-stundenplan
 
 ---
 
+## Statistik (nur lokal)
+
+`scripts/statistik.py` wertet aus, wie oft welches Fach ausgefallen ist. Datenquelle ist die Git-Historie: Die Pipeline committet bei jedem Lauf den Stand von heute, morgen und der Woche, damit liegt die Vergangenheit vollständig im Repository. Für jeden Tag zählt der Stand aus dem spätesten Commit, in dem er vorkommt, also der endgültige.
+
+```bash
+python scripts/statistik.py                    # seit Schuljahresbeginn
+python scripts/statistik.py --seit 2026-09-02  # ab Datum
+python scripts/statistik.py --fach Mathe       # nur ein Fach
+```
+
+Ausgegeben wird je Fach die Zahl der Stunden, Ausfälle, Vertretungen und die Ausfallquote, darunter die einzelnen Vorkommnisse mit Datum, Stunde und Hinweis. Das Skript braucht das Git-Repo und läuft deshalb nur lokal, nicht in der Pipeline.
+
 ## Welche Pläne wann geladen werden
 
 Nicht jeder Lauf lädt alles. Die PDF-Stände zeigen, dass die Schule morgens ausschließlich den laufenden Tag aktualisiert (beobachtet 06:07, 07:28, 08:17) und die Folgetage nachmittags veröffentlicht (13:33, 15:09, 16:52).
