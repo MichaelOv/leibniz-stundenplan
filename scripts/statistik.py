@@ -97,7 +97,11 @@ def auswerten(stand: dict, seit: str, bis: str) -> dict:
 
     Reine Funktion ohne Git, damit sie sich testen laesst.
     """
-    faecher = defaultdict(lambda: {"gesamt": 0, "ausfall": 0, "vertretung": 0})
+    leer = lambda: {"gesamt": 0, "ausfall": 0, "vertretung": 0}
+    faecher = defaultdict(leer)
+    wochen = defaultdict(leer)        # Kalenderwoche -> Verlauf
+    wochentage = defaultdict(leer)    # 0 bis 4
+    stunden = defaultdict(leer)       # Stundennummer
     liste, tage = [], set()
     for datum in sorted(stand):
         if not (seit <= datum <= bis):
@@ -110,18 +114,26 @@ def auswerten(stand: dict, seit: str, bis: str) -> dict:
         plan = stand[datum]
         if plan:
             tage.add(datum)
-        for p in plan:
-            fach = p.get("fach") or "(ohne Fach)"
+        d = date.fromisoformat(datum)
+        jahr, kw, _ = d.isocalendar()
+        schluessel = [faecher[p.get("fach") or "(ohne Fach)"] for p in plan]
+        for p, f in zip(plan, schluessel):
             status = p.get("status")
-            f = faecher[fach]
-            f["gesamt"] += 1
+            eimer = [f, wochen[f"{jahr}-KW{kw:02d}"], wochentage[d.weekday()],
+                     stunden[p.get("stunde", 0)]]
+            for e in eimer:
+                e["gesamt"] += 1
             if status == AUSFALL:
-                f["ausfall"] += 1
+                for e in eimer:
+                    e["ausfall"] += 1
                 liste.append((datum, p, AUSFALL))
             elif status == VERTRETUNG:
-                f["vertretung"] += 1
+                for e in eimer:
+                    e["vertretung"] += 1
                 liste.append((datum, p, VERTRETUNG))
-    return {"faecher": dict(faecher), "liste": liste, "schultage": len(tage)}
+    return {"faecher": dict(faecher), "liste": liste, "schultage": len(tage),
+            "wochen": dict(wochen), "wochentage": dict(wochentage),
+            "stunden": dict(stunden)}
 
 
 def _zeile(name, w, breite):

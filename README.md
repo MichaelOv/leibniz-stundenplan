@@ -158,6 +158,19 @@ python scripts/statistik.py --fach Mathe       # nur ein Fach
 
 Ausgegeben wird je Fach die Zahl der Stunden, Ausfälle, Vertretungen und die Ausfallquote, darunter die einzelnen Vorkommnisse mit Datum, Stunde und Hinweis. Das Skript braucht das Git-Repo und läuft deshalb nur lokal, nicht in der Pipeline.
 
+### Statistik-Weboberfläche
+
+`stats_server.py` zeigt dieselbe Auswertung als Seite: Kennzahlen, Balken je Fach, Verlauf nach Kalenderwoche, Aufschlüsselung nach Schulstunde und Wochentag sowie eine Tabelle aller Vorkommnisse. Umschaltbar zwischen Schuljahr, erstem Halbjahr und laufendem Monat. Unter `/daten.json` liegen dieselben Zahlen maschinenlesbar.
+
+Läuft als OpenRC-Dienst auf Port 8081 und ist im Service-Portal des Hosts eingetragen:
+
+```bash
+rc-service leibniz-stats start
+rc-update add leibniz-stats default
+```
+
+Die Auswertung der Git-Historie dauert einige Sekunden und wird zwischengespeichert, solange sich der HEAD-Commit nicht ändert.
+
 ## Welche Pläne wann geladen werden
 
 Nicht jeder Lauf lädt alles. Die PDF-Stände zeigen, dass die Schule morgens ausschließlich den laufenden Tag aktualisiert (beobachtet 06:07, 07:28, 08:17) und die Folgetage nachmittags veröffentlicht (13:33, 15:09, 16:52).
