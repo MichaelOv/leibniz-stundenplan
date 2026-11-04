@@ -22,6 +22,7 @@ from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_today import schulfrei_grund
 from constants import DAYS_DE, SCHOOL_YEAR_START_MONTH
 
 BASE = Path(__file__).resolve().parents[1]
@@ -100,6 +101,11 @@ def auswerten(stand: dict, seit: str, bis: str) -> dict:
     liste, tage = [], set()
     for datum in sorted(stand):
         if not (seit <= datum <= bis):
+            continue
+        # Ferientage tragen in alten Staenden noch den reguaeren Plan: die
+        # Ferien wurden erst spaeter in schulfrei.json gepflegt. Ohne diese
+        # Pruefung zaehlen sie als Schultage voller stattgefundener Stunden.
+        if schulfrei_grund(datum):
             continue
         plan = stand[datum]
         if plan:
