@@ -42,7 +42,7 @@ class TestFetchPdf:
     def test_500_bleibt_echter_fehler(self):
         with _pytest.raises(requests.exceptions.HTTPError):
             fetch_pdf(_FakeSession(_FakeResp(500)), "u")
-from datetime import date
+from datetime import date, timedelta
 from parse_untis import extract_valid_from, extract_schuljahr
 from constants import expected_schuljahr
 from build_today import parse_stunden, clean, clean_lehrer, fach_name, resolve_vtg_fach, ist_ausfall
@@ -818,3 +818,42 @@ class TestSchuljahrBeginn:
 
     def test_im_august(self):
         assert schuljahr_beginn(date(2026, 8, 1)) == date(2026, 8, 1)
+
+
+from constants import halbjahr_grenze, schuljahr_ende, schuljahr_start, zeitraum_fuer
+
+
+class TestSchuljahrZeitraeume:
+    """Die Statistik wird nach Schuljahr und Halbjahr geteilt. Das erste
+    Halbjahr endet mit der Zeugnisausgabe, nicht am 31.01.: bis dahin laeuft
+    der Unterricht weiter und zaehlt noch zum ersten Halbjahr."""
+
+    def test_schuljahr_grenzen(self):
+        assert schuljahr_start("2026/27") == date(2026, 8, 1)
+        assert schuljahr_ende("2026/27") == date(2027, 7, 31)
+
+    def test_halbjahr_aus_schulkalender(self):
+        assert halbjahr_grenze("2026/27") == date(2027, 2, 12)
+
+    def test_halbjahr_fallback_ohne_eintrag(self):
+        # Unbekanntes Schuljahr: gesetzliche Teilung zum 31.01.
+        assert halbjahr_grenze("2030/31") == date(2031, 1, 31)
+
+    def test_erstes_halbjahr(self):
+        von, bis = zeitraum_fuer("2026/27", "hj1")
+        assert (von, bis) == (date(2026, 8, 1), date(2027, 2, 12))
+
+    def test_zweites_halbjahr_schliesst_direkt_an(self):
+        _, ende1 = zeitraum_fuer("2026/27", "hj1")
+        von2, bis2 = zeitraum_fuer("2026/27", "hj2")
+        assert von2 == ende1 + timedelta(days=1)
+        assert bis2 == date(2027, 7, 31)
+
+    def test_halbjahre_decken_das_jahr_lueckenlos(self):
+        von, bis = zeitraum_fuer("2026/27", "jahr")
+        v1, b1 = zeitraum_fuer("2026/27", "hj1")
+        v2, b2 = zeitraum_fuer("2026/27", "hj2")
+        assert v1 == von and b2 == bis and v2 == b1 + timedelta(days=1)
+
+    def test_unbekannter_teil_ist_das_ganze_jahr(self):
+        assert zeitraum_fuer("2026/27", "quatsch") == zeitraum_fuer("2026/27", "jahr")

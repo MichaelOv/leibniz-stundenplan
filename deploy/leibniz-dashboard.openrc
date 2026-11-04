@@ -1,0 +1,22 @@
+#!/sbin/openrc-run
+
+name="leibniz-dashboard"
+description="Stundenplan 7c Dashboard (lokal)"
+
+: ${LEIBNIZ_DIR:=/root/leibniz-stundenplan}
+
+command="${LEIBNIZ_DIR}/venv/bin/python"
+command_args="${LEIBNIZ_DIR}/server.py"
+command_background=false
+directory="${LEIBNIZ_DIR}"
+supervisor="supervise-daemon"
+pidfile="/run/${RC_SVCNAME}.pid"
+output_log="/var/log/leibniz-dashboard.log"
+error_log="/var/log/leibniz-dashboard.log"
+respawn_delay=5
+respawn_max=0
+
+depend() {
+    need net
+    after firewall
+}

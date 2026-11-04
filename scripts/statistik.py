@@ -23,7 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_today import schulfrei_grund
-from constants import DAYS_DE, SCHOOL_YEAR_START_MONTH
+from constants import DAYS_DE, SCHOOL_YEAR_START_MONTH, expected_schuljahr, zeitraum_fuer
 
 BASE = Path(__file__).resolve().parents[1]
 DATEIEN = ["data/today_7c.json", "data/tomorrow_7c.json", "data/week_7c.json"]
@@ -189,8 +189,18 @@ def main(argv=None) -> int:
                     help="Startdatum (Vorgabe: Beginn des laufenden Schuljahrs)")
     ap.add_argument("--bis", default=heute.isoformat(), help="Enddatum (Vorgabe: heute)")
     ap.add_argument("--fach", default="", help="nur dieses Fach auswerten")
+    ap.add_argument("--halbjahr", choices=("1", "2"),
+                    help="nur das erste oder zweite Schulhalbjahr")
     a = ap.parse_args(argv)
 
+    if a.halbjahr:
+        sj = expected_schuljahr(heute)
+        von, bis = zeitraum_fuer(sj, "hj" + a.halbjahr)
+        a.seit, a.bis = von.isoformat(), min(bis, heute).isoformat()
+
+    if a.seit > a.bis:
+        print(f"Dieser Zeitraum beginnt erst am {a.seit}.")
+        return 1
     stand = historie(a.seit)
     if not stand:
         print("Keine Daten in der Git-Historie fuer diesen Zeitraum.")

@@ -7,7 +7,8 @@ das Repository. Registriert im Service-Portal, siehe README.
 import json
 import subprocess
 import sys
-from datetime import date
+from datetime import date, timedelta
+from urllib.parse import quote as url_quote
 from pathlib import Path
 
 from flask import Flask, Response, request
@@ -15,13 +16,14 @@ from flask import Flask, Response, request
 BASE = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE / "scripts"))
 
-from statistik import auswerten, historie, schuljahr_beginn
-from constants import DAYS_DE
+from build_today import schulfrei_grund
+from statistik import auswerten, historie
+from constants import DAYS_DE, expected_schuljahr, halbjahr_grenze, zeitraum_fuer
 
 app = Flask(__name__, static_folder=None)   # kein static_folder: sonst waere .env lesbar
 
-# Das Schulhalbjahr endet mit der Zeugnisausgabe, Termin aus dem Schulkalender.
-HALBJAHR_ENDE = "2027-02-12"
+# Beginn der Aufzeichnung: frueher reicht die Git-Historie nicht zurueck.
+AB = "2026-07-01"
 
 _cache: dict = {}
 
@@ -32,25 +34,49 @@ def _head() -> str:
     return r.stdout.strip()
 
 
-def daten(seit: str, bis: str) -> dict:
-    """Auswertung mit Cache. Schluessel ist der HEAD-Commit: solange die
-    Pipeline nichts Neues committet hat, kann sich nichts geaendert haben."""
-    key = (_head(), seit, bis)
+def gesamthistorie() -> dict:
+    """Die komplette Historie, gecacht nach HEAD-Commit.
+
+    Bewusst einmal vollstaendig statt je Zeitraum: das Lesen aus Git ist der
+    teure Teil, das Filtern danach kostet nichts. So laedt ein Wechsel des
+    Filters nicht erneut.
+    """
+    key = _head()
     if key not in _cache:
         _cache.clear()
-        _cache[key] = auswerten(historie(seit), seit, bis)
+        _cache[key] = historie(AB)
     return _cache[key]
 
 
-def zeitraum(name: str) -> tuple[str, str, str]:
+def daten(seit: str, bis: str) -> dict:
+    return auswerten(gesamthistorie(), seit, bis)
+
+
+def schuljahre() -> list[str]:
+    """Schuljahre mit auswertbaren Daten, neuestes zuerst.
+
+    Unterrichtsfreie Tage zaehlen nicht: das Repo enthaelt auch ein paar
+    Staende aus den Sommerferien, die sonst ein Schuljahr vortaeuschen,
+    unter dem dann eine leere Seite liegt.
+    """
+    vorhanden = {expected_schuljahr(date.fromisoformat(d))
+                 for d, plan in gesamthistorie().items()
+                 if plan and not schulfrei_grund(d)}
+    vorhanden.add(expected_schuljahr(date.today()))
+    return sorted(vorhanden, reverse=True)
+
+
+def zeitraum(sj: str, teil: str) -> tuple[str, str, str]:
+    """Zeitraum und Beschriftung. Das Ende wird bei heute gekappt: die
+    Pipeline haelt auch kommende Tage vor, die noch nicht stattgefunden
+    haben und deshalb nichts zur Statistik beitragen duerfen."""
     heute = date.today()
-    beginn = schuljahr_beginn(heute).isoformat()
-    if name == "halbjahr":
-        ende = min(HALBJAHR_ENDE, heute.isoformat())
-        return beginn, ende, "1. Halbjahr"
-    if name == "monat":
-        return heute.replace(day=1).isoformat(), heute.isoformat(), "Laufender Monat"
-    return beginn, heute.isoformat(), "Gesamtes Schuljahr"
+    if teil == "monat":
+        start = max(heute.replace(day=1), zeitraum_fuer(sj, "jahr")[0])
+        return start.isoformat(), heute.isoformat(), "Laufender Monat"
+    von, bis = zeitraum_fuer(sj, teil)
+    titel = {"hj1": "1. Halbjahr", "hj2": "2. Halbjahr"}.get(teil, "Ganzes Schuljahr")
+    return von.isoformat(), min(bis, heute).isoformat(), titel
 
 
 def balken(zeilen, max_wert, einheit=""):
@@ -141,7 +167,12 @@ SEITE = """<!DOCTYPE html>
   .wrap { max-width:960px; margin:0 auto; }
   h1 { font-size:1.5rem; margin:0 0 4px; }
   .unter { color:var(--ink2); margin:0 0 20px; font-size:.9rem; }
-  .filter { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  .filter { display:flex; flex-direction:column; gap:8px; margin-bottom:18px; }
+  .filterzeile { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .flabel { color:var(--muted); font-size:.78rem; min-width:66px; }
+  .warnbox { background:var(--surface); border:1px solid var(--rand);
+             border-left:3px solid var(--vertretung); border-radius:8px;
+             padding:12px 14px; margin:0 0 18px; color:var(--ink2); font-size:.88rem; }
   .filter a {
     padding:6px 14px; border:1px solid var(--rand); border-radius:999px;
     text-decoration:none; color:var(--ink2); background:var(--surface); font-size:.875rem;
@@ -200,6 +231,7 @@ SEITE = """<!DOCTYPE html>
   <p class="unter">__ZEITRAUM__</p>
 
   <nav class="filter" aria-label="Zeitraum">__FILTER__</nav>
+  __HINWEIS__
 
   <div class="kacheln">
     <div class="kachel"><div class="zahl">__SCHULTAGE__</div><div class="label">Schultage</div></div>
@@ -250,12 +282,25 @@ SEITE = """<!DOCTYPE html>
 </html>"""
 
 
+TEILE = (("jahr", "Ganzes Schuljahr"), ("hj1", "1. Halbjahr"),
+         ("hj2", "2. Halbjahr"), ("monat", "Dieser Monat"))
+
+
+def _wahl() -> tuple[str, str]:
+    jahre = schuljahre()
+    sj = request.args.get("sj", jahre[0])
+    if sj not in jahre:
+        sj = jahre[0]
+    teil = request.args.get("t", "jahr")
+    if teil not in {k for k, _ in TEILE}:
+        teil = "jahr"
+    return sj, teil
+
+
 @app.route("/")
 def seite():
-    wahl = request.args.get("z", "schuljahr")
-    if wahl not in ("schuljahr", "halbjahr", "monat"):
-        wahl = "schuljahr"
-    seit, bis, titel = zeitraum(wahl)
+    sj, teil = _wahl()
+    seit, bis, titel = zeitraum(sj, teil)
     e = daten(seit, bis)
 
     f = e["faecher"]
@@ -264,12 +309,24 @@ def seite():
     vertretung = sum(w["vertretung"] for w in f.values())
     quote = 100 * ausfall / gesamt if gesamt else 0
 
-    links = []
-    for schluessel, beschriftung in (("schuljahr", "Schuljahr"),
-                                     ("halbjahr", "1. Halbjahr"),
-                                     ("monat", "Dieser Monat")):
-        aktuell = ' aria-current="page"' if schluessel == wahl else ""
-        links.append(f'<a href="?z={schluessel}"{aktuell}>{beschriftung}</a>')
+    jahre = schuljahre()
+    jahr_links = "".join(
+        f'<a href="?sj={url_quote(j, safe="")}&t={teil}"'
+        f'{" aria-current=\"page\"" if j == sj else ""}>{j}</a>' for j in jahre)
+    teil_links = "".join(
+        f'<a href="?sj={url_quote(sj, safe="")}&t={k}"'
+        f'{" aria-current=\"page\"" if k == teil else ""}>{b}</a>' for k, b in TEILE)
+    links = (f'<div class="filterzeile"><span class="flabel">Schuljahr</span>{jahr_links}</div>'
+             f'<div class="filterzeile"><span class="flabel">Zeitraum</span>{teil_links}</div>')
+
+    # Ein Halbjahr, das noch nicht angefangen hat, waere sonst nur eine leere Seite
+    hinweis = ""
+    if seit > bis:
+        hinweis = (f'<p class="warnbox">Dieser Zeitraum hat noch nicht begonnen. '
+                   f'Das 2. Halbjahr {sj} startet am '
+                   f'{(halbjahr_grenze(sj) + timedelta(days=1)).strftime("%d.%m.%Y")}.</p>')
+    elif e["schultage"] == 0:
+        hinweis = '<p class="warnbox">Für diesen Zeitraum liegen keine Daten vor.</p>'
 
     fach_zeilen = sorted(f.items(), key=lambda x: (-x[1]["ausfall"], x[0]))
     max_fach = max([w["ausfall"] + w["vertretung"] for _, w in fach_zeilen] or [1])
@@ -283,10 +340,15 @@ def seite():
     tage = sorted(e["wochentage"].items())
     max_tag = max([w["ausfall"] + w["vertretung"] for _, w in tage] or [1])
 
+    # Bei einem Zeitraum, der noch nicht begonnen hat, liegt das bei heute
+    # gekappte Ende vor dem Anfang. Dann die geplanten Grenzen zeigen.
+    a_von, a_bis = (zeitraum_fuer(sj, teil) if seit > bis
+                    else (date.fromisoformat(seit), date.fromisoformat(bis)))
     html = (SEITE
-            .replace("__ZEITRAUM__", f"{titel}: {date.fromisoformat(seit).strftime('%d.%m.%Y')} "
-                                     f"bis {date.fromisoformat(bis).strftime('%d.%m.%Y')}")
-            .replace("__FILTER__", "".join(links))
+            .replace("__ZEITRAUM__", f"{titel}: {a_von.strftime('%d.%m.%Y')} "
+                                     f"bis {a_bis.strftime('%d.%m.%Y')}")
+            .replace("__FILTER__", links)
+            .replace("__HINWEIS__", hinweis)
             .replace("__SCHULTAGE__", str(e["schultage"]))
             .replace("__STUNDEN__", str(gesamt))
             .replace("__AUSFALL__", str(ausfall))
@@ -305,10 +367,14 @@ def seite():
 @app.route("/daten.json")
 def daten_json():
     """Rohdaten, falls man selbst rechnen will."""
-    seit, bis, _ = zeitraum(request.args.get("z", "schuljahr"))
+    sj, teil = _wahl()
+    seit, bis, titel = zeitraum(sj, teil)
     e = daten(seit, bis)
     return Response(json.dumps({
-        "zeitraum": {"seit": seit, "bis": bis},
+        "schuljahr": sj,
+        # seit > bis heisst: der Zeitraum liegt noch in der Zukunft
+        "zeitraum": {"teil": teil, "titel": titel, "seit": seit, "bis": bis,
+                     "begonnen": seit <= bis},
         "schultage": e["schultage"],
         "faecher": e["faecher"],
         "wochen": e["wochen"],

@@ -154,13 +154,16 @@ gh workflow run update.yml --repo <github-username>/leibniz-stundenplan
 python scripts/statistik.py                    # seit Schuljahresbeginn
 python scripts/statistik.py --seit 2026-09-02  # ab Datum
 python scripts/statistik.py --fach Mathe       # nur ein Fach
+python scripts/statistik.py --halbjahr 1       # nur das erste Schulhalbjahr
 ```
 
 Ausgegeben wird je Fach die Zahl der Stunden, Ausfälle, Vertretungen und die Ausfallquote, darunter die einzelnen Vorkommnisse mit Datum, Stunde und Hinweis. Das Skript braucht das Git-Repo und läuft deshalb nur lokal, nicht in der Pipeline.
 
 ### Statistik-Weboberfläche
 
-`stats_server.py` zeigt dieselbe Auswertung als Seite: Kennzahlen, Balken je Fach, Verlauf nach Kalenderwoche, Aufschlüsselung nach Schulstunde und Wochentag sowie eine Tabelle aller Vorkommnisse. Umschaltbar zwischen Schuljahr, erstem Halbjahr und laufendem Monat. Unter `/daten.json` liegen dieselben Zahlen maschinenlesbar.
+`stats_server.py` zeigt dieselbe Auswertung als Seite: Kennzahlen, Balken je Fach, Verlauf nach Kalenderwoche, Aufschlüsselung nach Schulstunde und Wochentag sowie eine Tabelle aller Vorkommnisse. Gefiltert wird in zwei Ebenen: oben das **Schuljahr**, darunter der **Zeitraum** (ganzes Schuljahr, 1. Halbjahr, 2. Halbjahr, laufender Monat). Angeboten werden nur Schuljahre, zu denen auswertbare Tage vorliegen. Unter `/daten.json` liegen dieselben Zahlen maschinenlesbar.
+
+Die Halbjahresgrenze ist der Tag der Zeugnisausgabe, nicht der 31.01.: Bis dahin läuft der Unterricht weiter und zählt zum ersten Halbjahr. Die Termine stehen in `HALBJAHR_ENDE` in `scripts/constants.py`, ohne Eintrag wird auf den 31.01. zurückgefallen.
 
 Läuft als OpenRC-Dienst auf Port 8081 und ist im Service-Portal des Hosts eingetragen:
 
@@ -168,6 +171,8 @@ Läuft als OpenRC-Dienst auf Port 8081 und ist im Service-Portal des Hosts einge
 rc-service leibniz-stats start
 rc-update add leibniz-stats default
 ```
+
+Das lokale Dashboard selbst läuft ebenso als Dienst (`leibniz-dashboard`, Port 8080). Beide Init-Skripte liegen unter `deploy/`.
 
 Die Auswertung der Git-Historie dauert einige Sekunden und wird zwischengespeichert, solange sich der HEAD-Commit nicht ändert.
 
