@@ -80,10 +80,10 @@
       "fach": "Evangelische Rel.",
       "fach_kurz": "ER",
       "lehrer": "PAR",
-      "raum": "A1.11",
-      "status": "vertretung",
-      "vertreter": "PER",
-      "hinweis": "ER Raumänderung wg. Klassenbedarfs",
+      "raum": "A2.11",
+      "status": "normal",
+      "vertreter": "",
+      "hinweis": "",
       "lehrer_name": "",
       "vertreter_name": ""
     },
@@ -136,9 +136,9 @@
       "vertreter_name": ""
     }
   ],
-  "vtg_count": 3,
-  "generated_at": "2026-11-05T09:00:31.079992+00:00",
-  "pdf_stand": "2026-11-05T07:16:00+01:00",
+  "vtg_count": 2,
+  "generated_at": "2026-11-05T10:00:28.447810+00:00",
+  "pdf_stand": "2026-11-05T10:11:00+01:00",
   "schulfrei": "",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
