@@ -69,8 +69,8 @@
           "fach_kurz": "EK",
           "lehrer": "MAN",
           "raum": "433",
-          "status": "normal",
-          "vertreter": "",
+          "status": "vertretung",
+          "vertreter": "ZIN",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -148,10 +148,10 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 1,
+      "vtg_count": 2,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-11-09T07:19:00+01:00"
+      "pdf_stand": "2026-11-09T08:15:00+01:00"
     },
     {
       "date": "2026-11-11",
@@ -450,5 +450,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-11-09T07:15:24.626068+00:00"
+  "generated_at": "2026-11-09T07:20:29.366517+00:00"
 }
