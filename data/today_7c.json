@@ -57,8 +57,8 @@
       "fach_kurz": "EK",
       "lehrer": "MAN",
       "raum": "433",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "ZIN",
       "hinweis": "",
       "lehrer_name": "",
       "vertreter_name": ""
@@ -129,16 +129,16 @@
       "fach_kurz": "CH",
       "lehrer": "WIN",
       "raum": "CH104",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": "",
+      "hinweis": "frei",
       "lehrer_name": "",
       "vertreter_name": ""
     }
   ],
-  "vtg_count": 0,
-  "generated_at": "2026-11-10T06:05:26.981556+00:00",
-  "pdf_stand": "",
+  "vtg_count": 2,
+  "generated_at": "2026-11-10T06:10:22.778748+00:00",
+  "pdf_stand": "2026-11-10T07:07:00+01:00",
   "schulfrei": "",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
