@@ -280,6 +280,18 @@ def build_plan(target_date=None, vtg_file="latest_7c.json"):
                     "vertreter": vtg_anzeige,
                     "hinweis": text or ("Entfall" if status == "frei" else "")
                 }
+                # Gleiches Fach steht in dieser Stunde schon im Untis-Plan, nur
+                # mit anderer Lehrkraft (z.B. nach einem Planwechsel): das ist
+                # dieselbe Stunde, keine zweite. Sonst stuende sie doppelt da.
+                gleiche = next((p for p in plan if p["stunde"] == stunde_nr_u
+                                and p["status"] == "normal" and fach
+                                and p["fach_kurz"].upper() == fach.upper()), None)
+                if gleiche:
+                    gleiche.update(status=status, vertreter=vtg_anzeige,
+                                   hinweis=extra["hinweis"])
+                    if raum:
+                        gleiche["raum"] = raum
+                    continue
                 plan.append(extra)
 
     plan.sort(key=lambda x: x["stunde"])

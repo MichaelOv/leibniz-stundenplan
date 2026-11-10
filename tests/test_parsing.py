@@ -438,6 +438,52 @@ class TestVorgezogeneStunde:
         assert ergebnis == erwartet
 
 
+class TestVertretungImKursblock:
+    """Realfall Dienstag 10.11.2026: '07c 4 PER FTB 433' ohne Fach.
+
+    PER unterrichtete bis zum Planwechsel am 21.09. Evangelische Religion in
+    dieser Stunde, im neuen Untis-Plan steht dort PAR. Die Vertretung landete
+    als zusaetzliche Karte "Zusatzstunde" neben dem Kursblock, die 4. Stunde
+    hatte damit zwei verschiedene Stunden.
+    """
+
+    def _baue(self, tmp_path, monkeypatch, lehrer_fach):
+        import json, build_today
+        daten = tmp_path / "data"
+        daten.mkdir()
+        (daten / "untis_7c.json").write_text(json.dumps({
+            "valid_from": "2026-09-21", "schuljahr": "2026/27",
+            "4": {"Dienstag": [
+                {"fach": ".ER", "lehrer": "PAR", "raum": "A2.04Mu"},
+                {"fach": "KR", "lehrer": "VOS", "raum": "102"},
+            ]},
+        }), encoding="utf-8")
+        (daten / "fach_mapping.json").write_text(json.dumps(
+            {"ER": "Evangelische Rel.", "KR": "Katholische Rel."}), encoding="utf-8")
+        (daten / "lehrer_fach.json").write_text(json.dumps(lehrer_fach), encoding="utf-8")
+        (daten / "lehrer_namen.json").write_text("{}", encoding="utf-8")
+        (daten / "vtg.json").write_text(json.dumps({"date": "2026-11-10", "class": "07c",
+            "substitutions": [{"klasse": "07c", "stunde": "4", "lehrer": "PER",
+                               "vertreter": "FTB", "raum": "433", "fach": "", "text": ""}]}),
+            encoding="utf-8")
+        monkeypatch.setattr(build_today, "BASE", tmp_path)
+        return [p for p in build_today.build_plan("2026-11-10", vtg_file="vtg.json")["plan"]
+                if p["stunde"] == 4]
+
+    def test_vertretung_landet_im_passenden_kurs(self, tmp_path, monkeypatch):
+        stunde4 = self._baue(tmp_path, monkeypatch, {"PER": "ER"})
+        assert [p["fach_kurz"] for p in stunde4] == ["ER", "KR"]   # keine dritte Karte
+        er = stunde4[0]
+        assert er["status"] == "vertretung"
+        assert er["vertreter"] == "FTB"
+        assert er["raum"] == "433"
+        assert stunde4[1]["status"] == "normal"
+
+    def test_ohne_bekanntes_fach_bleibt_die_zusatzstunde(self, tmp_path, monkeypatch):
+        stunde4 = self._baue(tmp_path, monkeypatch, {})
+        assert "Zusatzstunde" in [p["fach"] for p in stunde4]
+
+
 class TestAlleWochentageHolen:
     """Die Wochenansicht soll alle veroeffentlichten Plaene zeigen, nicht nur
     heute und morgen."""

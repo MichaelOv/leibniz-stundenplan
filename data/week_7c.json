@@ -80,9 +80,9 @@
           "fach": "Evangelische Rel.",
           "fach_kurz": "ER",
           "lehrer": "PAR",
-          "raum": "A2.04Mu",
-          "status": "normal",
-          "vertreter": "",
+          "raum": "433",
+          "status": "vertretung",
+          "vertreter": "FTB",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -119,18 +119,6 @@
           "raum": "609",
           "status": "normal",
           "vertreter": "",
-          "hinweis": "",
-          "lehrer_name": "",
-          "vertreter_name": ""
-        },
-        {
-          "stunde": 4,
-          "fach": "Zusatzstunde",
-          "fach_kurz": "",
-          "lehrer": "PER",
-          "raum": "433",
-          "status": "vertretung",
-          "vertreter": "FTB",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
