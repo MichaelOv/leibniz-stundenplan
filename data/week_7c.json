@@ -329,8 +329,8 @@
           "fach_kurz": "KR",
           "lehrer": "VOS",
           "raum": "102",
-          "status": "vertretung",
-          "vertreter": "NYE",
+          "status": "normal",
+          "vertreter": "",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -360,10 +360,10 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 1,
+      "vtg_count": 0,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-11-11T07:16:00+01:00"
+      "pdf_stand": ""
     },
     {
       "date": "2026-11-13",
@@ -450,5 +450,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-11-11T08:00:28.480981+00:00"
+  "generated_at": "2026-11-11T09:00:35.075080+00:00"
 }
