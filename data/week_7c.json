@@ -304,9 +304,9 @@
           "fach": "Evangelische Rel.",
           "fach_kurz": "ER",
           "lehrer": "PAR",
-          "raum": "A2.11",
-          "status": "normal",
-          "vertreter": "",
+          "raum": "433",
+          "status": "vertretung",
+          "vertreter": "BIL",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -360,10 +360,10 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 1,
+      "vtg_count": 2,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-11-11T09:59:00+01:00"
+      "pdf_stand": "2026-11-11T19:14:00+01:00"
     },
     {
       "date": "2026-11-13",
@@ -445,10 +445,10 @@
       "vtg_count": 0,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-11-10T16:57:00+01:00"
+      "pdf_stand": "2026-11-11T19:13:00+01:00"
     }
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-11-11T18:00:34.055435+00:00"
+  "generated_at": "2026-11-11T19:00:33.958095+00:00"
 }
