@@ -423,9 +423,9 @@
           "fach_kurz": "SP",
           "lehrer": "MAT",
           "raum": "SH1",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -435,20 +435,20 @@
           "fach_kurz": "SP",
           "lehrer": "MAT",
           "raum": "SH1",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 0,
+      "vtg_count": 2,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-11-12T07:37:00+01:00"
+      "pdf_stand": "2026-11-12T14:37:00+01:00"
     }
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-11-12T13:00:28.761510+00:00"
+  "generated_at": "2026-11-12T14:00:25.169606+00:00"
 }
