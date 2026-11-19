@@ -9,8 +9,8 @@
       "fach_kurz": "E",
       "lehrer": "MOR",
       "raum": "433",
-      "status": "normal",
-      "vertreter": "",
+      "status": "vertretung",
+      "vertreter": "STO",
       "hinweis": "",
       "lehrer_name": "",
       "vertreter_name": ""
@@ -21,9 +21,9 @@
       "fach_kurz": "E",
       "lehrer": "MOR",
       "raum": "433",
-      "status": "normal",
-      "vertreter": "",
-      "hinweis": "",
+      "status": "vertretung",
+      "vertreter": "BUD",
+      "hinweis": "E",
       "lehrer_name": "",
       "vertreter_name": ""
     },
@@ -136,9 +136,9 @@
       "vertreter_name": ""
     }
   ],
-  "vtg_count": 1,
-  "generated_at": "2026-11-19T05:45:28.894147+00:00",
-  "pdf_stand": "2026-11-19T06:16:00+01:00",
+  "vtg_count": 3,
+  "generated_at": "2026-11-19T05:50:28.773782+00:00",
+  "pdf_stand": "2026-11-19T06:48:00+01:00",
   "schulfrei": "",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
