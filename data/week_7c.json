@@ -426,17 +426,17 @@
           "fach_kurz": "D",
           "lehrer": "GRU",
           "raum": "433",
-          "status": "normal",
+          "status": "frei",
           "vertreter": "",
-          "hinweis": "",
+          "hinweis": "frei",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 3,
+      "vtg_count": 4,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-11-19T06:48:00+01:00"
+      "pdf_stand": "2026-11-19T07:36:00+01:00"
     },
     {
       "date": "2026-11-20",
@@ -523,5 +523,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-11-19T06:35:27.593285+00:00"
+  "generated_at": "2026-11-19T06:40:30.214851+00:00"
 }
