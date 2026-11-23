@@ -294,7 +294,7 @@
       "vtg_count": 1,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-11-20T19:04:00+01:00"
+      "pdf_stand": "2026-11-23T14:29:00+01:00"
     },
     {
       "date": "2026-11-26",
@@ -523,5 +523,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-11-23T13:00:37.894443+00:00"
+  "generated_at": "2026-11-23T14:00:38.354545+00:00"
 }
