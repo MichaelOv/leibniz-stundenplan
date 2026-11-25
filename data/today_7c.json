@@ -45,9 +45,9 @@
       "fach_kurz": "KU",
       "lehrer": "NYE",
       "raum": "A2.03Ku",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": "",
+      "hinweis": "frei",
       "lehrer_name": "",
       "vertreter_name": ""
     },
@@ -57,16 +57,16 @@
       "fach_kurz": "KU",
       "lehrer": "NYE",
       "raum": "A2.03Ku",
-      "status": "normal",
+      "status": "frei",
       "vertreter": "",
-      "hinweis": "",
+      "hinweis": "frei",
       "lehrer_name": "",
       "vertreter_name": ""
     }
   ],
-  "vtg_count": 1,
-  "generated_at": "2026-11-25T06:30:28.111770+00:00",
-  "pdf_stand": "2026-11-25T06:45:00+01:00",
+  "vtg_count": 3,
+  "generated_at": "2026-11-25T06:35:29.774105+00:00",
+  "pdf_stand": "2026-11-25T07:30:00+01:00",
   "schulfrei": "",
   "untis_schuljahr": "2026/27",
   "untis_stale": false
