@@ -343,8 +343,8 @@
           "lehrer": "ZIM",
           "raum": "102",
           "status": "vertretung",
-          "vertreter": "RIT",
-          "hinweis": "L7",
+          "vertreter": "WAR",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -436,7 +436,7 @@
       "vtg_count": 4,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-11-26T06:11:00+01:00"
+      "pdf_stand": "2026-11-26T07:12:00+01:00"
     },
     {
       "date": "2026-11-27",
@@ -523,5 +523,5 @@
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-11-26T06:10:26.948792+00:00"
+  "generated_at": "2026-11-26T06:15:27.339308+00:00"
 }
