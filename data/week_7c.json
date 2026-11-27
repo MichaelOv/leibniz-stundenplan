@@ -1,9 +1,9 @@
 {
-  "week_start": "2026-11-23",
+  "week_start": "2026-11-30",
   "class": "07c",
   "days": [
     {
-      "date": "2026-11-23",
+      "date": "2026-11-30",
       "day": "Montag",
       "plan": [
         {
@@ -82,10 +82,10 @@
       "vtg_count": 0,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-11-23T07:31:00+01:00"
+      "pdf_stand": "2026-11-27T07:27:00+01:00"
     },
     {
-      "date": "2026-11-24",
+      "date": "2026-12-01",
       "day": "Dienstag",
       "plan": [
         {
@@ -152,8 +152,8 @@
           "stunde": 4,
           "fach": "Evangelische Rel.",
           "fach_kurz": "ER",
-          "lehrer": "PAR",
-          "raum": "A2.04Mu",
+          "lehrer": "PER",
+          "raum": "433",
           "status": "normal",
           "vertreter": "",
           "hinweis": "",
@@ -214,20 +214,20 @@
           "fach_kurz": "CH",
           "lehrer": "WIN",
           "raum": "CH104",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 1,
+      "vtg_count": 0,
       "has_vertretungsplan": true,
       "schulfrei": "",
-      "pdf_stand": "2026-11-24T07:39:00+01:00"
+      "pdf_stand": "2026-11-27T06:36:00+01:00"
     },
     {
-      "date": "2026-11-25",
+      "date": "2026-12-02",
       "day": "Mittwoch",
       "plan": [
         {
@@ -236,9 +236,9 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -272,9 +272,9 @@
           "fach_kurz": "KU",
           "lehrer": "NYE",
           "raum": "A2.03Ku",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -284,20 +284,20 @@
           "fach_kurz": "KU",
           "lehrer": "NYE",
           "raum": "A2.03Ku",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 3,
-      "has_vertretungsplan": true,
+      "vtg_count": 0,
+      "has_vertretungsplan": false,
       "schulfrei": "",
-      "pdf_stand": "2026-11-25T07:30:00+01:00"
+      "pdf_stand": ""
     },
     {
-      "date": "2026-11-26",
+      "date": "2026-12-03",
       "day": "Donnerstag",
       "plan": [
         {
@@ -306,9 +306,9 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -318,9 +318,9 @@
           "fach_kurz": "E",
           "lehrer": "MOR",
           "raum": "433",
-          "status": "frei",
+          "status": "normal",
           "vertreter": "",
-          "hinweis": "frei",
+          "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
         },
@@ -342,8 +342,8 @@
           "fach_kurz": "L7",
           "lehrer": "ZIM",
           "raum": "102",
-          "status": "vertretung",
-          "vertreter": "WAR",
+          "status": "normal",
+          "vertreter": "",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -366,8 +366,8 @@
           "fach_kurz": "L7",
           "lehrer": "ZIM",
           "raum": "102",
-          "status": "vertretung",
-          "vertreter": "MEN",
+          "status": "normal",
+          "vertreter": "",
           "hinweis": "",
           "lehrer_name": "",
           "vertreter_name": ""
@@ -376,8 +376,8 @@
           "stunde": 5,
           "fach": "Evangelische Rel.",
           "fach_kurz": "ER",
-          "lehrer": "PAR",
-          "raum": "A2.11",
+          "lehrer": "PER",
+          "raum": "433",
           "status": "normal",
           "vertreter": "",
           "hinweis": "",
@@ -413,7 +413,7 @@
           "fach": "Praktische Philosophie",
           "fach_kurz": "PP",
           "lehrer": "LUD",
-          "raum": "433",
+          "raum": "103",
           "status": "normal",
           "vertreter": "",
           "hinweis": "",
@@ -433,13 +433,13 @@
           "vertreter_name": ""
         }
       ],
-      "vtg_count": 4,
-      "has_vertretungsplan": true,
+      "vtg_count": 0,
+      "has_vertretungsplan": false,
       "schulfrei": "",
-      "pdf_stand": "2026-11-26T11:45:00+01:00"
+      "pdf_stand": ""
     },
     {
-      "date": "2026-11-27",
+      "date": "2026-12-04",
       "day": "Freitag",
       "plan": [
         {
@@ -516,12 +516,12 @@
         }
       ],
       "vtg_count": 0,
-      "has_vertretungsplan": true,
+      "has_vertretungsplan": false,
       "schulfrei": "",
-      "pdf_stand": "2026-11-27T09:44:00+01:00"
+      "pdf_stand": ""
     }
   ],
   "untis_schuljahr": "2026/27",
   "untis_stale": false,
-  "generated_at": "2026-11-27T12:00:25.610739+00:00"
+  "generated_at": "2026-11-27T13:00:43.015074+00:00"
 }
